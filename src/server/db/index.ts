@@ -1,18 +1,16 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { drizzle } from "drizzle-orm/neon-serverless";
+import { Pool } from "@neondatabase/serverless";
 
 import { env } from "~/env";
 import * as schema from "./schema";
 
 /**
- * Cache the database connection in development. This avoids creating a new connection on every HMR
- * update.
+ * Neon uses HTTP-based pooling.
+ * This is safe for serverless (Vercel).
  */
-const globalForDb = globalThis as unknown as {
-  conn: postgres.Sql | undefined;
-};
+const pool = new Pool({
+  connectionString: env.DATABASE_URL,
+});
 
-const conn = globalForDb.conn ?? postgres(env.DATABASE_URL);
-if (env.NODE_ENV !== "production") globalForDb.conn = conn;
+export const db = drizzle(pool, { schema });
 
-export const db = drizzle(conn, { schema });
