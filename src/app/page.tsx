@@ -63,17 +63,16 @@ export default async function Home() {
                       "use server";
                       const res = await auth.api.signInSocial({
                         body: {
-                          provider: "github",
+                          provider: "google",
                           callbackURL: "/",
                         },
                       });
-                      if (!res.url) {
-                        throw new Error("No URL returned from signInSocial");
+                      if (res.url) {
+                        redirect(res.url);
                       }
-                      redirect(res.url);
                     }}
                   >
-                    Sign in with Github
+                    Sign in with Google
                   </button>
                 </form>
               ) : (
