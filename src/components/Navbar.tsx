@@ -15,6 +15,26 @@ const navLinks = [
   { href: "/sponsorship", label: "Sponsorship" },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.3, ease: "easeOut" as const },
+  },
+};
+
 export default function Navbar() {
   const [hidden, setHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -43,11 +63,7 @@ export default function Navbar() {
         <motion.div
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          variants={{
-            visible: { x: 0, opacity: 1 },
-            hidden: { x: -50, opacity: 0 },
-          }}
-          transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
         >
           <Link href="/">
             <Image src="/logo.svg" alt="Logo" width={40} height={40} />
@@ -55,35 +71,32 @@ export default function Navbar() {
         </motion.div>
 
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex gap-8 items-center text-foreground">
-          {navLinks.map((link, index) => (
+        <motion.div 
+          className="hidden lg:flex gap-8 items-center text-foreground"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {navLinks.map((link) => (
             <motion.div
               key={link.href}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 0.4, 
-                ease: "easeOut", 
-                delay: 0.1 + index * 0.05 
-              }}
-              whileHover={{ x: 0, y: -3 }}
+              variants={itemVariants}
+              whileHover={{ y: -3, transition: { duration: 0.15 } }}
             >
               <Link href={link.href}>{link.label}</Link>
             </motion.div>
           ))}
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4, ease: "easeOut", delay: 0.4 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            variants={itemVariants}
+            whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
+            whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
           >
             <Link href="/login" className="px-4 py-1.5 bg-red text-white rounded-md shadow-xl">
               Sign in
             </Link>
           </motion.div>
-        </div>
+        </motion.div>
 
         <button
           className="lg:hidden p-2 text-foreground"
@@ -122,13 +135,16 @@ export default function Navbar() {
                   <X size={24} />
                 </button>
 
-                <nav className="flex flex-col gap-4">
-                  {navLinks.map((link, index) => (
+                <motion.nav 
+                  className="flex flex-col gap-4"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
+                  {navLinks.map((link) => (
                     <motion.div
                       key={link.href}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
+                      variants={itemVariants}
                     >
                       <Link
                         href={link.href}
@@ -139,22 +155,17 @@ export default function Navbar() {
                       </Link>
                     </motion.div>
                   ))}
-                </nav>
 
-                <motion.div
-                  className="mt-8"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <Link
-                    href="/login"
-                    className="block w-full text-center px-4 py-2 bg-red text-white rounded-md shadow-xl"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Sign in
-                  </Link>
-                </motion.div>
+                  <motion.div variants={itemVariants}>
+                    <Link
+                      href="/login"
+                      className="block w-full text-center px-4 py-2 bg-red text-white rounded-md shadow-xl"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Sign in
+                    </Link>
+                  </motion.div>
+                </motion.nav>
               </div>
             </motion.div>
           </>
