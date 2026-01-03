@@ -5,6 +5,7 @@ import { Geist, Roboto_Slab, Titan_One } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import Navbar from "~/components/Navbar";
+import Footer from "~/components/Footer";
 
 export const metadata: Metadata = {
   title: "TEDxITB 9.0",
@@ -35,8 +36,9 @@ export default function RootLayout({
     <html lang="en" className={`${robotoSlab.variable} ${titanOne.variable} `}>
       <body>
         <TRPCReactProvider>
-            <Navbar />
-           {children}
+          <Navbar />
+          {children}
+          <Footer />
         </TRPCReactProvider>
       </body>
     </html>

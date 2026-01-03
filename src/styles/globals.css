@@ -4,5 +4,16 @@
   --font-sans: var(--font-roboto-slab), ui-serif, Georgia, serif;
   --font-geist: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-titan: var(--font-titan-one), cursive;
+
+  /* Colors */
+  --color-red: #E12D2D;
+  --color-orange: #FF6A15;
+  --color-yellow: #FFB820;
+  --color-pink: #FF3A8C;
+  --color-purple: #9A1AEF;
+  --color-blue: #443BF4;
+  --color-navy: #201C70;
+
+  /* Default text color */
+  --color-foreground: #201C70;
 }
-  
