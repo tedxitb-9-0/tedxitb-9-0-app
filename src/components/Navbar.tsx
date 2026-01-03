@@ -94,6 +94,7 @@ export default function Navbar() {
         </button>
       </motion.nav>
 
+      {/* Mobile View */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
