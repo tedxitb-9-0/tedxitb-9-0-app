@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Geist, Roboto_Slab, Titan_One } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
 
 import { TRPCReactProvider } from "~/trpc/react";
 import Navbar from "~/components/Navbar";
@@ -35,6 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${robotoSlab.variable} ${titanOne.variable} `}>
       <body>
+        <NextTopLoader color="red" showSpinner={false} />
         <TRPCReactProvider>
           <Navbar />
           {children}
