@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "motion/react";
 import ColorfulBackground from "~/components/ColorfulBackground";
 import TEDxITBBadge from "~/components/TEDxITBBadge";
@@ -92,12 +93,14 @@ export default function Home() {
               TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology
             </p>
             <div className="flex justify-end">
-              <button className="bg-white text-red-600 font-semibold text-sm px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
-                Learn more
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </button>
+              <Link href="/main-event">
+                <button className="bg-white text-red-600 font-semibold text-sm px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
+                  Learn more
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </button>
+              </Link>
             </div>
           </motion.div>
 
@@ -127,12 +130,14 @@ export default function Home() {
               TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology
             </p>
             <div className="flex justify-end">
-              <button className="bg-white text-orange-600 font-semibold text-sm px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
-                Learn more
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </button>
+              <Link href="/about">
+                <button className="bg-white text-orange-600 font-semibold text-sm px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
+                  Learn more
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </button>
+              </Link>
             </div>
           </motion.div>
 
@@ -162,12 +167,14 @@ export default function Home() {
               TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology
             </p>
             <div className="flex justify-end">
-              <button className="bg-white text-yellow-600 font-semibold text-sm px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
-                Learn more
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </button>
+              <Link href="/pre-event">
+                <button className="bg-white text-yellow-600 font-semibold text-sm px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
+                  Learn more
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </button>
+              </Link>
             </div>
           </motion.div>
         </div>
@@ -212,14 +219,15 @@ export default function Home() {
 
           <div className="flex flex-row gap-3 md:gap-40 z-10 px-4 w-full max-w-[320px] md:max-w-4xl mb-8 md:mb-32">
             {/* Magazine Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="rounded-2xl py-4 px-3 md:py-10 md:px-12 shadow-lg flex flex-col items-center text-center w-1/2 md:w-auto md:flex-1"
-              style={{ background: 'linear-gradient(to bottom right, #FF3A8C, #FF75AE)' }}
-            >
+            <Link href="/magazine" className="w-1/2 md:w-auto md:flex-1">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="rounded-2xl py-4 px-3 md:py-10 md:px-12 shadow-lg flex flex-col items-center text-center h-full cursor-pointer hover:scale-105 transition-transform"
+                style={{ background: 'linear-gradient(to bottom right, #FF3A8C, #FF75AE)' }}
+              >
               <div className="bg-white rounded-xl p-2 md:py-8 md:px-10 mb-2 md:mb-4 w-full aspect-square flex items-center justify-center relative">
                 <div className="absolute top-1 right-1 md:top-3 md:right-3">
                   <Image
@@ -243,16 +251,18 @@ export default function Home() {
               <h3 className="text-base md:text-4xl font-titan mt-2 md:mt-5 text-white mb-1 md:mb-2">Magazine</h3>
               <p className="text-white text-[7px] md:text-sm leading-tight">Check out TEDxITB 9.0's magazine!</p>
             </motion.div>
+            </Link>
 
             {/* Merchandise Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="rounded-2xl py-4 px-3 md:py-10 md:px-12 shadow-lg flex flex-col items-center text-center w-1/2 md:w-auto md:flex-1"
-              style={{ background: 'linear-gradient(to bottom right, #443BF4, #635BF7)' }}
-            >
+            <Link href="/merchandise" className="w-1/2 md:w-auto md:flex-1">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="rounded-2xl py-4 px-3 md:py-10 md:px-12 shadow-lg flex flex-col items-center text-center h-full cursor-pointer hover:scale-105 transition-transform"
+                style={{ background: 'linear-gradient(to bottom right, #443BF4, #635BF7)' }}
+              >
               <div className="bg-white rounded-xl p-2 md:py-8 md:px-10 mb-2 md:mb-4 w-full aspect-square flex items-center justify-center relative">
                 <div className="absolute top-1 right-1 md:top-3 md:right-3">
                   <Image
@@ -276,6 +286,7 @@ export default function Home() {
               <h3 className="text-base md:text-4xl font-titan mt-2 md:mt-5 text-white mb-1 md:mb-2">Merchandise</h3>
               <p className="text-white text-[7px] md:text-sm leading-tight">Check out TEDxITB 9.0's Merchandise!</p>
             </motion.div>
+            </Link>
           </div>
         </ColorfulBackground>
       </section>
