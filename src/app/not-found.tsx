@@ -59,7 +59,7 @@ export default function NotFound() {
           variants={itemVariants}
         >
        <p>
-          Seems like you've lost your way!
+          Seems like {`you've`} lost your way!
        </p> 
         </motion.div>
 
