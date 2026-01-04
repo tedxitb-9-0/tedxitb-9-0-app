@@ -35,7 +35,7 @@ const itemVariants = {
   },
 };
 
-export default function Navbar() {
+const Navbar = () => {
   const [hidden, setHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
@@ -175,3 +175,5 @@ export default function Navbar() {
   )
 }
 
+
+export default Navbar;

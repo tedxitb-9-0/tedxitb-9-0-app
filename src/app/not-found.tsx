@@ -51,9 +51,18 @@ export default function NotFound() {
             width={400} 
             height={400}
             className="w-full h-auto"
+            draggable={false}
           />
         </motion.div>
-        
+       
+        <motion.div
+          variants={itemVariants}
+        >
+       <p>
+          Seems like {`you've`} lost your way!
+       </p> 
+        </motion.div>
+
         <motion.div
           variants={itemVariants}
           whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
@@ -61,7 +70,7 @@ export default function NotFound() {
         >
           <Link 
             href="/" 
-            className="mt-8 px-6 py-2 bg-red text-white rounded-md hover:opacity-90 transition shadow-lg"
+            className="mt-12 px-6 py-2 bg-red text-white rounded-md hover:opacity-90 transition shadow-lg"
           >
             Go Home
           </Link>
