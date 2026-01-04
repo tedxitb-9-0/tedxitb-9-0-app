@@ -6,14 +6,32 @@
   --font-titan: var(--font-titan-one), cursive;
 
   /* Colors */
-  --color-red: #E12D2D;
-  --color-orange: #FF6A15;
-  --color-yellow: #FFB820;
-  --color-pink: #FF3A8C;
-  --color-purple: #9A1AEF;
-  --color-blue: #443BF4;
-  --color-navy: #201C70;
+  --color-red: #e12d2d;
+  --color-orange: #ff6a15;
+  --color-yellow: #ffb820;
+  --color-pink: #ff3a8c;
+  --color-purple: #9a1aef;
+  --color-blue: #443bf4;
+  --color-navy: #201c70;
 
   /* Default text color */
-  --color-foreground: #201C70;
+  --color-foreground: #201c70;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar but keep functionality */
+html,
+body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+  width: 0;
+  height: 0;
 }
