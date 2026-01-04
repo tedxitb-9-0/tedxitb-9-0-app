@@ -134,7 +134,7 @@ export default function ColorfulBackground({ children, className = "" }: Colorfu
         transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.3 }}
       >
         <motion.div
-          animate={{ x: [0, -10, 0], y: [0, -10, 0] }}
+          animate={{ x: [0, 10, 0], y: [0, 10, 0] }}
           transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" as const }}
         >
           <Image src="/colorfulbg/bottomright.png" alt="" width={200} height={200} className="w-full h-auto" draggable={false} />
