@@ -1,5 +1,6 @@
 import type React from "react"
-import { motion } from "motion/react"
+import { useRef } from "react"
+import { motion, useScroll, useTransform } from "motion/react"
 import Image from "next/image";
 
 
@@ -16,7 +17,7 @@ const leftAssetMap: Record<string, string> = {
 }
 
 const rightAssetMap: Record<string, string> = {
-  red: "/plainbg/right.svg",
+  red: "/plainbg/rightred.svg",
   pink: "/plainbg/rightpink.svg",
   blue: "/plainbg/rightblue.svg",
 }
@@ -27,12 +28,23 @@ interface BackgroundProps {
 }
 
 const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
+  const containerRef = useRef<HTMLElement>(null)
   const bgClass = colorMap[color] ?? "bg-red"
   const leftAsset = leftAssetMap[color] ?? ""
   const rightAsset = rightAssetMap[color] ?? ""
 
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  })
+
+  // Parallax transforms - both assets scroll up (out to top)
+  const leftAssetY = useTransform(scrollYProgress, [0, 1], [0, -300])
+  const rightAssetY = useTransform(scrollYProgress, [0, 1], [0, -300])
+
   return (
     <section
+        ref={containerRef}
         className={`h-screen w-full overflow-hidden flex ${bgClass} flex-col items-center justify-center gap-4 bg-cover bg-center bg-no-repeat relative select-none`} 
     >
      {/* Top Left - floats diagonally from corner */}
@@ -106,31 +118,38 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
       </motion.div>
 
 
-      {/* Left Asset */}
+      {/* Left Asset - enters from top, parallax scrolls up */}
       <motion.div
-        className="hidden md:block absolute top-[50%] left-40 w-64 md:w-2xl z-0"
-        initial={{ opacity: 0, x: -50, y: -50 }}
-        animate={{ opacity: 1, x: 0, y: 0 }}
+        className="hidden lg:block absolute -top-[25%] left-0 w-xl lg:w-2xl xl:w-2xl z-0"
+        initial={{ opacity: 0, y: -100 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" as const }}
+        style={{ y: leftAssetY }}
       >
-        <Image src={leftAsset}  alt="" width={200} height={200} className="w-full h-auto" draggable={false} />
+        <Image src={leftAsset}  alt="" width={500} height={500} className="w-full h-auto" draggable={false} />
       </motion.div>
 
-      {/* Right Asset */}
+      {/* Right Asset - enters from top, parallax scrolls up */}
       <motion.div
-        className="hidden md:block absolute top-[50%] right-40 w-48 md:w-2xl z-0"
-        initial={{ opacity: 0, x: 50, y: -50 }}
-        animate={{ opacity: 1, x: 0, y: 0 }}
+        className="absolute lg:-top-[50%] right-8 w-2xl  xl:w-4xl z-0"
+        initial={{ opacity: 0, y: -100 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.1 }}
+        style={{ y: rightAssetY }}
       >
-        <Image src={rightAsset} alt="" width={200} height={200} className="w-full h-auto" draggable={false} />
+        <Image src={rightAsset} alt="" width={500} height={500} className="w-full h-full" draggable={false} />
       </motion.div>
 
 
-      {/* White fade at bottom */}
-      <div className="absolute bottom-0 left-0 w-full pointer-events-none z-20">
+      {/* White fade at bottom - animates up on first show */}
+      <motion.div 
+        className="absolute bottom-0 left-0 w-full pointer-events-none z-20"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" as const, delay: 0.2 }}
+      >
         <Image src="/plainbg/cloud.png" alt="" width={400} height={400} className="w-full h-auto" draggable={false} />
-      </div>
+      </motion.div>
 
 
  

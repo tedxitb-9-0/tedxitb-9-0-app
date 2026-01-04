@@ -27,7 +27,7 @@ const itemVariants = {
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col  items-center justify-center ">
-      <PlainBackground color="blue">
+      <PlainBackground color="red">
 
 
       </PlainBackground>  
