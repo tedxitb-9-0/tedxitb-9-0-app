@@ -8,7 +8,7 @@ import TEDxITBBadge from "~/components/TEDxITBBadge";
 export default function Home() {
   return (
     <main className="flex flex-col items-center">
-      <h1 className="hidden sr-only">TEDxITB 9.0</h1>
+      <h1 className="hidden sr-only">TEDxITB 9.0 - Happiness Through Colors</h1>
       
       {/* Hero Section */}
       <section className="h-screen w-full flex flex-col items-center justify-center relative">
@@ -65,30 +65,30 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-        <div className="flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-20 w-full max-w-7xl px-4">
+        <div className="flex flex-col lg:flex-row gap-4 md:gap-8 lg:gap-20 w-full max-w-7xl px-4">
           {/* Main Event Card */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="rounded-xl p-6 shadow-2xl"
+            className="rounded-xl p-4 md:p-6 shadow-2xl"
             style={{ background: 'linear-gradient(to bottom right, #E12D2D, #FA5151)' }}
           >
-            <div className="flex items-center gap-3 mb-4 justify-between">
+            <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4 justify-between">
               <div>
                 <Image
                   src="/senyummainevent.svg"
                   alt="Main Event"
                   width={40}
                   height={40}
-                  className="w-12 h-12"
+                  className="w-8 h-8 md:w-12 md:h-12"
                   draggable={false}
                 />
               </div>
-              <h2 className="text-4xl font-titan text-white">Main Event</h2>
+              <h2 className="text-2xl md:text-4xl font-titan text-white">Main Event</h2>
             </div>
-            <p className="text-white text-justify  text-sm mb-6 leading-relaxed">
+            <p className="text-white text-justify text-xs md:text-sm mb-4 md:mb-6 leading-relaxed">
               TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology
             </p>
             <div className="flex justify-end">
@@ -107,23 +107,23 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="rounded-xl p-6 shadow-2xl"
+            className="rounded-xl p-4 md:p-6 shadow-2xl"
             style={{ background: 'linear-gradient(to bottom right, #FF6A15, #FF975C)' }}
           >
-            <div className="flex items-center gap-3 justify-between mb-4">
+            <div className="flex items-center gap-2 md:gap-3 justify-between mb-3 md:mb-4">
               <div>
                 <Image
                   src="/aboutsenyum.svg"
                   alt="Main Event"
                   width={40}
                   height={40}
-                  className="w-12 h-12"
+                  className="w-8 h-8 md:w-12 md:h-12"
                   draggable={false}
                 />
               </div>
-              <h2 className="text-4xl font-titan text-white">About</h2>
+              <h2 className="text-2xl md:text-4xl font-titan text-white">About</h2>
             </div>
-            <p className="text-white text-justify  text-sm mb-6 leading-relaxed">
+            <p className="text-white text-justify text-xs md:text-sm mb-4 md:mb-6 leading-relaxed">
               TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology
             </p>
             <div className="flex justify-end">
@@ -142,23 +142,23 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
             viewport={{ once: true }}
-            className="rounded-xl p-6 shadow-2xl"
+            className="rounded-xl p-4 md:p-6 shadow-2xl"
             style={{ background: '#FFB820' }}
           >
-            <div className="flex items-center gap-3 mb-4 justify-between">
+            <div className="flex items-center gap-2 md:gap-3 mb-3 md:mb-4 justify-between">
               <div>
                 <Image
                   src="/senyumpreevent.svg"
                   alt="Pre Event"
                   width={40}
                   height={40}
-                  className="w-12 h-12"
+                  className="w-8 h-8 md:w-12 md:h-12"
                   draggable={false}
                 />
               </div>
-              <h2 className="text-4xl font-titan text-white">Pre Event</h2>
+              <h2 className="text-2xl md:text-4xl font-titan text-white">Pre Event</h2>
             </div>
-            <p className="text-white text-justify text-sm mb-6 leading-relaxed">
+            <p className="text-white text-justify text-xs md:text-sm mb-4 md:mb-6 leading-relaxed">
               TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology
             </p>
             <div className="flex justify-end">
