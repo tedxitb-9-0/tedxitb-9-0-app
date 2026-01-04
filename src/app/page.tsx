@@ -9,7 +9,7 @@ export default function Home() {
     <main className="flex flex-col items-center">
       <h1 className="hidden sr-only">TEDxITB 9.0</h1>
       
-      {/* Hero Section - 200vh */}
+      {/* Hero Section */}
       <section className="h-screen w-full flex flex-col items-center justify-center relative">
         <ColorfulBackground>
           <motion.div
@@ -58,10 +58,13 @@ export default function Home() {
         </ColorfulBackground>
       </section>
 
-      {/* Explore Section - 70vh */}
-      <section className="h-[70vh] w-full flex flex-col items-center justify-center bg-gradient-to-b from-white to-gray-50 px-4">
+      {/* Explore Section */}
+      <section 
+        className="min-h-screen md:h-screen w-full flex flex-col items-center justify-center py-12 md:py-0 px-4 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/exploreTEDxITBeffectsIZIN.png')" }}
+      >
         <motion.div
-          className="z-10 w-[80%] max-w-8xl mb-8"
+          className="z-10 w-full md:w-[90%] max-w-[8xl] md:max-w-6xl mb-8 md:mb-12"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.3 }}
@@ -73,8 +76,8 @@ export default function Home() {
             <Image
               src="/exploreTEDxITB.svg"
               alt="TEDxITB 9.0 - Happiness Through Colors"
-              width={800}
-              height={400}
+              width={1000}
+              height={600}
               className="w-full h-auto"
               draggable={false}
               priority
@@ -82,7 +85,7 @@ export default function Home() {
           </motion.div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-20 w-full max-w-7xl px-4">
+        <div className="flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-20 w-full max-w-7xl px-4">
           {/* Main Event Card */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
