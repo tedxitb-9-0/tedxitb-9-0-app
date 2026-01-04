@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "motion/react";
 import ColorfulBackground from "~/components/ColorfulBackground";
+import TEDxITBBadge from "~/components/TEDxITBBadge";
 
 export default function Home() {
   return (
@@ -12,28 +13,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="h-screen w-full flex flex-col items-center justify-center relative">
         <ColorfulBackground>
-          <motion.div
-            className="z-20 mb-6 flex-row flex"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
-            <motion.div
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-              className="px-8  bg-white rounded-full flex items-center justify-center flex-row shadow-[0_0_40px_rgba(147,51,234,0.6),0_10px_25px_rgba(0,0,0,0.15),inset_0_2px_10px_rgba(147,51,234,0.2)]"
-            >
-              <Image
-                src="/TEDxITB.svg"
-                alt="TEDxITB Presents"
-                width={256}
-                height={64}
-                className="h-8 md:h-10 w-auto"
-                draggable={false}
-                priority
-              />
-            </motion.div>
-          </motion.div>
+          <TEDxITBBadge />
           <motion.div
             className="z-10 w-[80%] max-w-4xl"
             initial={{ opacity: 0 }}
@@ -64,26 +44,26 @@ export default function Home() {
         style={{ backgroundImage: "url('/exploreTEDxITBeffectsIZIN.png')" }}
       >
         <motion.div
-          className="z-10 w-full md:w-[90%] max-w-[8xl] md:max-w-6xl mb-8 md:mb-12"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-        >
-          <motion.div
-            animate={{ y: [0, -15, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="z-10 w-[120%] md:w-[90%] max-w-[8xl] mb-5 md:max-w-[8xl] mt-20 md:mt-40"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <Image
-              src="/exploreTEDxITB.svg"
-              alt="TEDxITB 9.0 - Happiness Through Colors"
-              width={1000}
-              height={600}
-              className="w-full h-auto"
-              draggable={false}
-              priority
-            />
+            <motion.div
+              animate={{ y: [0, -15, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Image
+                src="/exploretedx.png"
+                alt="TEDxITB 9.0 - Happiness Through Colors"
+                width={1000}
+                height={600}
+                className="w-full h-auto scale-125 md:scale-100"
+                draggable={false}
+                priority
+              />
+            </motion.div>
           </motion.div>
-        </motion.div>
 
         <div className="flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-20 w-full max-w-7xl px-4">
           {/* Main Event Card */}
@@ -191,6 +171,113 @@ export default function Home() {
             </div>
           </motion.div>
         </div>
+      </section>
+
+      {/* Exclusively Section */}
+      <section className="min-h-screen md:h-screen w-full flex flex-col items-center justify-center relative overflow-hidden py-12 md:py-0 md:pb-[-20]">
+        <ColorfulBackground>
+          {/* Cloud Border Frame */}
+          <div className="absolute top-0 left-0 w-full h-auto z-20 pointer-events-none">
+            <Image
+              src="/cloud.png"
+              alt=""
+              width={2000}
+              height={100}
+              className="w-full h-auto"
+              draggable={false}
+            />
+          </div>
+
+          <motion.div
+            className="z-10 w-[105%] md:w-[90%] max-w-[8xl] md:max-w-[8xl] mt-20 md:mt-40"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            <motion.div
+              animate={{ y: [0, -15, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Image
+                src="/exclusively.png"
+                alt="TEDxITB 9.0 - Happiness Through Colors"
+                width={1000}
+                height={600}
+                className="w-full h-auto scale-125 md:scale-100"
+                draggable={false}
+                priority
+              />
+            </motion.div>
+          </motion.div>
+
+          <div className="flex flex-row gap-3 md:gap-40 z-10 px-4 w-full max-w-[320px] md:max-w-4xl mb-8 md:mb-32">
+            {/* Magazine Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="rounded-2xl py-4 px-3 md:py-10 md:px-12 shadow-lg flex flex-col items-center text-center w-1/2 md:w-auto md:flex-1"
+              style={{ background: 'linear-gradient(to bottom right, #FF3A8C, #FF75AE)' }}
+            >
+              <div className="bg-white rounded-xl p-2 md:py-8 md:px-10 mb-2 md:mb-4 w-full aspect-square flex items-center justify-center relative">
+                <div className="absolute top-1 right-1 md:top-3 md:right-3">
+                  <Image
+                    src="/smilesmall.svg"
+                    alt="Magazine"
+                    width={120}
+                    height={120}
+                    className="w-5 md:w-10 h-auto object-contain"
+                    draggable={false}
+                  />
+                </div>
+                <Image
+                  src="/magazine.svg"
+                  alt="Magazine"
+                  width={120}
+                  height={120}
+                  className="w-16 md:w-40 h-auto object-contain"
+                  draggable={false}
+                />
+              </div>
+              <h3 className="text-base md:text-4xl font-titan mt-2 md:mt-5 text-white mb-1 md:mb-2">Magazine</h3>
+              <p className="text-white text-[7px] md:text-sm leading-tight">Check out TEDxITB 9.0's magazine!</p>
+            </motion.div>
+
+            {/* Merchandise Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="rounded-2xl py-4 px-3 md:py-10 md:px-12 shadow-lg flex flex-col items-center text-center w-1/2 md:w-auto md:flex-1"
+              style={{ background: 'linear-gradient(to bottom right, #443BF4, #635BF7)' }}
+            >
+              <div className="bg-white rounded-xl p-2 md:py-8 md:px-10 mb-2 md:mb-4 w-full aspect-square flex items-center justify-center relative">
+                <div className="absolute top-1 right-1 md:top-3 md:right-3">
+                  <Image
+                    src="/smilemerchandise.svg"
+                    alt="Merchandise"
+                    width={120}
+                    height={120}
+                    className="w-5 md:w-10 h-auto object-contain"
+                    draggable={false}
+                  />
+                </div>
+                <Image
+                  src="/merchandise.svg"
+                  alt="Merchandise"
+                  width={120}
+                  height={120}
+                  className="w-16 md:w-40 h-auto object-contain"
+                  draggable={false}
+                />
+              </div>
+              <h3 className="text-base md:text-4xl font-titan mt-2 md:mt-5 text-white mb-1 md:mb-2">Merchandise</h3>
+              <p className="text-white text-[7px] md:text-sm leading-tight">Check out TEDxITB 9.0's Merchandise!</p>
+            </motion.div>
+          </div>
+        </ColorfulBackground>
       </section>
     </main>
   );
