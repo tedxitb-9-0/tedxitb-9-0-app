@@ -146,6 +146,22 @@ export default function ColorfulBackground({ children, className = "" }: Colorfu
         <Image src="/colorfulbg/whitefade.png" alt="" width={400} height={400} className="w-full h-auto" draggable={false} />
       </div>
 
+      {/* Floating smiley characters - center */}
+      <motion.div
+        className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.3 }}
+      >
+        <motion.div
+          animate={{ y: [0, -15, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="w-[80%] max-w-4xl"
+        >
+          <Image src="/senyum-senyum-lucu.png" alt="" width={800} height={400} className="w-full h-auto" draggable={false} />
+        </motion.div>
+      </motion.div>
+
       {children}
     </section>
   );
