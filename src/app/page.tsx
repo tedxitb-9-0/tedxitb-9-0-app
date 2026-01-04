@@ -81,6 +81,113 @@ export default function Home() {
             />
           </motion.div>
         </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-20 w-full max-w-7xl px-4">
+          {/* Main Event Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="rounded-xl p-6 shadow-2xl"
+            style={{ background: 'linear-gradient(to bottom right, #E12D2D, #FA5151)' }}
+          >
+            <div className="flex items-center gap-3 mb-4 justify-between">
+              <div>
+                <Image
+                  src="/senyummainevent.svg"
+                  alt="Main Event"
+                  width={40}
+                  height={40}
+                  className="w-12 h-12"
+                  draggable={false}
+                />
+              </div>
+              <h2 className="text-4xl font-titan text-white">Main Event</h2>
+            </div>
+            <p className="text-white text-justify  text-sm mb-6 leading-relaxed">
+              TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology
+            </p>
+            <div className="flex justify-end">
+              <button className="bg-white text-red-600 font-semibold text-sm px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
+                Learn more
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </button>
+            </div>
+          </motion.div>
+
+          {/* About Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="rounded-xl p-6 shadow-2xl"
+            style={{ background: 'linear-gradient(to bottom right, #FF6A15, #FF975C)' }}
+          >
+            <div className="flex items-center gap-3 justify-between mb-4">
+              <div>
+                <Image
+                  src="/aboutsenyum.svg"
+                  alt="Main Event"
+                  width={40}
+                  height={40}
+                  className="w-12 h-12"
+                  draggable={false}
+                />
+              </div>
+              <h2 className="text-4xl font-titan text-white">About</h2>
+            </div>
+            <p className="text-white text-justify  text-sm mb-6 leading-relaxed">
+              TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology
+            </p>
+            <div className="flex justify-end">
+              <button className="bg-white text-orange-600 font-semibold text-sm px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
+                Learn more
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Pre Event Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            viewport={{ once: true }}
+            className="rounded-xl p-6 shadow-2xl"
+            style={{ background: '#FFB820' }}
+          >
+            <div className="flex items-center gap-3 mb-4 justify-between">
+              <div>
+                <Image
+                  src="/senyumpreevent.svg"
+                  alt="Pre Event"
+                  width={40}
+                  height={40}
+                  className="w-12 h-12"
+                  draggable={false}
+                />
+              </div>
+              <h2 className="text-4xl font-titan text-white">Pre Event</h2>
+            </div>
+            <p className="text-white text-justify text-sm mb-6 leading-relaxed">
+              TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology
+            </p>
+            <div className="flex justify-end">
+              <button className="bg-white text-yellow-600 font-semibold text-sm px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
+                Learn more
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </button>
+            </div>
+          </motion.div>
+        </div>
       </section>
     </main>
   );
