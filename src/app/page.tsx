@@ -16,7 +16,7 @@ export default function Home() {
         <ColorfulBackground>
           <TEDxITBBadge />
           <motion.div
-            className="z-10 w-[80%] max-w-4xl"
+            className="z-30 w-[80%] max-w-4xl"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.3 }}
@@ -26,7 +26,7 @@ export default function Home() {
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             >
               <Image
-                src="/hero-section.svg"
+                src="/hero-section.webp"
                 alt="TEDxITB 9.0 - Happiness Through Colors"
                 width={800}
                 height={400}
@@ -45,7 +45,7 @@ export default function Home() {
         style={{ backgroundImage: "url('/exploreTEDxITBeffectsIZIN.png')" }}
       >
         <motion.div
-            className="z-10 w-full md:w-[90%] max-w-[8xl] mb-5 md:max-w-[8xl] mt-20 md:mt-40"
+            className="z-20 m:w-[90%] max-w-[8xl] mb-5 md:max-w-[6xl] mt-20 md:mt-40"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -56,10 +56,10 @@ export default function Home() {
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             >
               <Image
-                src="/exploretedx.png"
+                src="/exploretedx.webp"
                 alt="TEDxITB 9.0 - Happiness Through Colors"
                 width={1000}
-                height={600}
+                height={1000}
                 className="w-full h-auto"
                 draggable={false}
                 priority
@@ -197,7 +197,7 @@ export default function Home() {
           </div>
 
           <motion.div
-            className="z-10 w-xl md:w-[90%] max-w-[8xl] md:max-w-[8xl] mt-20 md:mt-40"
+            className="z-20 w-xl md:w-[90%] max-w-[8xl] md:max-w-[8xl] mt-20 md:mt-40"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -209,7 +209,7 @@ export default function Home() {
               className="w-full"
             >
               <Image
-                src="/exclusively.png"
+                src="/exclusively.webp"
                 alt="TEDxITB 9.0 - Happiness Through Colors"
                 width={1000}
                 height={600}
@@ -220,7 +220,7 @@ export default function Home() {
             </motion.div>
           </motion.div>
 
-          <div className="flex flex-row gap-3 md:gap-40 z-10 px-4 w-full max-w-[320px] md:max-w-4xl mb-8 md:mb-32">
+          <div className="flex flex-row gap-3 md:gap-40 z-20 px-4 w-full max-w-[320px] md:max-w-4xl mb-8 md:mb-32">
             {/* Magazine Card */}
             <Link href="/magazine" className="w-1/2 md:w-auto md:flex-1">
               <motion.div

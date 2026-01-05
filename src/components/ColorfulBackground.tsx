@@ -19,6 +19,8 @@ export default function ColorfulBackground({ children, className = "" }: Colorfu
   });
 
   // Parallax transforms - assets exit when scrolling down
+  const leftSmileX = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const rightSmileX = useTransform(scrollYProgress, [0, 1], [0, -200]);
   const leftAssetY = useTransform(scrollYProgress, [0, 1], [0, -300]);
   const leftAssetX = useTransform(scrollYProgress, [0, 1], [0, -200]);
   const rightAssetY = useTransform(scrollYProgress, [0, 1], [0, 300]);
@@ -30,6 +32,32 @@ export default function ColorfulBackground({ children, className = "" }: Colorfu
       className={`h-screen w-full overflow-hidden flex flex-col items-center justify-center gap-4 bg-cover bg-center bg-no-repeat relative select-none ${className}`}
       style={{ backgroundImage: "url('/colorfulbg/colorfulbg.png')" }}
     >
+      {/* Left Smiles */}
+      <motion.div
+        className="absolute top-[10%] left-[5%] w-40 md:w-sm z-20"
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" as const }}
+        style={{ x: leftSmileX }}
+      >
+        <Image src="/colorfulbg/leftsmile.png" alt="" width={400} height={400} className="w-full h-auto" draggable={false} />
+      </motion.div>
+
+      {/* Right Smiles */}
+      <motion.div
+        className="absolute bottom-0 md:top-[10%] right-[5%] w-48 md:w-lg z-20"
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" as const }}
+        style={{ x: rightSmileX }}
+      >
+        <Image src="/colorfulbg/rightsmile.png" alt="" width={400} height={400} className="w-full h-auto" draggable={false} />
+      </motion.div>
+
+
+
+
+
       {/* Left Asset - parallax scroll, below corner elements */}
       <motion.div
         className="absolute top-32 left-0 w-lg md:w-2xl z-0"
