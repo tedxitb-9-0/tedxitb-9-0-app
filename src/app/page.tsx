@@ -45,10 +45,11 @@ export default function Home() {
         style={{ backgroundImage: "url('/exploreTEDxITBeffectsIZIN.png')" }}
       >
         <motion.div
-            className="z-10 w-[120%] md:w-[90%] max-w-[8xl] mb-5 md:max-w-[8xl] mt-20 md:mt-40"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            className="z-10 w-full md:w-[90%] max-w-[8xl] mb-5 md:max-w-[8xl] mt-20 md:mt-40"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <motion.div
               animate={{ y: [0, -15, 0] }}
@@ -59,7 +60,7 @@ export default function Home() {
                 alt="TEDxITB 9.0 - Happiness Through Colors"
                 width={1000}
                 height={600}
-                className="w-full h-auto scale-125 md:scale-100"
+                className="w-full h-auto"
                 draggable={false}
                 priority
               />
@@ -196,21 +197,23 @@ export default function Home() {
           </div>
 
           <motion.div
-            className="z-10 w-[105%] md:w-[90%] max-w-[8xl] md:max-w-[8xl] mt-20 md:mt-40"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
+            className="z-10 w-xl md:w-[90%] max-w-[8xl] md:max-w-[8xl] mt-20 md:mt-40"
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <motion.div
               animate={{ y: [0, -15, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="w-full"
             >
               <Image
                 src="/exclusively.png"
                 alt="TEDxITB 9.0 - Happiness Through Colors"
                 width={1000}
                 height={600}
-                className="w-full h-auto scale-125 md:scale-100"
+                className="w-full h-auto"
                 draggable={false}
                 priority
               />

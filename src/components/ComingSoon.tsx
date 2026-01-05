@@ -4,6 +4,7 @@ import ColorfulBackground from "./ColorfulBackground"
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "motion/react";
+import TEDxITBBadge from "./TEDxITBBadge";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -37,7 +38,9 @@ const ComingSoon = () => {
         initial="hidden"
         animate="visible"
       >
-        {/* Coming Soon Image - center floating */}
+      <TEDxITBBadge />
+ 
+      {/* Coming Soon Image - center floating */}
         <motion.div
           animate={{ y: [0, -15, 0] }}
           transition={{ 
