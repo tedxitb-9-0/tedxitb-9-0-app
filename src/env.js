@@ -16,6 +16,8 @@ export const env = createEnv({
     BETTER_AUTH_GOOGLE_CLIENT_ID: z.string(),
     BETTER_AUTH_GOOGLE_CLIENT_SECRET: z.string(),
     DATABASE_URL: z.string().url(),
+    MIDTRANS_SERVER_KEY: z.string(),
+    MIDTRANS_IS_PRODUCTION: z.enum(["true", "false"]).default("false"),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -27,7 +29,8 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_MIDTRANS_CLIENT_KEY: z.string(),
+    NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION: z.enum(["true", "false"]).default("false"),
   },
 
   /**
@@ -43,7 +46,13 @@ export const env = createEnv({
     BETTER_AUTH_GOOGLE_CLIENT_SECRET:
       process.env.BETTER_AUTH_GOOGLE_CLIENT_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
+    MIDTRANS_SERVER_KEY: process.env.MIDTRANS_SERVER_KEY,
+    MIDTRANS_IS_PRODUCTION: process.env.MIDTRANS_IS_PRODUCTION,
     NODE_ENV: process.env.NODE_ENV,
+    NEXT_PUBLIC_MIDTRANS_CLIENT_KEY:
+      process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY,
+    NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION:
+      process.env.NEXT_PUBLIC_MIDTRANS_IS_PRODUCTION,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
