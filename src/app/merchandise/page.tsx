@@ -2,18 +2,16 @@
 
 import { motion } from "motion/react";
 import { Titan_One } from "next/font/google";
-import PlainBackground from "~/components/PlainBackground"; // Menggunakan komponen yang sama dengan Magazine
+import PlainBackground from "~/components/PlainBackground"; 
 import Image from "next/image";
 import { merchBundles, merchCollection, MerchItem } from "./data";
 
-// --- 1. SETUP FONT TITAN ONE ---
 const titanOne = Titan_One({
   weight: "400",
   subsets: ["latin"],
   display: "swap",
 });
 
-// --- 2. VARIAN ANIMASI (Sama Persis dengan Magazine) ---
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -72,7 +70,6 @@ export default function MerchandisePage() {
             variants={containerVariants}
         >
 
-            {/* JUDUL MERCHANDISE (Posisi Kanan) */}
             <div className="flex justify-end items-center relative z-10 w-full">
                 <motion.h1 
                     variants={itemVariants}
@@ -85,11 +82,9 @@ export default function MerchandisePage() {
         </motion.div>
       </PlainBackground>
 
-      {/* --- CONTENT SECTION (White Background) --- */}
       <section className="w-full py-16 md:py-24 bg-white relative overflow-hidden">
         <div className="container mx-auto px-4 md:px-6 lg:px-12 relative z-10">
             
-            {/* 1. BUNDLES SECTION */}
             <motion.div
                 className="flex flex-col space-y-12 mb-24"
                 initial="hidden"
@@ -97,15 +92,14 @@ export default function MerchandisePage() {
                 viewport={{ once: true, margin: "-100px" }}
                 variants={containerVariants}
             >
-                {/* Judul Section */}
                 <motion.div variants={itemVariants} className="flex justify-center">
                      <h2 
                         className={`${titanOne.className} text-4xl sm:text-5xl md:text-6xl text-center uppercase tracking-wide`}
                         style={{
-                            backgroundImage: "linear-gradient(180deg, #FF6B6B 0%, #FFC048 100%)", // Gradient Pink-Kuning
+                            backgroundImage: "linear-gradient(180deg, #FF6B6B 0%, #FFC048 100%)",
                             WebkitBackgroundClip: "text",
                             WebkitTextFillColor: "transparent",
-                            WebkitTextStroke: "3px white", // Stroke Putih Tebal
+                            WebkitTextStroke: "3px white",
                             paintOrder: "stroke fill",
                             filter: "drop-shadow(0px 4px 4px rgba(0,0,0,0.15))",
                             lineHeight: "1.2"
@@ -115,14 +109,11 @@ export default function MerchandisePage() {
                     </h2>
                 </motion.div>
 
-                {/* Grid Bundles */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
                     {merchBundles.map(renderMerchCard)}
                 </div>
             </motion.div>
 
-
-            {/* 2. COLLECTION SECTION */}
             <motion.div
                 className="flex flex-col space-y-12"
                 initial="hidden"
@@ -130,7 +121,6 @@ export default function MerchandisePage() {
                 viewport={{ once: true, margin: "-100px" }}
                 variants={containerVariants}
             >
-                {/* Judul Section */}
                 <motion.div variants={itemVariants} className="flex justify-center">
                      <h2 
                         className={`${titanOne.className} text-4xl sm:text-5xl md:text-6xl text-center uppercase tracking-wide`}
@@ -148,7 +138,6 @@ export default function MerchandisePage() {
                     </h2>
                 </motion.div>
 
-                {/* Grid Collection */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
                     {merchCollection.map(renderMerchCard)}
                 </div>
