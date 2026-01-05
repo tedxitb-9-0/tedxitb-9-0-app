@@ -80,7 +80,7 @@ export default function MagazinePage() {
             {/* Hero Section*/}
             <PlainBackground color="pink">
                 <motion.div
-                    className="container mx-auto px-4 md:px-6 lg:px-12 z-20 relative pt-16 md:pt-12 pb-12 md:pb-16"
+                    className="container mx-auto px-4 md:px-6 lg:px-12 z-30 relative pt-20 md:pt-12 pb-12 md:pb-16"
                     initial="hidden"
                     animate="visible"
                     variants={containerVariants}
@@ -126,7 +126,7 @@ export default function MagazinePage() {
                             {latestMagazine.description}
                         </p>
                         {/* View Flipbook Button*/}
-                        <div className="flex justify-center md:justify-start">
+                        <div className="flex justify-center md:justify-start z-50">
                             <motion.button
                             className="px-6 py-2 bg-blue text-white rounded-md shadow-lg hover:opacity-90 transition-opacity text-sm sm:text-base"
                             whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
