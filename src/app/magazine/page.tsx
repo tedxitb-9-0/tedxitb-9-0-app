@@ -145,7 +145,7 @@ export default function MagazinePage() {
             </PlainBackground>
 
             {/* Magazine List Section */}
-            <section className="w-full py-12 md:py-16 lg:py-24 bg-white relative overflow-hidden">
+            <section className="w-full py-12 md:py-16 lg:py-24 bg-[url('/pattern-bg.svg')] bg-repeat relative overflow-hidden">
                 <div className="container mx-auto px-4 md:px-6 lg:px-12 relative z-10">
                     {/* Section Title */}
                     <motion.div
