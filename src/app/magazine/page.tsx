@@ -2,9 +2,9 @@
 
 import { motion } from "motion/react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import PlainBackground from "~/components/PlainBackground";
 import { magazines, getLatestMagazine } from "./data";
+import Image from "next/image";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -29,7 +29,6 @@ const itemVariants = {
 const latestMagazine = getLatestMagazine();
 
 export default function MagazinePage() {
-    const router = useRouter();
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
     // Quick preview in modal (click on cover/title/description)
@@ -88,12 +87,14 @@ export default function MagazinePage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl mx-auto">
                         <motion.div variants={itemVariants} className="flex justify-center order-1">
                         <div 
-                            className="w-full max-w-[280px] sm:max-w-xs md:max-w-sm rounded-lg shadow-[0_20px_60px_-15px_rgba(0,0,0,0.4)] hover:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.5)] overflow-hidden cursor-pointer hover:scale-105 transition-all duration-300"
+                            className="w-full max-w-70 sm:max-w-xs md:max-w-sm rounded-lg shadow-[0_20px_60px_-15px_rgba(0,0,0,0.4)] hover:shadow-[0_25px_70px_-15px_rgba(0,0,0,0.5)] overflow-hidden cursor-pointer hover:scale-105 transition-all duration-300"
                             onClick={() => handleQuickPreview(latestMagazine.flipbookUrl)}
                         >
-                            <img 
+                        <Image 
                             src={latestMagazine.coverImage} 
                             alt={latestMagazine.title}
+                            width={400}
+                            height={600}
                             className="w-full h-auto object-contain"
                             />
                         </div>
@@ -105,9 +106,11 @@ export default function MagazinePage() {
                             className="cursor-pointer hover:opacity-80 transition-opacity flex justify-center md:justify-start"
                             onClick={() => handleQuickPreview(latestMagazine.flipbookUrl)}
                         >
-                            <img 
+                            <Image 
                             src="/magazine/magazine.png" 
                             alt="Magazine"
+                            width={500}
+                            height={200}
                             className="w-full max-w-62.5 sm:max-w-sm md:max-w-md drop-shadow-lg"
                             />
                         </div>
@@ -152,9 +155,11 @@ export default function MagazinePage() {
                         viewport={{ once: true }}
                         transition={{ duration: 0.6 }}
                     >
-                        <img 
+                        <Image 
                         src="/magazine/our_magazines.png" 
                         alt="Our Magazines"
+                        width={600}
+                        height={200}
                         className="w-full max-w-xs md:max-w-xl px-4"
                         />
                     </motion.div>
@@ -174,12 +179,14 @@ export default function MagazinePage() {
                         >
                             {/* Magazine Cover*/}
                             <div
-                            className="w-full max-w-[200px] sm:max-w-[240px] md:w-64 rounded-lg shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] hover:shadow-[0_15px_50px_-10px_rgba(0,0,0,0.4)] overflow-hidden flex-shrink-0 cursor-pointer hover:scale-105 transition-all duration-300"
+                            className="w-full max-w-50 sm:max-w-60 md:w-64 rounded-lg shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] hover:shadow-[0_15px_50px_-10px_rgba(0,0,0,0.4)] overflow-hidden flex-shrink-0 cursor-pointer hover:scale-105 transition-all duration-300"
                             onClick={() => handleQuickPreview(magazine.flipbookUrl)}
                             >
-                            <img 
+                            <Image 
                                 src={magazine.coverImage} 
                                 alt={magazine.title}
+                                width={300}
+                                height={450}
                                 className="w-full h-auto object-contain"
                             />
                             </div>

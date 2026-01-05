@@ -1,7 +1,7 @@
 import "~/styles/globals.css";
 
 import { type Metadata } from "next";
-import { Geist, Roboto_Slab, Titan_One } from "next/font/google";
+import { Roboto_Slab, Titan_One } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 
 import { TRPCReactProvider } from "~/trpc/react";

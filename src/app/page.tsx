@@ -252,7 +252,7 @@ export default function Home() {
                 />
               </div>
               <h3 className="text-base md:text-4xl font-titan mt-2 md:mt-5 text-white mb-1 md:mb-2">Magazine</h3>
-              <p className="text-white text-[7px] md:text-sm leading-tight">Check out TEDxITB 9.0's magazine!</p>
+              <p className="text-white text-[7px] md:text-sm leading-tight">Check out TEDxITB {`9.0's`} magazine!</p>
             </motion.div>
             </Link>
 
@@ -287,7 +287,7 @@ export default function Home() {
                 />
               </div>
               <h3 className="text-base md:text-4xl font-titan mt-2 md:mt-5 text-white mb-1 md:mb-2">Merchandise</h3>
-              <p className="text-white text-[7px] md:text-sm leading-tight">Check out TEDxITB 9.0's Merchandise!</p>
+              <p className="text-white text-[7px] md:text-sm leading-tight">Check out TEDxITB {`9.0's`} Merchandise!</p>
             </motion.div>
             </Link>
           </div>

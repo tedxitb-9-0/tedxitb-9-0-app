@@ -6,4 +6,4 @@ const MainEvent = () => {
   )
 }
 
-export default MainEvent
+export default MainEvent;

@@ -6,4 +6,4 @@ const PreEvent = () => {
   )
 }
 
-export default ComingSoon;
+export default PreEvent;
