@@ -52,7 +52,7 @@ const Navbar = () => {
   return (
     <>
       <motion.nav
-        className="fixed top-0 left-0 right-0 z-50 w-full h-16 flex justify-between items-center px-6 md:px-12 bg-white backdrop-blur-sm"
+        className="fixed top-0 left-0 right-0 z-50 w-full h-16 select-none flex justify-between items-center px-6 md:px-12 bg-white backdrop-blur-sm"
         variants={{
           visible: { y: 0 },
           hidden: { y: "-100%" },

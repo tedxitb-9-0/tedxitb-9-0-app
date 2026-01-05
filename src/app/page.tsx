@@ -58,8 +58,8 @@ export default function Home() {
               <Image
                 src="/exploretedx.webp"
                 alt="TEDxITB 9.0 - Happiness Through Colors"
-                width={1000}
-                height={1000}
+                width={806}
+                height={175}
                 className="w-full h-auto"
                 draggable={false}
                 priority
@@ -212,7 +212,7 @@ export default function Home() {
                 src="/exclusively.webp"
                 alt="TEDxITB 9.0 - Happiness Through Colors"
                 width={1000}
-                height={600}
+                height={150}
                 className="w-full h-auto"
                 draggable={false}
                 priority
