@@ -95,7 +95,7 @@ export default function Home() {
             </p>
             <div className="flex justify-end">
               <Link href="/main-event">
-                <button className="bg-white text-red-600 font-semibold text-sm px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
+                <button className="bg-white text-red-600 font-semibold text-sm px-6 hover:cursor-pointer py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
                   Learn more
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -132,7 +132,7 @@ export default function Home() {
             </p>
             <div className="flex justify-end">
               <Link href="/about">
-                <button className="bg-white text-orange-600 font-semibold text-sm px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
+                <button className="bg-white text-orange-600 font-semibold hover:cursor-pointer text-sm px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
                   Learn more
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -169,7 +169,7 @@ export default function Home() {
             </p>
             <div className="flex justify-end">
               <Link href="/pre-event">
-                <button className="bg-white text-yellow-600 font-semibold text-sm px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
+                <button className="bg-white text-yellow-600 font-semibold text-sm px-6 py-2 rounded-lg hover:cursor-pointer flex items-center gap-2 hover:bg-gray-100 transition-colors shadow-md">
                   Learn more
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -183,7 +183,7 @@ export default function Home() {
 
       {/* Exclusively Section */}
       <section className="min-h-screen md:h-screen w-full flex flex-col items-center justify-center relative overflow-hidden py-12 md:py-0 md:pb-[-20]">
-        <ColorfulBackground showSmiles ={false} >
+        <ColorfulBackground>
           {/* Cloud Border Frame */}
           <div className="absolute top-0 left-0 w-full h-auto z-20 pointer-events-none">
             <Image

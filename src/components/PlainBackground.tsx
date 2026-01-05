@@ -75,7 +75,7 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
           animate={{ x: [0, -10, 0], y: [0, -10, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" as const }}
         >
-          <Image src="/plainbg/topleft.png" alt="" width={200} height={200} className="w-full h-auto" draggable={false} />
+          <Image src="/plainbg/topleft.png" alt="Decorative corner element" width={200} height={200} className="w-full h-auto" draggable={false} />
         </motion.div>
       </motion.div>
 
@@ -90,7 +90,7 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
         <motion.div
           animate={{ x: [0, 10, 0], y: [0, 10, 0] }}
           transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" as const }}
-        > <Image src="/plainbg/topright.png" alt="" width={200} height={200} className="w-full h-auto" draggable={false} /> </motion.div> </motion.div> {/* Top Right - floats diagonally from corner */} <motion.div
+        > <Image src="/plainbg/topright.png" alt="Decorative corner element" width={200} height={200} className="w-full h-auto" draggable={false} /> </motion.div> </motion.div> {/* Top Right - floats diagonally from corner */} <motion.div
         className="absolute top-0 right-0 w-48 md:w-64 z-10"
         initial={{ opacity: 0, x: 50, y: -50 }}
         animate={{ opacity: 1, x: 0, y: 0 }}
@@ -100,7 +100,7 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
           animate={{ x: [0, 10, 0], y: [0, 10, 0] }}
           transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" as const }}
         >
-          <Image src="/plainbg/topright.png" alt="" width={200} height={200} className="w-full h-auto" draggable={false} />
+          <Image src="/plainbg/topright.png" alt="Decorative corner element" width={200} height={200} className="w-full h-auto" draggable={false} />
         </motion.div>
       </motion.div>
 
@@ -115,7 +115,7 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
           animate={{ x: [0, -10, 0], y: [0, 10, 0] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" as const }}
         >
-          <Image src="/plainbg/bottomleft.png" alt="" width={200} height={200} className="w-full h-auto" draggable={false} />
+          <Image src="/plainbg/bottomleft.png" alt="Decorative corner element" width={200} height={200} className="w-full h-auto" draggable={false} />
         </motion.div>
       </motion.div>
 
@@ -130,7 +130,7 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
           animate={{ x: [0, 10, 0], y: [0, 10, 0] }}
           transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" as const }}
         >
-          <Image src="/plainbg/bottomright.png" alt="" width={200} height={200} className="w-full h-auto" draggable={false} />
+          <Image src="/plainbg/bottomright.png" alt="Decorative corner element" width={200} height={200} className="w-full h-auto" draggable={false} />
         </motion.div>
       </motion.div>
 
@@ -143,7 +143,7 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
         transition={{ duration: 0.6, ease: "easeOut" as const }}
         style={{ y: leftAssetY }}
       >
-        <Image src={leftAsset}  alt="" width={500} height={500} className="w-full h-auto" draggable={false} />
+        <Image src={leftAsset}  alt="Decorative geometric pattern" width={500} height={500} className="w-full h-auto" draggable={false} />
       </motion.div>
 
       {/* Right Asset - enters from top, parallax scrolls up */}
@@ -154,7 +154,7 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
         transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.1 }}
         style={{ y: rightAssetY }}
       >
-        <Image src={rightAsset} alt="" width={500} height={500} className="w-full h-full" draggable={false} />
+        <Image src={rightAsset} alt="Decorative geometric pattern" width={500} height={500} className="w-full h-full" draggable={false} />
       </motion.div>
 
       {/* Left Smile */}
@@ -165,7 +165,7 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
         transition={{ duration: 0.6, ease: "easeOut" as const }}
         style={{ x: leftSmileX }}
       >
-        <Image src={leftSmile} alt="" width={400} height={400} className="w-full h-auto" draggable={false} />
+        <Image src={leftSmile} alt="Decorative smile pattern" width={400} height={400} className="w-full h-auto" draggable={false} />
       </motion.div>
 
       {/* Right Smile */}
@@ -176,7 +176,7 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
         transition={{ duration: 0.6, ease: "easeOut" as const }}
         style={{ x: rightSmileX }}
       >
-        <Image src={rightSmile} alt="" width={400} height={400} className="w-full h-auto" draggable={false} />
+        <Image src={rightSmile} alt="Decorative smile pattern" width={400} height={400} className="w-full h-auto" draggable={false} />
       </motion.div>
 
       {/* White fade at bottom - animates up on first show */}
@@ -186,7 +186,7 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" as const, delay: 0.2 }}
       >
-        <Image src="/plainbg/cloud.png" alt="" width={400} height={400} className="w-full h-auto" draggable={false} />
+        <Image src="/plainbg/cloud.png" alt="Decorative cloud border" width={400} height={400} className="w-full h-auto" draggable={false} />
       </motion.div>
 
 

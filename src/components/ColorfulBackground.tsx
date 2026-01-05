@@ -41,7 +41,7 @@ export default function ColorfulBackground({ children, className = "",  showSmil
         transition={{ duration: 0.6, ease: "easeOut" as const }}
         style={{ x: leftSmileX }}
       >
-        <Image src="/colorfulbg/leftsmile.png" alt="" width={400} height={400} className="w-full h-auto" draggable={false} />
+        <Image src="/colorfulbg/leftsmile.png" alt="Decorative smile pattern" width={400} height={400} className="w-full h-auto" draggable={false} />
       </motion.div>
 
       {/* Right Smiles */}
@@ -52,7 +52,7 @@ export default function ColorfulBackground({ children, className = "",  showSmil
         transition={{ duration: 0.6, ease: "easeOut" as const }}
         style={{ x: rightSmileX }}
       >
-        <Image src="/colorfulbg/rightsmile.png" alt="" width={400} height={400} className="w-full h-auto" draggable={false} />
+        <Image src="/colorfulbg/rightsmile.png" alt="Decorative smile pattern" width={400} height={400} className="w-full h-auto" draggable={false} />
       </motion.div>
 
       {/* Left Asset - parallax scroll, below corner elements */}
@@ -63,7 +63,7 @@ export default function ColorfulBackground({ children, className = "",  showSmil
         transition={{ duration: 0.6, ease: "easeOut" as const }}
         style={{ x: leftAssetX, y: leftAssetY }}
       >
-        <Image src="/colorfulbg/leftasset.png" alt="" width={400} height={400} className="w-full h-auto" draggable={false} />
+        <Image src="/colorfulbg/leftasset.png" alt="Decorative geometric pattern" width={400} height={400} className="w-full h-auto" draggable={false} />
       </motion.div>
 
       {/* Right Asset - parallax scroll, below corner elements */}
@@ -74,7 +74,7 @@ export default function ColorfulBackground({ children, className = "",  showSmil
         transition={{ duration: 0.6, ease: "easeOut" as const }}
         style={{ x: rightAssetX, y: rightAssetY }}
       >
-        <Image src="/colorfulbg/rightasset.png" alt="" width={400} height={400} className="w-full h-auto opacity-50" draggable={false} />
+        <Image src="/colorfulbg/rightasset.png" alt="Decorative geometric pattern" width={400} height={400} className="w-full h-auto opacity-50" draggable={false} />
       </motion.div>
 
       {/* Top Left - floats diagonally from corner */}
@@ -88,7 +88,7 @@ export default function ColorfulBackground({ children, className = "",  showSmil
           animate={{ x: [0, -10, 0], y: [0, -10, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" as const }}
         >
-          <Image src="/colorfulbg/topleft.png" alt="" width={200} height={200} className="w-full h-auto" draggable={false} />
+          <Image src="/colorfulbg/topleft.png" alt="Decorative corner element" width={200} height={200} className="w-full h-auto" draggable={false} />
         </motion.div>
       </motion.div>
 
@@ -99,7 +99,7 @@ export default function ColorfulBackground({ children, className = "",  showSmil
         animate={{ opacity: 1, x: 0, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" as const }}
       >
-        <Image src="/colorfulbg/topbubble.png" alt="" width={200} height={200} className="w-full h-auto" draggable={false} />
+        <Image src="/colorfulbg/topbubble.png" alt="Decorative bubble element" width={200} height={200} className="w-full h-auto" draggable={false} />
       </motion.div>
 
       {/* Top Rightish - entry animation only, hidden on small screens */}
@@ -109,7 +109,7 @@ export default function ColorfulBackground({ children, className = "",  showSmil
         animate={{ opacity: 1, x: 0, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.1 }}
       >
-        <Image src="/colorfulbg/topmark.png" alt="" width={200} height={200} className="w-full h-auto" draggable={false} />
+        <Image src="/colorfulbg/topmark.png" alt="Decorative mark element" width={200} height={200} className="w-full h-auto" draggable={false} />
       </motion.div>
 
       {/* Top Right  - floats diagonally from corner */}
@@ -122,7 +122,7 @@ export default function ColorfulBackground({ children, className = "",  showSmil
         <motion.div
           animate={{ x: [0, 10, 0], y: [0, 10, 0] }}
           transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" as const }}
-        > <Image src="/colorfulbg/topright.png" alt="" width={200} height={200} className="w-full h-auto" draggable={false} /> </motion.div> </motion.div> {/* Top Right - floats diagonally from corner */} <motion.div
+        > <Image src="/colorfulbg/topright.png" alt="Decorative corner element" width={200} height={200} className="w-full h-auto" draggable={false} /> </motion.div> </motion.div> {/* Top Right - floats diagonally from corner */} <motion.div
         className="absolute top-0 right-0 w-48 md:w-64 z-10"
         initial={{ opacity: 0, x: 50, y: -50 }}
         animate={{ opacity: 1, x: 0, y: 0 }}
@@ -132,7 +132,7 @@ export default function ColorfulBackground({ children, className = "",  showSmil
           animate={{ x: [0, 10, 0], y: [0, 10, 0] }}
           transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" as const }}
         >
-          <Image src="/colorfulbg/topright.png" alt="" width={200} height={200} className="w-full h-auto" draggable={false} />
+          <Image src="/colorfulbg/topright.png" alt="Decorative corner element" width={200} height={200} className="w-full h-auto" draggable={false} />
         </motion.div>
       </motion.div>
 
@@ -147,7 +147,7 @@ export default function ColorfulBackground({ children, className = "",  showSmil
           animate={{ x: [0, -10, 0], y: [0, 10, 0] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" as const }}
         >
-          <Image src="/colorfulbg/bottomleft.png" alt="" width={200} height={200} className="w-full h-auto" draggable={false} />
+          <Image src="/colorfulbg/bottomleft.png" alt="Decorative corner element" width={200} height={200} className="w-full h-auto" draggable={false} />
         </motion.div>
       </motion.div>
 
@@ -162,13 +162,13 @@ export default function ColorfulBackground({ children, className = "",  showSmil
           animate={{ x: [0, 10, 0], y: [0, 10, 0] }}
           transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" as const }}
         >
-          <Image src="/colorfulbg/bottomright.png" alt="" width={200} height={200} className="w-full h-auto" draggable={false} />
+          <Image src="/colorfulbg/bottomright.png" alt="Decorative corner element" width={200} height={200} className="w-full h-auto" draggable={false} />
         </motion.div>
       </motion.div>
 
       {/* White fade at bottom */}
       <div className="absolute bottom-0 left-0 w-full pointer-events-none">
-        <Image src="/colorfulbg/whitefade.png" alt="" width={400} height={400} className="w-full h-auto" draggable={false} />
+        <Image src="/colorfulbg/whitefade.png" alt="Decorative gradient fade" width={400} height={400} className="w-full h-auto" draggable={false} />
       </div>
 
       {children}

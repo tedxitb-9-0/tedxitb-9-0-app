@@ -16,7 +16,7 @@ export default function Footer() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          <Image src="/tedx9.svg" alt="Logo" width={150} height={150} />
+          <Image src="/tedx9.png" alt="Logo" width={156} height={30} />
           <p className="font-semibold">Happiness Through Colors</p>
           
           <div className="flex flex-wrap gap-4 items-center justify-center md:justify-start">
