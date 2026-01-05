@@ -57,6 +57,7 @@ export default function NotFound() {
        
         <motion.div
           variants={itemVariants}
+          className="mb-2"
         >
        <p>
           Seems like {`you've`} lost your way!
