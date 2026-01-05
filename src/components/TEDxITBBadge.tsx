@@ -25,8 +25,8 @@ export default function TEDxITBBadge() {
         <Image
           src="/TEDxITB.svg"
           alt="TEDxITB Presents"
-          width={256}
-          height={64}
+          width={512}
+          height={128}
           className="h-6 md:h-8 w-auto"
           draggable={false}
           priority
