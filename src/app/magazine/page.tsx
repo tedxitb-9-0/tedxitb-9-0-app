@@ -22,7 +22,7 @@ const itemVariants = {
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.6, ease: "easeOut" },
+        transition: { duration: 0.6, ease: "easeOut" } as const,
     },
 };
 
@@ -57,7 +57,7 @@ export default function MagazinePage() {
                     {/* Close Button - Outside iframe */}
                     <motion.button
                         onClick={handleClosePreview}
-                        className="px-6 py-2 bg-blue text-white rounded-md shadow-lg hover:opacity-90 transition-opacity z-[60]"
+                        className="px-6 py-2 bg-blue text-white rounded-md shadow-lg hover:opacity-90 transition-opacity z-60"
                         whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
                         whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
                     >
@@ -65,7 +65,7 @@ export default function MagazinePage() {
                     </motion.button>
                     
                     <div 
-                        className="h-[85vh] w-[90vw] max-w-6xl z-[55]"
+                        className="h-[85vh] w-[90vw] max-w-6xl z-55"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <iframe
@@ -79,49 +79,6 @@ export default function MagazinePage() {
 
             {/* Hero Section*/}
             <PlainBackground color="pink">
-                <motion.img
-                    src="/magazine/leftside.png"
-                    alt="Decorative left"
-                    className="hidden md:block absolute left-0 top-0 h-full w-auto pointer-events-none z-30"
-                    initial={{ opacity: 0, x: -100 }}
-                    animate={{ 
-                        opacity: 1, 
-                        x: 0,
-                        y: [0, -15, 0],
-                    }}
-                    transition={{ 
-                        opacity: { duration: 0.8, ease: "easeOut" },
-                        x: { duration: 0.8, ease: "easeOut" },
-                        y: { 
-                        duration: 4, 
-                        repeat: Infinity, 
-                        ease: "easeInOut",
-                        }
-                    }}
-                />
-                    
-                <motion.img
-                src="/magazine/rightside.png"
-                alt="Decorative right"
-                className="hidden md:block absolute right-0 top-0 h-full w-auto pointer-events-none z-30"
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ 
-                    opacity: 1, 
-                    x: 0,
-                    y: [0, -20, 0],
-                }}
-                transition={{ 
-                    opacity: { duration: 0.8, ease: "easeOut" },
-                    x: { duration: 0.8, ease: "easeOut" },
-                    y: { 
-                    duration: 5, 
-                    repeat: Infinity, 
-                    ease: "easeInOut",
-                    delay: 0.5,
-                    }
-                }}
-            />
-
                 <motion.div
                     className="container mx-auto px-4 md:px-6 lg:px-12 z-20 relative pt-16 md:pt-12 pb-12 md:pb-16"
                     initial="hidden"
@@ -151,7 +108,7 @@ export default function MagazinePage() {
                             <img 
                             src="/magazine/magazine.png" 
                             alt="Magazine"
-                            className="w-full max-w-[250px] sm:max-w-sm md:max-w-md drop-shadow-lg"
+                            className="w-full max-w-62.5 sm:max-w-sm md:max-w-md drop-shadow-lg"
                             />
                         </div>
                         {/* Subtitle*/}
