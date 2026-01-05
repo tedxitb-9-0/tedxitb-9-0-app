@@ -21,7 +21,7 @@ export default function TEDxITBBadge() {
           alt="TEDxITB Presents"
           width={256}
           height={64}
-          className="h-8 md:h-10 w-auto"
+          className="h-6 md:h-8 w-auto"
           draggable={false}
           priority
         />
