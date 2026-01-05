@@ -23,7 +23,7 @@ export default function TEDxITBBadge() {
         style={{ willChange: 'transform' }}
       >
         <Image
-          src="/TEDxITB.svg"
+          src="/TEDxITB.png"
           alt="TEDxITB Presents"
           width={256}
           height={64}

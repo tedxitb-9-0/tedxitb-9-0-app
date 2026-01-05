@@ -30,7 +30,7 @@ export default function NotFound() {
     <ColorfulBackground>
       {/* Center content with stagger */}
       <motion.div
-        className="flex flex-col w-full items-center gap-4 z-10"
+        className="flex flex-col w-full items-center gap-4 z-20"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -43,13 +43,13 @@ export default function NotFound() {
             repeat: Infinity, 
             ease: "easeInOut" 
           }}
-          className="w-[70%] max-w-4xl z-10"
+          className="w-[70%] max-w-4xl z-30"
         >
           <Image 
-            src="/404notfound.svg" 
+            src="/notfound.webp" 
             alt="404 Not Found" 
-            width={400} 
-            height={400}
+            width={1000} 
+            height={100}
             className="w-full h-auto"
             draggable={false}
           />

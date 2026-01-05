@@ -33,7 +33,7 @@ const ComingSoon = () => {
     <ColorfulBackground>
       {/* Center content with stagger */}
       <motion.div
-        className="flex flex-col w-full items-center gap-4 z-10"
+        className="flex flex-col w-full items-center gap-4 z-20"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -48,13 +48,13 @@ const ComingSoon = () => {
             repeat: Infinity, 
             ease: "easeInOut" 
           }}
-          className="w-[70%] max-w-4xl z-10"
+          className="w-[70%] max-w-4xl z-30"
         >
           <Image 
-            src="/comingsoon.svg" 
+            src="/comingsoon.webp" 
             alt="Coming Soon" 
-            width={400} 
-            height={400}
+            width={1200} 
+            height={100}
             className="w-full h-auto"
             draggable={false}
           />
