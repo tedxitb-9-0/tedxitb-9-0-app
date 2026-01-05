@@ -2,27 +2,14 @@
 
 import { motion } from "motion/react";
 import Image from "next/image";
+import TEDxITBBadge from "~/components/TEDxITBBadge";
 
 export default function HappinessThroughColors() {
   return (
     <div className="max-w-1xl mx-auto relative">
       <div className="flex flex-col items-center px-6">
-        <div className="text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="mb-4"
-          >
-            <Image
-              src="/about/TEDxPresent.svg"
-              alt="TEDxITB 9.0 Presents"
-              width={220}
-              height={60}
-              className="mx-auto block h-auto w-[220px]"
-            />  
-          </motion.div>
+        <div className="flex flex-col items-center">
+          <TEDxITBBadge className="mx-auto"/>
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}

@@ -3,10 +3,10 @@
 import Image from "next/image";
 import { motion } from "motion/react";
 
-export default function TEDxITBBadge() {
+export default function TEDxITBBadge( {className}: {className?: string} ) {
   return (
     <motion.div
-      className="z-20 mb-6 flex-row flex"
+      className={`z-20 mb-6 flex-row flex ${className}`}
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
