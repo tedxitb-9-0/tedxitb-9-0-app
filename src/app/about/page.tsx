@@ -78,13 +78,13 @@ export default function About() {
         </PlainBackground>
 
         <section className="relative w-full overflow-hidden bg-[url('/pattern-bg.svg')] bg-repeat py-12 md:py-16 lg:py-24">
-          <div className="max-w-1xl mx-auto px-6">
+          <div className="max-w-1xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="flex flex-col items-center"
+              className="flex flex-col items-center px-6"
             >
               <div className="text-center">
                 <motion.div
@@ -119,10 +119,10 @@ export default function About() {
                 </motion.div>
               </div>
 
-              <div className="relative mt-8 w-full">
+              <div className="relative mt-8 w-screen ">               
                 {/* Left Hand - sticks to page border */}
                 <motion.div
-                  className="pointer-events-none absolute top-1/2 left-0 z-10 hidden h-auto w-[400px] -translate-y-1/2 md:block lg:w-[500px]"
+                  className="pointer-events-none absolute top-[15%] left-0 z-10 hidden h-auto -translate-y-1/2 lg:block w-[30%]"
                   animate={{ y: [0, -10, 0] }}
                   transition={{
                     duration: 3,
@@ -141,7 +141,7 @@ export default function About() {
 
                 {/* Right Hand - sticks to page border */}
                 <motion.div
-                  className="pointer-events-none absolute top-1/2 right-0 z-10 hidden h-auto w-[400px] -translate-y-1/2 md:block lg:w-[500px]"
+                  className="pointer-events-none absolute top-[80%] right-0 z-10 hidden h-auto w-[30%] -translate-y-1/2 lg:block"
                   animate={{ y: [0, -10, 0] }}
                   transition={{
                     duration: 3,
@@ -159,76 +159,83 @@ export default function About() {
                   />
                 </motion.div>
 
-                <div className="relative flex w-full justify-center">
-                  {/* Paper Container - Desktop */}
+                <div className="relative flex w-full flex-col items-center justify-center md:block">
+  
+                  {/* --- SPLIT VIEW: Two Separate Papers (< lg) --- */}
+                  {/* CHANGED: md:hidden -> lg:hidden */}
+                  <div className="flex w-full flex-col gap-6 px-6 lg:hidden">
+                    {/* Paper 1 */}
+                    <div
+                      className="relative w-full rounded-xl p-8"
+                      style={{
+                        backgroundImage: "url('/about/PaperBG.png')",
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "center center",
+                        backgroundSize: "100% 100%", 
+                      }}
+                    >
+                      <p className="text-foreground/90 text-justify text-xs leading-6 font-bold sm:text-sm sm:leading-7">
+                        Happiness Through Colors was born from the belief that each person holds
+                        their own unique color of happiness. Its message is simple yet profound,
+                        that every individual has the right to define and celebrate the color
+                        that represents their joy, whether it comes through achievement,
+                        passion, creativity, relationships, reflection and self-acceptance.
+                      </p>
+                    </div>
+
+                    {/* Paper 2 */}
+                    <div
+                      className="relative w-full rounded-xl p-8"
+                      style={{
+                        backgroundImage: "url('/about/PaperBG.png')",
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "center center",
+                        backgroundSize: "100% 100%", 
+                      }}
+                    >
+                      <p className="text-foreground/90 text-justify text-xs leading-6 font-bold sm:text-sm sm:leading-7">
+                        Color is chosen as a universal metaphor because each one carries its own
+                        meaning, and when brought together, they form a spectrum that reflects
+                        the beauty of diverse human happiness. This theme is not about forcing a
+                        single definition of happiness, but about celebrating the differences in
+                        how people experience joy and realizing that our lives become richer
+                        when every color is acknowledged and celebrated together.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* --- DESKTOP VIEW: Single Combined Paper (>= lg) --- */}
+                  {/* CHANGED: hidden md:block -> hidden lg:block */}
                   <div
-                    className="relative w-full max-w-3xl sm:max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl"
+                    className="relative hidden lg:block mx-auto w-[90%] h-auto"
                     style={{
                       backgroundImage: "url('/about/PaperBG.png')",
                       backgroundRepeat: "no-repeat",
                       backgroundPosition: "center center",
-                      backgroundSize: "100% 100%",
+                      backgroundSize: "contain",
                       backgroundAttachment: "scroll",
                     }}
                   >
-                    <div className="px-12 py-12 sm:px-16 sm:py-16 md:px-24 md:py-20 lg:px-40 lg:py-28 xl:px-48 xl:py-32">
-                      <div className="bg-transparent">
-                        <p className="text-foreground/90 text-justify text-xs leading-6 font-bold sm:text-sm sm:leading-7 md:text-base md:leading-7">
-                          Happiness Through Colors was born from the belief that
-                          each person holds their own unique color of happiness.
-                          Its message is simple yet profound, that every
-                          individual has the right to define and celebrate the
-                          color that represents their joy, whether it comes
-                          through achievement, passion, creativity,
-                          relationships, reflection and self-acceptance.                         
+                    <div className="flex h-full items-center justify-center px-16 py-12 md:px-32 md:py-16 lg:py-20">
+                      <div className="bg-transparent max-w-3xl">
+                        <p className="text-foreground/90 text-justify text-xs leading-6 font-bold sm:text-xs sm:leading-7 md:text-md lg:text-base lg:leading-7 xl:leading-10">
+                          Happiness Through Colors was born from the belief that each person
+                          holds their own unique color of happiness. Its message is simple yet
+                          profound, that every individual has the right to define and celebrate
+                          the color that represents their joy, whether it comes through
+                          achievement, passion, creativity, relationships, reflection and
+                          self-acceptance.
                         </p>
-                        <p className="text-foreground/90 text-justify text-xs leading-6 font-bold sm:text-sm sm:leading-7 md:text-base md:leading-7">
-                        Color is chosen as a universal metaphor because each one
-                        carries its own meaning, and when brought together,
-                        they form a spectrum that reflects the beauty of
-                        diverse human happiness. This theme is not about
-                        forcing a single definition of happiness, but about
-                        celebrating the differences in how people experience
-                        joy and realizing that our lives become richer when
-                        every color is acknowledged and celebrated together.
-
+                        <p className="text-foreground/90 text-justify text-xs leading-6 font-bold sm:text-xs sm:leading-7 lg:text-base lg:leading-7 xl:leading-10 mt-4">
+                          Color is chosen as a universal metaphor because each one carries its
+                          own meaning, and when brought together, they form a spectrum that
+                          reflects the beauty of diverse human happiness. This theme is not
+                          about forcing a single definition of happiness, but about celebrating
+                          the differences in how people experience joy and realizing that our
+                          lives become richer when every color is acknowledged and celebrated
+                          together.
                         </p>
                       </div>
-                    </div>
-
-
-                  </div>
-
-                  {/* Box - Mobile */}
-                  <div className="relative w-full md:hidden">
-                    <div
-                      className="mx-4 rounded-2xl border-4 border-white/20 bg-white/90 p-6 shadow-2xl backdrop-blur-sm"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, #FFF5EC 0%, rgba(255,248,240,0.95) 100%)",
-                        borderColor: "rgba(255,255,255,0.4)",
-                      }}
-                    >
-                      <div className="absolute -top-2 left-1/2 -translate-x-1/2">
-                        <div className="h-4 w-16 rounded-full bg-white/60 shadow-sm" />
-                      </div>
-                      <p className="text-foreground/90 text-justify text-xs leading-6">
-                        Happiness Through Colors was born from the belief that
-                        each person holds their own unique color of happiness.
-                        Its message is simple yet profound, that every
-                        individual has the right to define and celebrate the
-                        color that represents their joy, whether it comes
-                        through achievement, passion, creativity, relationships,
-                        reflection and self-acceptance. Color is chosen as a
-                        universal metaphor because each one carries its own
-                        meaning, and when brought together, they form a spectrum
-                        that reflects the beauty of diverse human happiness.
-                        This theme is not about forcing a single definition of
-                        happiness, but about celebrating the differences in how
-                        people experience joy and realizing that our lives
-                        become richer when every color is acknowledged and
-                        celebrated together.
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -240,7 +247,7 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="mx-auto mt-12 grid max-w-7xl grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+              className="mx-auto mt-12 grid max-w-7xl grid-cols-1 gap-5 px-6 sm:grid-cols-2 lg:grid-cols-3"
             >
               {/* Accomplishment */}
               <div
