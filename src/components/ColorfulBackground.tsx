@@ -27,7 +27,7 @@ export default function ColorfulBackground({ children, className = "" }: Colorfu
   return (
     <section 
       ref={containerRef}
-      className={`h-screen w-full overflow-hidden flex flex-col items-center justify-center gap-4 bg-cover bg-center bg-no-repeat relative select-none ${className}`}
+      className={`h-screen w-full overflow-hidden flex flex-col items-center justify-center gap-2 md:gap-4 bg-cover bg-center bg-no-repeat relative select-none ${className}`}
       style={{ backgroundImage: "url('/colorfulbg/colorfulbg.png')" }}
     >
       {/* Left Asset - parallax scroll, below corner elements */}

@@ -62,7 +62,7 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
   return (
     <section
         ref={containerRef}
-        className={`h-screen w-full overflow-hidden flex ${bgClass} flex-col items-center justify-center gap-4 bg-cover bg-center bg-no-repeat relative select-none`} 
+        className={`h-fit md:min-h-screen w-full overflow-hidden flex ${bgClass} flex-col items-center justify-center gap-4 bg-cover bg-center bg-no-repeat relative select-none`} 
     >
      {/* Top Left - floats diagonally from corner */}
       <motion.div
