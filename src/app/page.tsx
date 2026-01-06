@@ -16,6 +16,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="h-screen w-full flex flex-col items-center justify-center relative">
         <ColorfulBackground>
+        <h1 className="sr-only">TEDxITB 9.0: Happiness Through Colors</h1>
           <TEDxITBBadge />
           <motion.div
             className="z-30 w-[80%] max-w-4xl"

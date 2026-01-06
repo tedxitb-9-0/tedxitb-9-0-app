@@ -61,7 +61,7 @@ export default function AboutHero() {
               <h3 className="mb-3 text-2xl font-extrabold text-red md:text-3xl">
                 What is TEDx?
               </h3>
-              <p className="text-foreground/90 text-justify text-sm  md:text-base">
+              <p className="text-foreground/90 text-justify text-sm leading-5 md:leading-7 md:text-base">
                 {`TEDx is a grassroots initiative, created in the spirit of
                 TED's overall mission to research and discover "ideas worth
                 spreading." TEDx brings the spirit of TED to local

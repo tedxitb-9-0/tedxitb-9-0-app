@@ -3,7 +3,10 @@ import ComingSoon from "~/components/ComingSoon"
 
 const Merchandise = () => {
   return (
-    <ComingSoon />
+    <>
+      <h1 className="sr-only">TEDxITB 9.0 Merchandise</h1>
+      <ComingSoon />
+    </>
   )
 }
 

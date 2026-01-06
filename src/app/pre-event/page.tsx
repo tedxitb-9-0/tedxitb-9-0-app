@@ -2,7 +2,10 @@ import ComingSoon from "~/components/ComingSoon"
 
 const PreEvent = () => {
   return (
-    <ComingSoon />
+    <>
+     <h1 className="sr-only">TEDxITB 9.0 Pre-Event</h1>
+      <ComingSoon />
+    </>
   )
 }
 
