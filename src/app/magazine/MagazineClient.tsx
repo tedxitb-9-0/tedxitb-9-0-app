@@ -84,6 +84,7 @@ export default function MagazineClient() {
                     animate="visible"
                     variants={containerVariants}
                 >
+                    <h1 className="sr-only">TEDxITB 9.0 Magazine</h1>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center max-w-6xl mx-auto">
                         <motion.div variants={itemVariants} className="flex justify-center order-1">
                         <div 
