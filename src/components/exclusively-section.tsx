@@ -28,8 +28,8 @@ const ExclusivelySection = () => {
               <Image
                 src="/exclusively.webp"
                 alt="TEDxITB 9.0 - Happiness Through Colors"
-                width={1000}
-                height={150}
+                width={1300}
+                height={120}
                 className="w-full h-auto"
                 draggable={false}
                 priority
