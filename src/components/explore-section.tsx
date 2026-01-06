@@ -1,4 +1,3 @@
-import { Play } from "next/font/google";
 import { motion } from "motion/react"
 import Image from "next/image"
 import Link from "next/link"
@@ -13,7 +12,7 @@ const ExploreSection = () => {
             alt="TEDxITB 9.0 - Happiness Through Colors"
             width={806}
             height={175}
-            className="absolute w-full h-auto"
+            className="absolute w-full h-auto pointer-events-none"
             draggable={false}
             priority
       />

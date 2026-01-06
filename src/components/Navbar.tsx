@@ -66,7 +66,7 @@ const Navbar = () => {
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
           <Link href="/">
-            <Image src="/logo.svg" alt="Logo" width={40} height={40} />
+            <Image src="/logo.svg" alt="Logo" width={40} height={38} />
           </Link>
         </motion.div>
 
