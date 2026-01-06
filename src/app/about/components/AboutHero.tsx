@@ -7,7 +7,7 @@ import PlainBackground from "~/components/PlainBackground";
 export default function AboutHero() {
   return (
     <PlainBackground color="red">
-      <div className="flex min-h-screen items-center justify-center pt-16 md:py-20 my-14">
+      <div className="flex min-h-screen items-center justify-center pt-16 md:py-20 my-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -41,7 +41,7 @@ export default function AboutHero() {
               <h3 className="mb-3 text-2xl font-extrabold text-red md:text-3xl">
                 What does TED stand for?
               </h3>
-              <p className="text-foreground/90 text-justify text-sm leading-7 md:text-base">
+              <p className="text-foreground/90 text-justify text-sm leading-5 md:leading-7 md:text-base">
                 TED stands for Technology, Entertainment, Design — three
                 broad subject areas that are collectively shaping our world.
                 But a TED conference is broader still, showcasing important
@@ -61,7 +61,7 @@ export default function AboutHero() {
               <h3 className="mb-3 text-2xl font-extrabold text-red md:text-3xl">
                 What is TEDx?
               </h3>
-              <p className="text-foreground/90 text-justify text-sm leading-7 md:text-base">
+              <p className="text-foreground/90 text-justify text-sm  md:text-base">
                 {`TEDx is a grassroots initiative, created in the spirit of
                 TED's overall mission to research and discover "ideas worth
                 spreading." TEDx brings the spirit of TED to local

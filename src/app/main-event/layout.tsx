@@ -1,5 +1,4 @@
-import { type Metadata } from "next";
-import ComingSoon from "~/components/ComingSoon"
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Main Event",
@@ -15,10 +14,14 @@ export const metadata: Metadata = {
   },
 };
 
-const MainEvent = () => {
+export default function MainEventLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <ComingSoon />
-  )
+   <>
+    {children}
+   </>     
+  );
 }
-
-export default MainEvent;

@@ -101,7 +101,7 @@ export default function ColorGrid() {
                 />
               </div>
               <h4
-                className="md:text-1xl text-right text-3xl  text-white"
+                className="text-xl text-right md:text-3xl text-white"
                 style={{
                   fontFamily: "var(--font-titan-one), cursive",
                   textShadow: "0 6px 10px rgba(0,0,0,0.18)",
