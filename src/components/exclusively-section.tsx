@@ -7,7 +7,7 @@ import Link from "next/link"
 const ExclusivelySection = () => {
   return (
      <section className="min-h-screen md:h-screen w-full flex flex-col items-center justify-center relative overflow-hidden py-12 md:py-0 md:pb-[-20]">
-        <ColorfulBackground>
+        <ColorfulBackground showSmiles={false}>
           {/* Cloud Border Frame */} <div className="absolute top-0 left-0 w-full h-auto z-20 pointer-events-none"> <Image src="/cloud.png" alt="" width={2000} height={100} className="w-full h-auto"
               draggable={false}
             />
