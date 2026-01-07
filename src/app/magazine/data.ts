@@ -14,7 +14,7 @@ export const magazines: Magazine[] = [
         description: "Enter the first dimension of joy, Achievement: Some Ways to Win Life! This December issue invites you to explore the meaning of achievement through inspiring stories, beautiful art, comforting films, and exciting life events. Together, they encourage you to reflect and form your own interpretation of what it truly means to win in life.",
         coverImage: "/magazine/cover/magcover_1.webp",
         flipbookUrl: "https://heyzine.com/flip-book/ae6c5719da.html",
-        publishedDate: "2025-12-5",
+        publishedDate: "2025-12-05",
     },
 ];
 
