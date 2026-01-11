@@ -92,7 +92,7 @@ const Navbar = () => {
             whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
             whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
           >
-            <Link href="/login" className="px-4 py-1.5 bg-red text-white rounded-md shadow-xl">
+            <Link href="/signin" className="px-4 py-1.5 bg-red text-white rounded-md shadow-xl">
               Sign in
             </Link>
           </motion.div>

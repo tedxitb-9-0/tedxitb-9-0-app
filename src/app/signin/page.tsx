@@ -3,10 +3,21 @@ import ColorfulBackground from "~/components/ColorfulBackground";
 import ComingSoon from "~/components/ComingSoon"
 import { motion } from "motion/react"
 import Image from "next/image"
-import Link from "next/link"
-import { signIn } from "better-auth/react"
+import { useRouter } from "next/router";
+import { authClient } from "~/server/better-auth/client";
 
 const LoginPage = () => {
+  const handleGoogleSignIn = async () => {
+    const data = await authClient.signIn.social({
+      provider: "google", 
+      callbackURL: "/dashboard"
+    });
+
+    if (data.error) {
+      console.error("Signin Error: ", data.error);
+    }
+  }
+
   return (
     <>
      <h1 className="sr-only">TEDxITB 9.0 Login</h1>
@@ -18,7 +29,7 @@ const LoginPage = () => {
             repeat: Infinity, 
             ease: "easeInOut" 
           }}
-          className="w-[15%] max-w-4xl z-30"
+          className="w-[40%] max-w-sm z-30"
         >
           <Image 
             src="/signin.png" 
@@ -33,11 +44,13 @@ const LoginPage = () => {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="w-[50%] rounded-xl bg-white p-8 shadow-xl"
+              className="w-[60%] max-w-xl rounded-xl bg-white p-2 md:p-4 shadow-xl text-center z-40"
         >
-            <Link href="/api/auth/sign-in/google">
-              Tes
-            </Link> 
+            <button onClick={handleGoogleSignIn} className="text-md md:text-xl p-2 border-black hover:bg-gray-200 rounded-xl flex justify-center items-center gap-2">
+              
+                <Image src="/google.png" height={50} width={50} alt="Google Logo" className="w-6 md:w-8"/>  
+                Sign In With Google
+            </button> 
         </motion.div>
  
      </ColorfulBackground>
