@@ -5,7 +5,7 @@ import ColorGrid from "./components/ColorGrid";
 
 export default function About() {
   return (
-    <>
+    <section className="w-full">
       <h1 className="sr-only">About TEDxITB 9.0</h1>
 
       <AboutHero />
@@ -15,6 +15,6 @@ export default function About() {
         <HappinessThroughColors />
         <ColorGrid />
       </section>
-    </>
+    </section>
   );
 }
