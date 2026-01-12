@@ -71,7 +71,7 @@ export default function ColorGrid() {
         }}
         className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
       >
-        {colors.map((color, index) => (
+        {colors.map((color, _) => (
           <motion.div
             key={color.name}
             variants={{
