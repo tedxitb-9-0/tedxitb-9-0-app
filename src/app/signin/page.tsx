@@ -1,9 +1,6 @@
 "use client"
 import ColorfulBackground from "~/components/ColorfulBackground";
 import ComingSoon from "~/components/ComingSoon"
-import { motion } from "motion/react"
-import Image from "next/image"
-import { useRouter } from "next/router";
 import { authClient } from "~/server/better-auth/client";
 
 const LoginPage = () => {
