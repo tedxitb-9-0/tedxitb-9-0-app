@@ -28,12 +28,21 @@ export const metadata: Metadata = {
     title: "TEDxITB 9.0 - Happiness Through Colors",
     description: "TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology. Join us for TEDxITB 9.0: Happiness Through Colors.",
     siteName: "TEDxITB",
+    images: [
+      {
+        url: "/htc.png",
+        width: 1200,
+        height: 630,
+        alt: "TEDxITB 9.0 - Happiness Through Colors",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "TEDxITB 9.0 - Happiness Through Colors",
     description: "TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology.",
     creator: "@tedxitb",
+    images: ["/tedx.png"],
   },
   robots: {
     index: true,
