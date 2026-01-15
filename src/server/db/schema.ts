@@ -2,6 +2,9 @@ import { relations } from "drizzle-orm";
 import {
   boolean,
   index,
+  integer,
+  json,
+  pgEnum,
   pgTable,
   pgTableCreator,
   text,
@@ -102,4 +105,44 @@ export const accountRelations = relations(account, ({ one }) => ({
 
 export const sessionRelations = relations(session, ({ one }) => ({
   user: one(user, { fields: [session.userId], references: [user.id] }),
+}));
+
+export const statusEnum = pgEnum("status", ["shipped", "confirmed"]);
+
+export const deliveryTypeEnum = pgEnum("delivery_type", ["pickup", "delivery"]);
+
+export const orders = createTable("order", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .references(() => user.id)
+    .notNull(),
+  status: statusEnum("status").default("confirmed").notNull(),
+  totalAmount: integer("total_amount").notNull(),
+  midtransToken: text("midtrans_token"), // To resume payment if needed
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
+  deliveryType: deliveryTypeEnum("delivery_type").notNull(),
+  shippingDetails: text("shipping_details"), // For delivery
+});
+
+export const orderItems = createTable("order_item", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  orderId: text("order_id")
+    .notNull()
+    .references(() => orders.id),
+  contentfulProductId: text("contentful_product_id").notNull(),
+  quantity: integer("quantity").notNull(),
+  price: integer("price").notNull(),
+  variantOptions: json("variant_options"),
+});
+
+// Update relations
+export const ordersRelations = relations(orders, ({ one, many }) => ({
+  user: one(user, { fields: [orders.userId], references: [user.id] }),
+  items: many(orderItems),
+}));
+
+export const orderItemsRelations = relations(orderItems, ({ one }) => ({
+  order: one(orders, { fields: [orderItems.orderId], references: [orders.id] }),
 }));

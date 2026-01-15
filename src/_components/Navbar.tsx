@@ -7,6 +7,11 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { useAuthStore } from "~/stores";
 
+const truncateWithEllipsis = (text: string, maxLength: number = 10): string => {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + "…";
+};
+
 const navLinks = [
   { href: "/about", label: "About" },
   { href: "/pre-event", label: "Pre-Event" },
@@ -97,8 +102,8 @@ const Navbar = () => {
             {isLoading ? (
               <span className="px-4 py-1.5 text-gray-400">Loading...</span>
             ) : isAuthenticated && user ? (
-              <Link href="/dashboard" className="px-4 py-1.5 bg-red text-white rounded-md shadow-xl">
-                {user.name.split(" ")[0]}
+              <Link href="/dashboard" className="px-4 py-1.5 bg-red text-white rounded-md shadow-xl max-w-[120px] truncate inline-block">
+                {truncateWithEllipsis(user.name.split(" ")[0] ?? "")}
               </Link>
             ) : (
               <Link href="/signin" className="px-4 py-1.5 bg-red text-white rounded-md shadow-xl">
@@ -174,10 +179,10 @@ const Navbar = () => {
                     ) : isAuthenticated && user ? (
                       <Link
                         href="/dashboard"
-                        className="block w-full text-center px-4 py-2 bg-red text-white rounded-md shadow-xl"
+                        className="block w-full text-center px-4 py-2 bg-red text-white rounded-md shadow-xl truncate"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        {user.name.split(" ")[0]}
+                        {truncateWithEllipsis(user.name.split(" ")[0] ?? "")}
                       </Link>
                     ) : (
                       <Link

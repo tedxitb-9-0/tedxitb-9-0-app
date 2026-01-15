@@ -63,18 +63,18 @@ export default function Dashboard() {
             transition={{ duration: 0.5 }}
             className="mb-8 rounded-xl bg-white p-6 shadow-lg"
           >
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col items-center justify-between gap-2 text-center text-base md:flex-row md:text-left">
               <div className="flex items-center gap-4">
                 <div>
-                  <h2 className="text-3xl font-bold text-gray-800">
+                  <h2 className="text-xl font-bold text-gray-800 md:text-3xl">
                     Welcome back, {session.user.name}!
                   </h2>
-                  <p className="text-gray-600">{session.user.email}</p>
+                  <p className="text-lg text-gray-600">{session.user.email}</p>
                 </div>
               </div>
               <button
                 onClick={handleSignOut}
-                className="rounded-lg bg-red-600 px-6 py-2 text-white transition-colors hover:cursor-pointer hover:bg-red-700"
+                className="rounded-lg bg-red-600 px-3 py-2 text-white transition-colors hover:cursor-pointer hover:bg-red-700 md:px-6 md:py-2"
               >
                 Sign Out
               </button>
