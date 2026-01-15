@@ -7,6 +7,7 @@ import NextTopLoader from "nextjs-toploader";
 import { TRPCReactProvider } from "~/trpc/react";
 import Navbar from "~/components/Navbar";
 import Footer from "~/components/Footer";
+import AuthProvider from "~/components/AuthProvider";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://tedxitb.id';
 
@@ -81,9 +82,11 @@ export default function RootLayout({
       <body>
         <NextTopLoader color="red" showSpinner={false} />
         <TRPCReactProvider>
-          <Navbar />
-          {children}
-          <Footer />
+          <AuthProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </AuthProvider>
         </TRPCReactProvider>
       </body>
     </html>
