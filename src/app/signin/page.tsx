@@ -1,5 +1,5 @@
 "use client";
-import ColorfulBackground from "~/components/ColorfulBackground";
+import ColorfulBackground from "~/_components/ColorfulBackground";
 import { authClient } from "~/server/better-auth/client";
 import { motion } from "motion/react";
 import Image from "next/image";

@@ -3,10 +3,9 @@
 import { useSession, signOut } from "~/server/better-auth/client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import Image from "next/image";
 import { motion } from "motion/react";
 import { api } from "~/trpc/react";
-import PlainBackground from "~/components/PlainBackground";
+import PlainBackground from "~/_components/PlainBackground";
 
 export default function Dashboard() {
   const router = useRouter();
