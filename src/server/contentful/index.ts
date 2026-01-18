@@ -8,11 +8,12 @@ export type {
   IMerchandiseType,
   IDesignOption,
   ICartItem,
+  IMagazine,
 } from "./types";
 
 export { FAKULTAS_OPTIONS, KEYCHAIN_OPTIONS } from "./types";
 
-// Service functions
+// Merchandise service functions
 export {
   getAllMerchandises,
   getMerchandiseBySlug,
@@ -21,3 +22,6 @@ export {
   getMerchandiseOptions,
   requiresDesignSelection,
 } from "./merchandise";
+
+// Magazine service functions
+export { getAllMagazines, getLatestMagazine } from "./magazine";

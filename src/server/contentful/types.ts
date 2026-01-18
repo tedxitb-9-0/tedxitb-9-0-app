@@ -76,6 +76,18 @@ export interface IMerchandiseBundle {
 }
 
 /**
+ * Magazine from Contentful
+ */
+export interface IMagazine {
+  id: string;
+  title: string;
+  description: string; // Rich text as HTML string
+  date: Date;
+  flipbookUrl: string;
+  coverImage: string;
+}
+
+/**
  * Cart item with optional variant selection
  */
 export interface ICartItem {
