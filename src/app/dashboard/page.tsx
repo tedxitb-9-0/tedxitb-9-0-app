@@ -80,54 +80,6 @@ export default function Dashboard() {
               </button>
             </div>
           </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="mt-6 rounded-xl bg-white p-6 shadow-lg"
-          >
-            <h3 className="mb-4 text-2xl font-bold text-gray-800">
-              Account Details
-            </h3>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-gray-600">
-                  User ID
-                </label>
-                <p className="rounded-lg bg-gray-50 p-3 font-mono text-sm text-gray-800">
-                  {session.user.id}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-gray-600">
-                  Email
-                </label>
-                <p className="rounded-lg bg-gray-50 p-3 text-sm text-gray-800">
-                  {session.user.email}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-gray-600">
-                  Account Created
-                </label>
-                <p className="rounded-lg bg-gray-50 p-3 text-sm text-gray-800">
-                  {profile?.createdAt
-                    ? new Date(profile.createdAt).toLocaleString()
-                    : "N/A"}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-gray-600">
-                  Last Updated
-                </label>
-                <p className="rounded-lg bg-gray-50 p-3 text-sm text-gray-800">
-                  {profile?.updatedAt
-                    ? new Date(profile.updatedAt).toLocaleString()
-                    : "N/A"}
-                </p>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </PlainBackground>
     </main>
