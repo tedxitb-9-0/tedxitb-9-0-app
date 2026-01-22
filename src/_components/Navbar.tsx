@@ -7,7 +7,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { useAuthStore } from "~/stores";
 
-const truncateWithEllipsis = (text: string, maxLength: number = 10): string => {
+const truncateWithEllipsis = (text: string, maxLength = 10): string => {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "…";
 };

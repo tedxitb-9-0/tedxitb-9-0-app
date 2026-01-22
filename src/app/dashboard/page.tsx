@@ -12,7 +12,7 @@ export default function Dashboard() {
   const { data: session, isPending } = useSession();
 
   // Fetch user data with tRPC
-  const { data: profile } = api.user.getProfileById.useQuery(undefined, {
+  const { data: _profile } = api.user.getProfileById.useQuery(undefined, {
     enabled: !!session,
   });
 
