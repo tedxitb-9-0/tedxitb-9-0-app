@@ -107,42 +107,36 @@ export const sessionRelations = relations(session, ({ one }) => ({
   user: one(user, { fields: [session.userId], references: [user.id] }),
 }));
 
-export const statusEnum = pgEnum("status", ["shipped", "confirmed"]);
+export const statusEnum = pgEnum("status", ["pending", "paid", "confirmed", "cancelled"]);
 
-export const deliveryTypeEnum = pgEnum("delivery_type", ["pickup", "delivery"]);
+export const orderTypeEnum = pgEnum("order_type", [
+  "pre_event_ticket",
+  "main_event_ticket",
+  "merchandise",
+]);
 
 export const orders = createTable("order", {
   id: text("id").primaryKey(),
   userId: text("user_id")
     .references(() => user.id)
     .notNull(),
-  status: statusEnum("status").default("confirmed").notNull(),
+  orderType: orderTypeEnum("order_type").notNull(),
+  status: statusEnum("status").default("pending").notNull(),
   totalAmount: integer("total_amount").notNull(),
   midtransToken: text("midtrans_token"), // To resume payment if needed
+  // Flexible JSON fields - one will be populated based on orderType
+  merchJson: json("merch_json"), // For merchandise orders
+  ticketJson: json("ticket_json"), // For ticket orders (pre-event or main-event)
   createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),
-  deliveryType: deliveryTypeEnum("delivery_type").notNull(),
-  shippingDetails: text("shipping_details"), // For delivery
-});
-
-export const orderItems = createTable("order_item", {
-  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-  orderId: text("order_id")
-    .notNull()
-    .references(() => orders.id),
-  contentfulProductId: text("contentful_product_id").notNull(),
-  quantity: integer("quantity").notNull(),
-  price: integer("price").notNull(),
-  variantOptions: json("variant_options"),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => new Date())
+    .notNull(),
 });
 
 // Update relations
-export const ordersRelations = relations(orders, ({ one, many }) => ({
+export const ordersRelations = relations(orders, ({ one }) => ({
   user: one(user, { fields: [orders.userId], references: [user.id] }),
-  items: many(orderItems),
 }));
 
-export const orderItemsRelations = relations(orderItems, ({ one }) => ({
-  order: one(orders, { fields: [orderItems.orderId], references: [orders.id] }),
-}));

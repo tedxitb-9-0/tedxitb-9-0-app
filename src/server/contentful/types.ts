@@ -43,9 +43,6 @@ export const FAKULTAS_OPTIONS: IDesignOption[] = [
 export const KEYCHAIN_OPTIONS: IDesignOption[] = [
   { id: "design-1", name: "Design 1" },
   { id: "design-2", name: "Design 2" },
-  { id: "design-3", name: "Design 3" },
-  { id: "design-4", name: "Design 4" },
-  { id: "design-5", name: "Design 5" },
 ];
 
 /**
