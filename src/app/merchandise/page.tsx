@@ -1,5 +1,4 @@
-import ComingSoon from "~/components/ComingSoon"
-
+import ComingSoon from "~/_components/ComingSoon";
 
 const Merchandise = () => {
   return (
@@ -7,7 +6,7 @@ const Merchandise = () => {
       <h1 className="sr-only">TEDxITB 9.0 Merchandise</h1>
       <ComingSoon />
     </>
-  )
-}
+  );
+};
 
 export default Merchandise;

@@ -3,10 +3,9 @@
 import { useSession, signOut } from "~/server/better-auth/client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import Image from "next/image";
 import { motion } from "motion/react";
 import { api } from "~/trpc/react";
-import PlainBackground from "~/components/PlainBackground";
+import PlainBackground from "~/_components/PlainBackground";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -14,10 +13,6 @@ export default function Dashboard() {
 
   // Fetch user data with tRPC
   const { data: profile } = api.user.getProfileById.useQuery(undefined, {
-    enabled: !!session,
-  });
-
-  const { data: sessions } = api.user.getSessions.useQuery(undefined, {
     enabled: !!session,
   });
 
@@ -58,7 +53,7 @@ export default function Dashboard() {
   return (
     <main className="min-h-screen">
       <PlainBackground color="blue">
-        <div className="container mx-auto max-w-7xl px-4 py-8 z-40 py-24">
+        <div className="z-40 container mx-auto h-screen max-w-7xl px-4 py-8 py-24">
           <h1 className="sr-only">TEDxITB 9.0 Dashboard</h1>
 
           {/* Header Section */}
@@ -68,133 +63,21 @@ export default function Dashboard() {
             transition={{ duration: 0.5 }}
             className="mb-8 rounded-xl bg-white p-6 shadow-lg"
           >
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col items-center justify-between gap-2 text-center text-base md:flex-row md:text-left">
               <div className="flex items-center gap-4">
-                
                 <div>
-                  <h2 className="text-3xl font-bold text-gray-800">
+                  <h2 className="text-xl font-bold text-gray-800 md:text-3xl">
                     Welcome back, {session.user.name}!
                   </h2>
-                  <p className="text-gray-600">{session.user.email}</p>
-                  {profile?.emailVerified && (
-                    <span className="mt-2 inline-block rounded-full bg-green-100 px-3 py-1 text-xs text-green-800">
-                      ✓ Email Verified
-                    </span>
-                  )}
+                  <p className="text-lg text-gray-600">{session.user.email}</p>
                 </div>
               </div>
               <button
                 onClick={handleSignOut}
-                className="rounded-lg bg-red-600 px-6 py-2 text-white transition-colors hover:bg-red-700"
+                className="rounded-lg bg-red-600 px-3 py-2 text-white transition-colors hover:cursor-pointer hover:bg-red-700 md:px-6 md:py-2"
               >
                 Sign Out
               </button>
-            </div>
-          </motion.div>
-
-          {/* Stats Cards */}
-          <div className="mb-8 grid gap-6 md:grid-cols-3">
-         </div>
-
-          <div className="grid gap-6 lg:grid-cols-2">
-            {/* Recent Posts */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="rounded-xl bg-white p-6 shadow-lg"
-            >
-              <h3 className="mb-4 text-2xl font-bold text-gray-800">
-                Active Sessions
-              </h3>
-              {sessions && sessions.length > 0 ? (
-                <div className="space-y-3">
-                  {sessions.slice(0, 5).map((sess) => (
-                    <div
-                      key={sess.id}
-                      className="rounded-lg border border-gray-200 p-4"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm font-semibold text-gray-800">
-                            {sess.userAgent?.split(" ")[0] ?? "Unknown Device"}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            {sess.ipAddress}
-                          </p>
-                        </div>
-                        <span
-                          className={`rounded-full px-3 py-1 text-xs ${
-                            new Date(sess.expiresAt) > new Date()
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {new Date(sess.expiresAt) > new Date()
-                            ? "Active"
-                            : "Expired"}
-                        </span>
-                      </div>
-                      <p className="mt-2 text-xs text-gray-400">
-                        Created:{" "}
-                        {new Date(sess.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-500">No active sessions</p>
-              )}
-            </motion.div>
-          </div>
-
-          {/* Account Details */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-            className="mt-6 rounded-xl bg-white p-6 shadow-lg"
-          >
-            <h3 className="mb-4 text-2xl font-bold text-gray-800">
-              Account Details
-            </h3>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-gray-600">
-                  User ID
-                </label>
-                <p className="rounded-lg bg-gray-50 p-3 font-mono text-sm text-gray-800">
-                  {session.user.id}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-gray-600">
-                  Email
-                </label>
-                <p className="rounded-lg bg-gray-50 p-3 text-sm text-gray-800">
-                  {session.user.email}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-gray-600">
-                  Account Created
-                </label>
-                <p className="rounded-lg bg-gray-50 p-3 text-sm text-gray-800">
-                  {profile?.createdAt
-                    ? new Date(profile.createdAt).toLocaleString()
-                    : "N/A"}
-                </p>
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-semibold text-gray-600">
-                  Last Updated
-                </label>
-                <p className="rounded-lg bg-gray-50 p-3 text-sm text-gray-800">
-                  {profile?.updatedAt
-                    ? new Date(profile.updatedAt).toLocaleString()
-                    : "N/A"}
-                </p>
-              </div>
             </div>
           </motion.div>
         </div>

@@ -5,6 +5,12 @@ import Link from "next/link";
 import { motion, useMotionValueEvent, useScroll, AnimatePresence } from "motion/react"
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { useAuthStore } from "~/stores";
+
+const truncateWithEllipsis = (text: string, maxLength: number = 10): string => {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + "…";
+};
 
 const navLinks = [
   { href: "/about", label: "About" },
@@ -28,8 +34,8 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: -20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: { duration: 0.3, ease: "easeOut" as const },
   },
@@ -39,6 +45,7 @@ const Navbar = () => {
   const [hidden, setHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
+  const { user, isAuthenticated, isLoading } = useAuthStore();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
@@ -71,7 +78,7 @@ const Navbar = () => {
         </motion.div>
 
         {/* Desktop Navigation */}
-        <motion.div 
+        <motion.div
           className="hidden lg:flex gap-8 items-center text-foreground"
           variants={containerVariants}
           initial="hidden"
@@ -92,9 +99,17 @@ const Navbar = () => {
             whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
             whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
           >
-            <Link href="/signin" className="px-4 py-1.5 bg-red text-white rounded-md shadow-xl">
-              Sign in
-            </Link>
+            {isLoading ? (
+              <span className="px-4 py-1.5 text-gray-400">Loading...</span>
+            ) : isAuthenticated && user ? (
+              <Link href="/dashboard" className="px-4 py-1.5 bg-red text-white rounded-md shadow-xl max-w-[120px] truncate inline-block">
+                {truncateWithEllipsis(user.name.split(" ")[0] ?? "")}
+              </Link>
+            ) : (
+              <Link href="/signin" className="px-4 py-1.5 bg-red text-white rounded-md shadow-xl">
+                Sign in
+              </Link>
+            )}
           </motion.div>
         </motion.div>
 
@@ -135,7 +150,7 @@ const Navbar = () => {
                   <X size={24} />
                 </button>
 
-                <motion.nav 
+                <motion.nav
                   className="flex flex-col gap-4"
                   variants={containerVariants}
                   initial="hidden"
@@ -157,13 +172,27 @@ const Navbar = () => {
                   ))}
 
                   <motion.div variants={itemVariants}>
-                    <Link
-                      href="/login"
-                      className="block w-full text-center px-4 py-2 bg-red text-white rounded-md shadow-xl"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Sign in
-                    </Link>
+                    {isLoading ? (
+                      <span className="block w-full text-center px-4 py-2 text-gray-400">
+                        Loading...
+                      </span>
+                    ) : isAuthenticated && user ? (
+                      <Link
+                        href="/dashboard"
+                        className="block w-full text-center px-4 py-2 bg-red text-white rounded-md shadow-xl truncate"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {truncateWithEllipsis(user.name.split(" ")[0] ?? "")}
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/signin"
+                        className="block w-full text-center px-4 py-2 bg-red text-white rounded-md shadow-xl"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Sign in
+                      </Link>
+                    )}
                   </motion.div>
                 </motion.nav>
               </div>
