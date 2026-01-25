@@ -1,7 +1,6 @@
-import AboutHero from "./components/AboutHero";
-import HappinessThroughColors from "./components/HappinessThroughColors";
-import ColorGrid from "./components/ColorGrid";
-
+import AboutHero from "./_components/AboutHero";
+import HappinessThroughColors from "./_components/HappinessThroughColors";
+import ColorGrid from "./_components/ColorGrid";
 
 export default function About() {
   return (
@@ -10,7 +9,6 @@ export default function About() {
 
       <AboutHero />
 
-      
       <section className="relative w-full overflow-hidden bg-[url('/pattern-bg.svg')] bg-repeat py-12 md:py-16 lg:py-24">
         <HappinessThroughColors />
         <ColorGrid />

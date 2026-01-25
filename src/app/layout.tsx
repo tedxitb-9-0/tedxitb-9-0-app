@@ -5,10 +5,11 @@ import { Roboto_Slab, Titan_One } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 
 import { TRPCReactProvider } from "~/trpc/react";
-import Navbar from "~/components/Navbar";
-import Footer from "~/components/Footer";
+import Navbar from "~/_components/Navbar";
+import Footer from "~/_components/Footer";
+import AuthProvider from "~/_components/AuthProvider";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://tedxitb.id';
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "https://tedxitb.id";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
@@ -16,8 +17,19 @@ export const metadata: Metadata = {
     default: "TEDxITB 9.0 - Happiness Through Colors",
     template: "%s | TEDxITB 9.0",
   },
-  description: "TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology. Join us for TEDxITB 9.0: Happiness Through Colors - exploring ideas worth spreading.",
-  keywords: ["TEDx", "TEDxITB", "TED", "ITB", "Bandung Institute of Technology", "Innovation", "Ideas Worth Spreading", "Happiness Through Colors", "TEDxITB 9.0"],
+  description:
+    "TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology. Join us for TEDxITB 9.0: Happiness Through Colors - exploring ideas worth spreading.",
+  keywords: [
+    "TEDx",
+    "TEDxITB",
+    "TED",
+    "ITB",
+    "Bandung Institute of Technology",
+    "Innovation",
+    "Ideas Worth Spreading",
+    "Happiness Through Colors",
+    "TEDxITB 9.0",
+  ],
   authors: [{ name: "TEDxITB Team" }],
   creator: "TEDxITB",
   publisher: "TEDxITB",
@@ -26,14 +38,25 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: baseUrl,
     title: "TEDxITB 9.0 - Happiness Through Colors",
-    description: "TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology. Join us for TEDxITB 9.0: Happiness Through Colors.",
+    description:
+      "TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology. Join us for TEDxITB 9.0: Happiness Through Colors.",
     siteName: "TEDxITB",
+    images: [
+      {
+        url: "/htc.png",
+        width: 1200,
+        height: 630,
+        alt: "TEDxITB 9.0 - Happiness Through Colors",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "TEDxITB 9.0 - Happiness Through Colors",
-    description: "TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology.",
+    description:
+      "TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology.",
     creator: "@tedxitb",
+    images: ["/tedx.png"],
   },
   robots: {
     index: true,
@@ -41,9 +64,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
   icons: [
@@ -62,7 +85,7 @@ const titanOne = Titan_One({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-titan-one",
-})
+});
 
 export default function RootLayout({
   children,
@@ -72,9 +95,11 @@ export default function RootLayout({
       <body>
         <NextTopLoader color="red" showSpinner={false} />
         <TRPCReactProvider>
-          <Navbar />
-          {children}
-          <Footer />
+          <AuthProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </AuthProvider>
         </TRPCReactProvider>
       </body>
     </html>
