@@ -3,8 +3,8 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import PlainBackground from "~/_components/PlainBackground";
-import { magazines, getLatestMagazine } from "./data";
 import Image from "next/image";
+import { api } from "~/trpc/react";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -26,10 +26,14 @@ const itemVariants = {
   },
 };
 
-const latestMagazine = getLatestMagazine();
-
 export default function MagazineClient() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  // Fetch magazines from tRPC API (connected to Contentful)
+  const { data: latestMagazine, isLoading: isLoadingLatest } =
+    api.magazine.getLatest.useQuery();
+  const { data: magazines, isLoading: isLoadingAll } =
+    api.magazine.getAll.useQuery();
 
   // Quick preview in modal (click on cover/title/description)
   const handleQuickPreview = (flipbookUrl: string) => {
@@ -44,6 +48,48 @@ export default function MagazineClient() {
   const handleViewFlipbook = (flipbookUrl: string) => {
     window.open(flipbookUrl, "_blank");
   };
+
+  // Loading state
+  if (isLoadingLatest || isLoadingAll) {
+    return (
+      <main className="flex min-h-screen flex-col">
+        <PlainBackground color="pink">
+          <div className="flex min-h-screen items-center justify-center">
+            <motion.div
+              className="relative z-30 flex flex-col items-center gap-4 px-4 text-center text-white"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-white border-t-transparent sm:h-16 sm:w-16" />
+              <p className="text-lg font-medium sm:text-xl">Loading magazines...</p>
+            </motion.div>
+          </div>
+        </PlainBackground>
+      </main>
+    );
+  }
+
+  // Error state - no latest magazine found
+  if (!latestMagazine) {
+    return (
+      <main className="flex min-h-screen flex-col">
+        <PlainBackground color="pink">
+          <div className="flex min-h-screen items-center justify-center">
+            <motion.div
+              className="relative z-30 flex flex-col items-center gap-4 px-4 text-center text-white"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <p className="text-lg font-medium sm:text-xl">No magazines available at the moment.</p>
+              <p className="text-sm opacity-80 sm:text-base">Please check back later.</p>
+            </motion.div>
+          </div>
+        </PlainBackground>
+      </main>
+    );
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
@@ -126,19 +172,18 @@ export default function MagazineClient() {
                 className="cursor-pointer px-2 text-lg font-bold transition-opacity hover:opacity-80 sm:text-xl md:px-0 md:text-2xl lg:text-3xl"
                 onClick={() => handleQuickPreview(latestMagazine.flipbookUrl)}
               >
-                {new Date(latestMagazine.publishedDate).toLocaleDateString(
-                  "en-US",
-                  { month: "long", year: "numeric" },
-                )}{" "}
+                {new Date(latestMagazine.date).toLocaleDateString("en-US", {
+                  month: "long",
+                  year: "numeric",
+                })}{" "}
                 Edition: {latestMagazine.title}
               </h2>
-              {/* Description*/}
-              <p
+              {/* Description - rendered as HTML since it comes from Contentful rich text */}
+              <div
                 className="cursor-pointer px-2 text-justify text-sm leading-snug transition-opacity hover:opacity-80 sm:text-base md:px-0 md:text-lg md:leading-relaxed"
                 onClick={() => handleQuickPreview(latestMagazine.flipbookUrl)}
-              >
-                {latestMagazine.description}
-              </p>
+                dangerouslySetInnerHTML={{ __html: latestMagazine.description }}
+              />
               {/* View Flipbook Button*/}
               <div className="z-50 flex justify-center md:justify-start">
                 <motion.button
@@ -182,7 +227,7 @@ export default function MagazineClient() {
             viewport={{ once: true, margin: "-100px" }}
             variants={containerVariants}
           >
-            {magazines.map((magazine) => (
+            {magazines?.map((magazine) => (
               <motion.div
                 key={magazine.id}
                 variants={itemVariants}
@@ -217,12 +262,12 @@ export default function MagazineClient() {
                     {magazine.title}
                   </h3>
 
-                  <p
+                  {/* Description - rendered as HTML since it comes from Contentful rich text */}
+                  <div
                     className="text-navy line-clamp-3 cursor-pointer text-sm transition-opacity hover:opacity-80 sm:text-base md:line-clamp-none md:text-lg"
                     onClick={() => handleQuickPreview(magazine.flipbookUrl)}
-                  >
-                    {magazine.description}
-                  </p>
+                    dangerouslySetInnerHTML={{ __html: magazine.description }}
+                  />
 
                   {/* View Flipbook Button*/}
                   <motion.button
