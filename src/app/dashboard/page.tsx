@@ -4,7 +4,7 @@ import { useSession, signOut } from "~/server/better-auth/client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { motion } from "motion/react";
-import { api } from "~/trpc/react";
+// import { api } from "~/trpc/react";
 import PlainBackground from "~/_components/PlainBackground";
 
 export default function Dashboard() {
@@ -12,9 +12,9 @@ export default function Dashboard() {
   const { data: session, isPending } = useSession();
 
   // Fetch user data with tRPC
-  const { data: _profile } = api.user.getProfileById.useQuery(undefined, {
-    enabled: !!session,
-  });
+  // const { data: _profile } = api.user.getProfileById.useQuery(undefined, {
+  //   enabled: !!session,
+  // });
 
   // Protect the route - redirect if not authenticated
   useEffect(() => {
