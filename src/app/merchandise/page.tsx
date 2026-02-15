@@ -1,9 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import ComingSoon from "~/_components/ComingSoon";
-import PlainBackground from "~/_components/PlainBackground";
-import { motion } from "motion/react";
 import { MerchandiseHero } from "./_components/MerchandiseHero";
 import MerchandiseGrid from "./_components/MerchandiseGrid";
 

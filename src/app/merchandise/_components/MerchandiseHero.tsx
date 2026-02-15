@@ -2,7 +2,7 @@ import PlainBackground from "~/_components/PlainBackground";
 import { motion } from "motion/react";
 import Image from "next/image";
 
-export const MerchandiseHero = (props: {}) => {
+export const MerchandiseHero = () => {
   return (
     <section>
       <PlainBackground color="blue">
