@@ -4,17 +4,21 @@ import { useSession, signOut } from "~/server/better-auth/client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { motion } from "motion/react";
-// import { api } from "~/trpc/react";
+import { api } from "~/trpc/react";
 import PlainBackground from "~/_components/PlainBackground";
+import OrdersList from "./_components/OrdersList";
 
 export default function Dashboard() {
   const router = useRouter();
   const { data: session, isPending } = useSession();
 
-  // Fetch user data with tRPC
-  // const { data: _profile } = api.user.getProfileById.useQuery(undefined, {
-  //   enabled: !!session,
-  // });
+  // Fetch user orders
+  const { data: orders, isLoading: ordersLoading } = api.order.getUserOrders.useQuery(
+    undefined,
+    {
+      enabled: !!session,
+    },
+  );
 
   // Protect the route - redirect if not authenticated
   useEffect(() => {
@@ -37,9 +41,9 @@ export default function Dashboard() {
   if (isPending) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-red-600"></div>
-          <p className="text-gray-600">Loading...</p>
+        <div className="flex flex-col items-center">
+          <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-navy/20 border-t-blue"></div>
+          <p className="text-navy">Loading...</p>
         </div>
       </div>
     );
@@ -53,7 +57,7 @@ export default function Dashboard() {
   return (
     <main className="min-h-screen">
       <PlainBackground color="blue">
-        <div className="z-40 container mx-auto h-screen max-w-7xl px-4 py-8 py-24">
+        <div className="z-40 container mx-auto min-h-screen max-w-7xl px-4 py-8 py-24">
           <h1 className="sr-only">TEDxITB 9.0 Dashboard</h1>
 
           {/* Header Section */}
@@ -66,22 +70,36 @@ export default function Dashboard() {
             <div className="flex flex-col items-center justify-between gap-2 text-center text-base md:flex-row md:text-left">
               <div className="flex items-center gap-4">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-800 md:text-3xl">
+                  <h2 className="text-xl font-bold text-navy md:text-3xl">
                     Welcome back, {session.user.name}!
                   </h2>
-                  <p className="text-lg text-gray-600">{session.user.email}</p>
+                  <p className="text-lg text-navy/70">{session.user.email}</p>
                 </div>
               </div>
               <button
                 onClick={handleSignOut}
-                className="rounded-lg bg-red-600 px-3 py-2 text-white transition-colors hover:cursor-pointer hover:bg-red-700 md:px-6 md:py-2"
+                className="rounded-lg bg-red px-3 py-2 text-white transition-colors hover:cursor-pointer hover:bg-red/90 md:px-6 md:py-2"
               >
                 Sign Out
               </button>
             </div>
           </motion.div>
+
+          {/* Orders Section */}
+          {ordersLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="flex flex-col items-center">
+                <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-white/20 border-t-blue"></div>
+                <p className="text-white">Loading orders...</p>
+              </div>
+            </div>
+          ) : (
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+            <OrdersList orders={orders as any} />
+          )}
         </div>
       </PlainBackground>
     </main>
   );
 }
+

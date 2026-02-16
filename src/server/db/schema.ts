@@ -127,6 +127,8 @@ export const orders = createTable("order", {
   // Flexible JSON fields - one will be populated based on orderType
   merchJson: json("merch_json"), // For merchandise orders
   ticketJson: json("ticket_json"), // For ticket orders (pre-event or main-event)
+  paymentProofUrl: text("payment_proof_url"), // Base64 encoded payment proof image
+  qrCode: text("qr_code"), // Attendance QR code string (e.g., TEDX-PE-{orderId})
   createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),
