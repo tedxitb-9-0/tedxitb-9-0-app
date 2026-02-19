@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { eq, desc, and } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, adminProcedure } from "../trpc";
 import { orders } from "~/server/db/schema";
 import { generateAttendanceQRString } from "~/lib/qrcode";
 
@@ -150,6 +150,47 @@ export const orderRouter = createTRPCRouter({
 
     return userOrders;
   }),
+
+  /**
+   * Get all orders (admin only)
+   */
+  getAllOrders: adminProcedure.query(async ({ ctx }) => {
+    const allOrders = await ctx.db.query.orders.findMany({
+      with: {
+        user: true,
+      },
+      orderBy: [desc(orders.createdAt)],
+    });
+
+    return allOrders;
+  }),
+
+  /**
+   * Update order status (admin only)
+   */
+  updateOrderStatus: adminProcedure
+    .input(
+      z.object({
+        orderId: z.string().uuid(),
+        status: z.enum(["pending", "paid", "confirmed", "cancelled"]),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const [updatedOrder] = await ctx.db
+        .update(orders)
+        .set({
+          status: input.status,
+          updatedAt: new Date(),
+        })
+        .where(eq(orders.id, input.orderId))
+        .returning();
+
+      if (!updatedOrder) {
+        throw new Error("Order not found");
+      }
+
+      return updatedOrder;
+    }),
 
   /**
    * Get a specific order by ID

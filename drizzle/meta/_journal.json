@@ -15,6 +15,20 @@
       "when": 1771243910377,
       "tag": "0001_sturdy_sentry",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771245000000,
+      "tag": "0002_admin_role",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1771510863837,
+      "tag": "0003_plain_mikhail_rasputin",
+      "breakpoints": true
     }
   ]
 }

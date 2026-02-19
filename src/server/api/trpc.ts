@@ -8,11 +8,13 @@
  */
 
 import { initTRPC, TRPCError } from "@trpc/server";
+import { eq } from "drizzle-orm";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { auth } from "~/server/better-auth";
 import { db } from "~/server/db";
+import { user } from "~/server/db/schema";
 
 /**
  * 1. CONTEXT
@@ -132,3 +134,15 @@ export const protectedProcedure = t.procedure
       },
     });
   });
+
+export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+  const currentUser = await ctx.db.query.user.findFirst({
+    where: eq(user.id, ctx.session.user.id),
+  });
+
+  if (!currentUser || currentUser.role !== "admin") {
+    throw new TRPCError({ code: "FORBIDDEN" });
+  }
+
+  return next();
+});

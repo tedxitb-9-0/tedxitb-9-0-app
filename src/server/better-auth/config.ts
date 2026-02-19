@@ -47,13 +47,12 @@ export const auth = betterAuth({
         ),
       });
 
-      console.log(`[Session Callback] User: ${user.email}, Has Ticket: ${!!existingOrder}`);
-
       return {
         ...session,
         hasPreEventTicket: !!existingOrder,
         user: {
           ...session.user,
+          role: user.role ?? "user",
           hasPreEventTicket: !!existingOrder,
         },
       };

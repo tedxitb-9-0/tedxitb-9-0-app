@@ -3,16 +3,19 @@
 import { motion } from "motion/react";
 import { signOut } from "~/server/better-auth/client";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface DashboardClientProps {
   userName: string;
   userEmail: string;
+  isAdmin: boolean;
   children: React.ReactNode;
 }
 
 export default function DashboardClient({
   userName,
   userEmail,
+  isAdmin,
   children,
 }: DashboardClientProps) {
   const router = useRouter();
@@ -45,12 +48,22 @@ export default function DashboardClient({
               <p className="text-lg text-navy/70">{userEmail}</p>
             </div>
           </div>
-          <button
-            onClick={handleSignOut}
-            className="rounded-lg bg-red px-3 py-2 text-white transition-colors hover:cursor-pointer hover:bg-red/90 md:px-6 md:py-2"
-          >
-            Sign Out
-          </button>
+          <div className="flex flex-col gap-2 md:flex-row">
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="rounded-lg bg-blue px-3 py-2 text-center text-white transition-colors hover:bg-blue/90 md:px-6"
+              >
+                Go to Admin Panel
+              </Link>
+            )}
+            <button
+              onClick={handleSignOut}
+              className="rounded-lg bg-red px-3 py-2 text-white transition-colors hover:cursor-pointer hover:bg-red/90 md:px-6 md:py-2"
+            >
+              Sign Out
+            </button>
+          </div>
         </div>
       </motion.div>
 

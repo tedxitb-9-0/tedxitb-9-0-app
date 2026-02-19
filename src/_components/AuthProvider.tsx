@@ -28,6 +28,7 @@ export default function AuthProvider({
         id: session.user.id,
         name: session.user.name,
         email: session.user.email,
+        role: (session.user as any).role ?? "user",
         image: session.user.image,
         emailVerified: session.user.emailVerified,
         createdAt: new Date(session.user.createdAt),

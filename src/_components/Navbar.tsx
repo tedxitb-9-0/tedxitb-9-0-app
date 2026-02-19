@@ -94,6 +94,15 @@ const Navbar = () => {
             </motion.div>
           ))}
 
+          {isAuthenticated && user?.role === "admin" && (
+            <motion.div
+              variants={itemVariants}
+              whileHover={{ y: -3, transition: { duration: 0.15 } }}
+            >
+              <Link href="/admin">Admin</Link>
+            </motion.div>
+          )}
+
           <motion.div
             variants={itemVariants}
             whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
@@ -102,7 +111,7 @@ const Navbar = () => {
             {isLoading ? (
               <span className="px-4 py-1.5 text-gray-400">Loading...</span>
             ) : isAuthenticated && user ? (
-              <Link href="/dashboard" className="px-4 py-1.5 bg-red text-white rounded-md shadow-xl max-w-[120px] truncate inline-block">
+              <Link href="/dashboard" className="px-4 py-1.5 bg-red text-white rounded-md shadow-xl max-w-30 truncate inline-block">
                 {truncateWithEllipsis(user.name.split(" ")[0] ?? "")}
               </Link>
             ) : (
@@ -170,6 +179,18 @@ const Navbar = () => {
                       </Link>
                     </motion.div>
                   ))}
+
+                  {isAuthenticated && user?.role === "admin" && (
+                    <motion.div variants={itemVariants}>
+                      <Link
+                        href="/admin"
+                        className="block py-2 text-lg text-foreground hover:text-red transition-colors"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Admin
+                      </Link>
+                    </motion.div>
+                  )}
 
                   <motion.div variants={itemVariants}>
                     {isLoading ? (
