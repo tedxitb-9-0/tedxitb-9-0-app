@@ -1,9 +1,11 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
+import { eq, and } from "drizzle-orm";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
+import { orders } from "~/server/db/schema";
 
 const isProduction = env.NODE_ENV === "production";
 const baseURL = isProduction ? "https://tedxitb.id" : "http://localhost:3000";
@@ -19,7 +21,7 @@ export const auth = betterAuth({
     enabled: true,
   },
   socialProviders: {
-   google: {
+    google: {
       clientId: env.BETTER_AUTH_GOOGLE_CLIENT_ID,
       clientSecret: env.BETTER_AUTH_GOOGLE_CLIENT_SECRET,
     },
@@ -35,6 +37,27 @@ export const auth = betterAuth({
     },
     cookiePrefix: "better-auth",
     useSecureCookies: isProduction, // true in production (HTTPS), false in development (HTTP)
+  },
+  callbacks: {
+    session: async ({ session, user }: { session: any; user: any }) => {
+      const existingOrder = await db.query.orders.findFirst({
+        where: and(
+          eq(orders.userId, user.id),
+          eq(orders.orderType, "pre_event_ticket"),
+        ),
+      });
+
+      console.log(`[Session Callback] User: ${user.email}, Has Ticket: ${!!existingOrder}`);
+
+      return {
+        ...session,
+        hasPreEventTicket: !!existingOrder,
+        user: {
+          ...session.user,
+          hasPreEventTicket: !!existingOrder,
+        },
+      };
+    },
   },
 });
 

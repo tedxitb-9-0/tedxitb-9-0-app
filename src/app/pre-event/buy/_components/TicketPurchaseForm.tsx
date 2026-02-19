@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { env } from "~/env";
 import { X, Upload, FileText } from "lucide-react";
+import { toast } from "sonner";
 
 const ticketPurchaseSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -53,8 +54,12 @@ export default function TicketPurchaseForm({
   const createOrder = api.order.createPreEventOrder.useMutation({
     onSuccess: (data) => {
       if (data?.id) {
+        toast.success("Order created successfully!");
         router.push("/dashboard");
       }
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
@@ -289,12 +294,7 @@ export default function TicketPurchaseForm({
           )}
         </div>
 
-        {/* Submit Error */}
-        {createOrder.error && (
-          <div className="bg-red/10 text-red rounded-lg p-4 text-sm">
-            {createOrder.error.message}
-          </div>
-        )}
+
 
         {/* Submit Button */}
         <button

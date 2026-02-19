@@ -5,17 +5,29 @@ import { useRouter } from "next/navigation";
 import { useSession } from "~/server/better-auth/client";
 import ColorfulBackground from "~/_components/ColorfulBackground";
 import TicketPurchaseForm from "./_components/TicketPurchaseForm";
+import { toast } from "sonner";
+import { api } from "~/trpc/react";
 
 export default function BuyTicketPage() {
   const router = useRouter();
-  const { data: session, isPending } = useSession();
+  const { data: session, isPending: sessionPending } = useSession();
 
-  // Protect the route - redirect if not authenticated
+  const { data: ticketCheck, isPending: ticketPending } =
+    api.order.hasPreEventTicket.useQuery(undefined, {
+      enabled: !!session,
+    });
+
+  const isPending = sessionPending || (!!session && ticketPending);
+
+  // Protect the route - redirect if not authenticated or already has a ticket
   useEffect(() => {
-    if (!isPending && !session) {
+    if (!sessionPending && !session) {
       router.push("/signin");
+    } else if (ticketCheck?.hasTicket) {
+      toast.error("You already have a pre-event ticket!");
+      router.push("/dashboard");
     }
-  }, [session, isPending, router]);
+  }, [session, sessionPending, ticketCheck, router]);
 
   // Loading state
   if (isPending) {
@@ -29,8 +41,8 @@ export default function BuyTicketPage() {
     );
   }
 
-  // Not authenticated
-  if (!session) {
+  // Not authenticated or already has a ticket
+  if (!session || ticketCheck?.hasTicket) {
     return null;
   }
 

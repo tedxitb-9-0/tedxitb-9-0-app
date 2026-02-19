@@ -121,6 +121,22 @@ export const orderRouter = createTRPCRouter({
     }),
 
   /**
+   * Check if the current user already has a pre-event ticket order
+   */
+  hasPreEventTicket: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+
+    const existingOrder = await ctx.db.query.orders.findFirst({
+      where: and(
+        eq(orders.userId, userId),
+        eq(orders.orderType, "pre_event_ticket"),
+      ),
+    });
+
+    return { hasTicket: !!existingOrder };
+  }),
+
+  /**
    * Get all orders for the logged-in user
    */
   getUserOrders: protectedProcedure.query(async ({ ctx }) => {
