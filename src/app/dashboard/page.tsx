@@ -20,7 +20,7 @@ export default async function Dashboard() {
   return (
     <main className="min-h-screen">
       <PlainBackground color="blue">
-        <div className="z-40 container mx-auto min-h-screen max-w-7xl px-4 py-8 py-24">
+          <div className="z-40 container mx-auto min-h-screen max-w-7xl px-4 py-16 md:py-24">
           <h1 className="sr-only">TEDxITB 9.0 Dashboard</h1>
 
           <DashboardClient

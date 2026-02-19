@@ -131,26 +131,26 @@ export default function OrdersList({ orders }: OrdersListProps) {
         <h3 className="mb-6 text-2xl font-bold text-navy">My Orders</h3>
 
         {/* Stats Summary */}
-        <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-          <div className="rounded-lg bg-blue/10 p-4">
-            <p className="text-sm text-blue">Total Orders</p>
-            <p className="text-2xl font-bold text-navy">{orders.length}</p>
+        <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <div className="rounded-lg bg-blue/10 p-3 md:p-4">
+            <p className="text-xs text-blue md:text-sm">Total Orders</p>
+            <p className="text-xl font-bold text-navy md:text-2xl">{orders.length}</p>
           </div>
-          <div className="rounded-lg bg-[#10b981]/10 p-4">
-            <p className="text-sm text-[#10b981]">Confirmed</p>
-            <p className="text-2xl font-bold text-navy">
+          <div className="rounded-lg bg-[#10b981]/10 p-3 md:p-4">
+            <p className="text-xs text-[#10b981] md:text-sm">Confirmed</p>
+            <p className="text-xl font-bold text-navy md:text-2xl">
               {orders.filter((o) => o.status === "confirmed").length}
             </p>
           </div>
-          <div className="rounded-lg bg-yellow/10 p-4">
-            <p className="text-sm text-yellow">Pending</p>
-            <p className="text-2xl font-bold text-navy">
+          <div className="rounded-lg bg-yellow/10 p-3 md:p-4">
+            <p className="text-xs text-yellow md:text-sm">Pending</p>
+            <p className="text-xl font-bold text-navy md:text-2xl">
               {orders.filter((o) => o.status === "pending").length}
             </p>
           </div>
-          <div className="rounded-lg bg-purple/10 p-4">
-            <p className="text-sm text-purple">Total Spent</p>
-            <p className="text-2xl font-bold text-navy">
+          <div className="col-span-2 rounded-lg bg-purple/10 p-3 md:col-span-1 md:p-4">
+            <p className="text-xs text-purple md:text-sm">Total Spent</p>
+            <p className="text-xl font-bold text-navy md:text-2xl">
               {new Intl.NumberFormat("id-ID", {
                 style: "currency",
                 currency: "IDR",
@@ -166,7 +166,7 @@ export default function OrdersList({ orders }: OrdersListProps) {
         </div>
 
         {/* Filters */}
-        <div className="mb-6 flex flex-wrap gap-4 border-b pb-4">
+        <div className="mb-6 grid grid-cols-2 gap-3 border-b pb-4 md:flex md:flex-wrap md:gap-4">
           <div>
             <label className="mb-1 block text-sm font-medium text-navy">
               Type
@@ -174,7 +174,7 @@ export default function OrdersList({ orders }: OrdersListProps) {
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              className="rounded-lg border border-navy/20 px-4 py-2 text-sm text-navy focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue"
+              className="w-full rounded-lg border border-navy/20 px-3 py-2 text-sm text-navy focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue md:w-auto md:px-4"
             >
               <option value="all">All Types</option>
               <option value="pre_event_ticket">Pre-Event</option>
@@ -190,7 +190,7 @@ export default function OrdersList({ orders }: OrdersListProps) {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="rounded-lg border border-navy/20 px-4 py-2 text-sm text-navy focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue"
+              className="w-full rounded-lg border border-navy/20 px-3 py-2 text-sm text-navy focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue md:w-auto md:px-4"
             >
               <option value="all">All Statuses</option>
               <option value="pending">Pending</option>
@@ -201,110 +201,193 @@ export default function OrdersList({ orders }: OrdersListProps) {
           </div>
         </div>
 
-        {/* Orders Table */}
+        {/* Orders List */}
         {filteredOrders.length === 0 ? (
           <div className="py-12 text-center">
             <p className="text-gray-600">No orders match the selected filters</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-navy/10 text-left text-sm font-semibold text-navy">
-                  <th className="pb-3">Order ID</th>
-                  <th className="pb-3">Type</th>
-                  <th className="pb-3">Customer</th>
-                  <th className="pb-3">Amount</th>
-                  <th className="pb-3">Date</th>
-                  <th className="pb-3">Status</th>
-                  <th className="pb-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredOrders.map((order, index) => (
-                  <motion.tr
-                    key={order.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                    className="border-b border-navy/5 hover:bg-blue/5"
-                  >
-                    <td className="py-4">
-                      <span className="font-mono text-sm font-medium text-navy">
-                        {order.id.slice(0, 8).toUpperCase()}
-                      </span>
-                    </td>
-                    <td className="py-4">
-                      <span className="rounded-full bg-blue/10 px-3 py-1 text-xs font-semibold text-blue">
-                        {getOrderTypeLabel(order.orderType)}
-                      </span>
-                    </td>
-                    <td className="py-4">
-                      <div className="text-sm">
-                        <div className="font-medium text-navy">
-                          {order.ticketJson?.fullName ?? "N/A"}
-                        </div>
-                        <div className="text-navy/60">
-                          {order.ticketJson?.email ?? ""}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-4">
-                      <span className="font-semibold text-navy">
-                        {new Intl.NumberFormat("id-ID", {
-                          style: "currency",
-                          currency: "IDR",
-                          minimumFractionDigits: 0,
-                        }).format(order.totalAmount)}
-                      </span>
-                    </td>
-                    <td className="py-4">
-                      <span className="text-sm text-navy/70">
-                        {new Date(order.createdAt).toLocaleDateString("id-ID", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </span>
-                    </td>
-                    <td className="py-4">
-                      <span
-                        className={`rounded-full px-3 py-1 text-xs font-semibold ${getStatusBadge(order.status, !!order.paymentProofUrl)}`}
+          <>
+            {/* Mobile cards (< md) */}
+            <div className="flex flex-col gap-4 md:hidden">
+              {filteredOrders.map((order, index) => (
+                <motion.div
+                  key={order.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className="rounded-xl border border-navy/10 bg-gray-50 p-4"
+                >
+                  {/* Top row: type badge + status badge */}
+                  <div className="mb-3 flex items-center justify-between gap-2">
+                    <span className="rounded-full bg-blue/10 px-3 py-1 text-xs font-semibold text-blue">
+                      {getOrderTypeLabel(order.orderType)}
+                    </span>
+                    <span
+                      className={`rounded-full px-3 py-1 text-xs font-semibold ${getStatusBadge(order.status, !!order.paymentProofUrl)}`}
+                    >
+                      {getStatusText(order.status, !!order.paymentProofUrl)}
+                    </span>
+                  </div>
+
+                  {/* Order ID + Customer */}
+                  <div className="mb-3">
+                    <p className="font-mono text-xs font-medium text-navy/50">#{order.id.slice(0, 8).toUpperCase()}</p>
+                    {order.ticketJson && (
+                      <p className="mt-0.5 font-semibold text-navy">{order.ticketJson.fullName}</p>
+                    )}
+                    {order.ticketJson?.email && (
+                      <p className="text-sm text-navy/60">{order.ticketJson.email}</p>
+                    )}
+                  </div>
+
+                  {/* Amount + Date */}
+                  <div className="mb-3 flex items-center justify-between">
+                    <span className="text-lg font-bold text-navy">
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        minimumFractionDigits: 0,
+                      }).format(order.totalAmount)}
+                    </span>
+                    <span className="text-sm text-navy/60">
+                      {new Date(order.createdAt).toLocaleDateString("id-ID", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </span>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-2">
+                    {order.status === "pending" && !order.paymentProofUrl && (
+                      <Link
+                        href={`/pre-event/payment/${order.id}`}
+                        className="flex-1 rounded-lg bg-blue px-3 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-purple"
                       >
-                        {getStatusText(order.status, !!order.paymentProofUrl)}
-                      </span>
-                    </td>
-                    <td className="py-4">
-                      <div className="flex gap-2">
-                        {order.status === "pending" && !order.paymentProofUrl && (
-                          <Link
-                            href={`/pre-event/payment/${order.id}`}
-                            className="rounded-lg bg-blue px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-purple"
-                          >
-                            Pay
-                          </Link>
-                        )}
-                        {canViewQR(order) && (
-                          <button
-                            onClick={() =>
-                              handleViewQR(
-                                order.qrCode!,
-                                order.id,
-                                order.ticketJson?.fullName ?? "Attendee",
-                              )
-                            }
-                            className="rounded-lg bg-gradient-to-r from-purple to-pink px-3 py-1.5 text-xs font-semibold text-white transition-all hover:opacity-90"
-                          >
-                            View QR
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                        Complete Payment
+                      </Link>
+                    )}
+                    {canViewQR(order) && (
+                      <button
+                        onClick={() =>
+                          handleViewQR(
+                            order.qrCode!,
+                            order.id,
+                            order.ticketJson?.fullName ?? "Attendee",
+                          )
+                        }
+                        className="flex-1 rounded-lg bg-linear-to-r from-purple to-pink px-3 py-2 text-sm font-semibold text-white transition-all hover:opacity-90"
+                      >
+                        View QR Code
+                      </button>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Desktop table (md+) */}
+            <div className="hidden overflow-x-auto md:block">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-navy/10 text-left text-sm font-semibold text-navy">
+                    <th className="pb-3">Order ID</th>
+                    <th className="pb-3">Type</th>
+                    <th className="pb-3">Customer</th>
+                    <th className="pb-3">Amount</th>
+                    <th className="pb-3">Date</th>
+                    <th className="pb-3">Status</th>
+                    <th className="pb-3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredOrders.map((order, index) => (
+                    <motion.tr
+                      key={order.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                      className="border-b border-navy/5 hover:bg-blue/5"
+                    >
+                      <td className="py-4">
+                        <span className="font-mono text-sm font-medium text-navy">
+                          {order.id.slice(0, 8).toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="py-4">
+                        <span className="rounded-full bg-blue/10 px-3 py-1 text-xs font-semibold text-blue">
+                          {getOrderTypeLabel(order.orderType)}
+                        </span>
+                      </td>
+                      <td className="py-4">
+                        <div className="text-sm">
+                          <div className="font-medium text-navy">
+                            {order.ticketJson?.fullName ?? "N/A"}
+                          </div>
+                          <div className="text-navy/60">
+                            {order.ticketJson?.email ?? ""}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4">
+                        <span className="font-semibold text-navy">
+                          {new Intl.NumberFormat("id-ID", {
+                            style: "currency",
+                            currency: "IDR",
+                            minimumFractionDigits: 0,
+                          }).format(order.totalAmount)}
+                        </span>
+                      </td>
+                      <td className="py-4">
+                        <span className="text-sm text-navy/70">
+                          {new Date(order.createdAt).toLocaleDateString("id-ID", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </span>
+                      </td>
+                      <td className="py-4">
+                        <span
+                          className={`rounded-full px-3 py-1 text-xs font-semibold ${getStatusBadge(order.status, !!order.paymentProofUrl)}`}
+                        >
+                          {getStatusText(order.status, !!order.paymentProofUrl)}
+                        </span>
+                      </td>
+                      <td className="py-4">
+                        <div className="flex gap-2">
+                          {order.status === "pending" && !order.paymentProofUrl && (
+                            <Link
+                              href={`/pre-event/payment/${order.id}`}
+                              className="rounded-lg bg-blue px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-purple"
+                            >
+                              Pay
+                            </Link>
+                          )}
+                          {canViewQR(order) && (
+                            <button
+                              onClick={() =>
+                                handleViewQR(
+                                  order.qrCode!,
+                                  order.id,
+                                  order.ticketJson?.fullName ?? "Attendee",
+                                )
+                              }
+                              className="rounded-lg bg-linear-to-r from-purple to-pink px-3 py-1.5 text-xs font-semibold text-white transition-all hover:opacity-90"
+                            >
+                              View QR
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </motion.div>
 
