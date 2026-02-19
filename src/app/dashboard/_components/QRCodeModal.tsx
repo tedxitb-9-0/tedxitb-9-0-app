@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { generateQRCodeImage } from "~/lib/qrcode";
+import Image from "next/image";
 
 interface QRCodeModalProps {
   isOpen: boolean;
@@ -116,10 +117,13 @@ export default function QRCodeModal({
                 </div>
               ) : (
                 <div className="overflow-hidden rounded-lg border-2 border-gray-200 bg-white p-4 shadow-md">
-                  <img
+                  <Image
                     src={qrImageUrl}
                     alt="Attendance QR Code"
+                    width={256}
+                    height={256}
                     className="h-64 w-64"
+                    unoptimized
                   />
                 </div>
               )}

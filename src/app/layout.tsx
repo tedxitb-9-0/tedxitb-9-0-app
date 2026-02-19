@@ -1,5 +1,6 @@
 import "~/styles/globals.css";
 
+
 import { type Metadata } from "next";
 import { Roboto_Slab, Titan_One } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
