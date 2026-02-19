@@ -140,7 +140,7 @@ export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
     where: eq(user.id, ctx.session.user.id),
   });
 
-  if (!currentUser || currentUser.role !== "admin") {
+  if (currentUser?.role !== "admin") {
     throw new TRPCError({ code: "FORBIDDEN" });
   }
 
