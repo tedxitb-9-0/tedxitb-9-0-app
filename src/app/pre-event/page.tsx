@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "motion/react";
 import ColorfulBackground from "~/_components/ColorfulBackground";
 import ActivityCard from "./_components/ActivityCard";
+import ActivityCarousel from "./_components/ActivityCarousel";
 
 const activities = [
   {
@@ -159,6 +160,37 @@ const PreEvent = () => {
               />
             ))}
           </motion.div>
+        </div>
+      </section>
+      <section className="relative overflow-hidden bg-white py-16 md:py-24">
+        <div className="container relative z-10 mx-auto max-w-7xl px-4">
+        <h2 className="relative mb-20 text-center text-7xl font-titan leading-none">
+          <span
+            className="absolute inset-0 text-black opacity-20"
+            style={{
+              transform: "translateY(10px)",
+              zIndex: 0,
+            }}
+          >
+            Gallery
+          </span>
+          <span
+            className="absolute inset-0 text-transparent"
+            style={{
+              WebkitTextStroke: "12px white",
+              zIndex: 1,
+            }}
+          >
+            Gallery
+          </span>
+          <span
+            className="relative z-10 bg-gradient-to-r from-yellow-300 via-orange-400 to-pink-500 bg-clip-text text-transparent"
+          >
+            Gallery
+          </span>
+        </h2>
+          {/* Activity Carousel */}
+          <ActivityCarousel />
         </div>
       </section>
     </main>
