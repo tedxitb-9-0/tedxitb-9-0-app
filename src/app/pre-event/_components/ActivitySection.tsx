@@ -86,7 +86,7 @@ const ActivitySection = () => {
           {/* "Last Year's"*/}
           <div className="mx-auto mb-2 flex justify-center">
             <Image
-              src="/pre-event/last-year.svg"
+              src="/pre-event/last-year.png"
               alt="Last Year's"
               width={305}
               height={58}
@@ -98,7 +98,7 @@ const ActivitySection = () => {
           {/* "Workshop and Activities"*/}
           <div className="mx-auto mb-6 flex justify-center">
             <Image
-              src="/pre-event/workshop-activities.svg"
+              src="/pre-event/workshop-activities.png"
               alt="Workshop and Activities"
               width={865}
               height={95}
