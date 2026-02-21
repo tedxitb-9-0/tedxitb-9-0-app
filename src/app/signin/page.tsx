@@ -1,11 +1,16 @@
 "use client";
+import { useState } from "react";
 import ColorfulBackground from "~/_components/ColorfulBackground";
 import { authClient } from "~/server/better-auth/client";
 import { motion } from "motion/react";
 import Image from "next/image";
+import { Loader2 } from "lucide-react";
 
 const LoginPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleGoogleSignIn = async () => {
+    setIsLoading(true);
     const data = await authClient.signIn.social({
       provider: "google",
       callbackURL: "/dashboard",
@@ -13,6 +18,7 @@ const LoginPage = () => {
 
     if (data.error) {
       console.error("Signin Error: ", data.error);
+      setIsLoading(false);
     }
   };
 
@@ -46,16 +52,21 @@ const LoginPage = () => {
         >
           <button
             onClick={handleGoogleSignIn}
-            className="text-md hover: flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-black p-2 hover:bg-gray-100 md:text-xl"
+            disabled={isLoading}
+            className="text-md hover: flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border-black p-2 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-70 md:text-xl"
           >
-            <Image
-              src="/google.png"
-              height={50}
-              width={50}
-              alt="Google Logo"
-              className="w-6 md:w-8"
-            />
-            Sign In With Google
+            {isLoading ? (
+              <Loader2 className="h-6 w-6 animate-spin text-neutral-600 md:h-8 md:w-8" />
+            ) : (
+              <Image
+                src="/google.png"
+                height={50}
+                width={50}
+                alt="Google Logo"
+                className="w-6 md:w-8"
+              />
+            )}
+            {isLoading ? "Signing In..." : "Sign In With Google"}
           </button>
         </motion.div>
       </ColorfulBackground>
