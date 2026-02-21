@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import ColorfulBackground from "./ColorfulBackground"
+import ColorfulBackground from "./ColorfulBackground";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "motion/react";
@@ -19,53 +19,47 @@ const containerVariants = {
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     transition: { duration: 0.4, ease: "easeOut" as const },
   },
 };
-
-
 
 const ComingSoon = () => {
   return (
     <ColorfulBackground>
       {/* Center content with stagger */}
       <motion.div
-        className="flex flex-col w-full items-center gap-4 z-20"
+        className="z-20 flex w-full flex-col items-center gap-4"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-      <TEDxITBBadge />
- 
-      {/* Coming Soon Image - center floating */}
+        <TEDxITBBadge />
+
+        {/* Coming Soon Image - center floating */}
         <motion.div
           animate={{ y: [0, -15, 0] }}
-          transition={{ 
-            duration: 3, 
-            repeat: Infinity, 
-            ease: "easeInOut" 
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
           }}
-          className="w-[70%] max-w-4xl z-30"
+          className="z-30 w-[70%] max-w-4xl"
         >
-          <Image 
-            src="/comingsoon.webp" 
-            alt="Coming Soon" 
-            width={1200} 
+          <Image
+            src="/comingsoon.webp"
+            alt="Coming Soon"
+            width={1200}
             height={100}
-            className="w-full h-auto"
+            className="h-auto w-full"
             draggable={false}
           />
         </motion.div>
-       
-        <motion.div
-          variants={itemVariants}
-        >
-       <p>
-          Stay tuned for more!
-       </p> 
+
+        <motion.div variants={itemVariants}>
+          <p>Stay tuned for more!</p>
         </motion.div>
 
         <motion.div
@@ -73,18 +67,16 @@ const ComingSoon = () => {
           whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
           whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
         >
-          <Link 
-            href="/" 
-            className="mt-12 px-6 py-2 bg-red text-white rounded-md hover:opacity-90 transition shadow-lg"
+          <Link
+            href="/"
+            className="bg-red mt-12 rounded-md px-6 py-2 text-white shadow-lg transition hover:opacity-90"
           >
             Go Home
           </Link>
         </motion.div>
       </motion.div>
-  
+    </ColorfulBackground>
+  );
+};
 
-    </ColorfulBackground>  
- )
-}
-
-export default ComingSoon
+export default ComingSoon;

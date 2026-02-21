@@ -43,9 +43,9 @@ const bundleMapper = (
   image:
     `https:${(item.fields.image as Asset)?.fields.file?.url as string}` || "",
   merchandises:
-    (item.fields.merchandises as Entry<EntrySkeletonType, undefined, string>[])?.map(
-      merchandiseMapper,
-    ) ?? [],
+    (
+      item.fields.merchandises as Entry<EntrySkeletonType, undefined, string>[]
+    )?.map(merchandiseMapper) ?? [],
   description: (item.fields.description as string) ?? "",
 });
 
@@ -167,6 +167,8 @@ export const getMerchandiseOptions = (
 /**
  * Check if a merchandise type requires design selection
  */
-export const requiresDesignSelection = (merchType: IMerchandiseType): boolean => {
+export const requiresDesignSelection = (
+  merchType: IMerchandiseType,
+): boolean => {
   return getMerchandiseOptions(merchType) !== null;
 };

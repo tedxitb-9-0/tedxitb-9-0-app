@@ -110,7 +110,12 @@ export const sessionRelations = relations(session, ({ one }) => ({
   user: one(user, { fields: [session.userId], references: [user.id] }),
 }));
 
-export const statusEnum = pgEnum("status", ["pending", "paid", "confirmed", "cancelled"]);
+export const statusEnum = pgEnum("status", [
+  "pending",
+  "paid",
+  "confirmed",
+  "cancelled",
+]);
 
 export const orderTypeEnum = pgEnum("order_type", [
   "pre_event_ticket",
@@ -144,4 +149,3 @@ export const orders = createTable("order", {
 export const ordersRelations = relations(orders, ({ one }) => ({
   user: one(user, { fields: [orders.userId], references: [user.id] }),
 }));
-

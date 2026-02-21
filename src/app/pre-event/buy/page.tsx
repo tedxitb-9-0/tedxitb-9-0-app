@@ -34,7 +34,7 @@ export default function BuyTicketPage() {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="flex flex-col items-center">
-          <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-navy/20 border-t-blue" />
+          <div className="border-navy/20 border-t-blue mb-4 h-12 w-12 animate-spin rounded-full border-4" />
           <p className="text-navy">Loading...</p>
         </div>
       </div>
@@ -48,7 +48,7 @@ export default function BuyTicketPage() {
 
   return (
     <ColorfulBackground showSmiles={false}>
-      <div className="container relative z-30 mx-auto flex min-h-screen items-center justify-center px-4 py-24">
+      <div className="relative z-30 container mx-auto flex min-h-screen items-center justify-center px-4 py-24">
         <h1 className="sr-only">TEDxITB 9.0 Pre-Event Ticket Purchase</h1>
         <TicketPurchaseForm userEmail={session.user.email} />
       </div>

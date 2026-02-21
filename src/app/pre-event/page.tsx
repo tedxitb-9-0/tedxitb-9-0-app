@@ -167,7 +167,7 @@ const PreEvent = () => {
               width={700}
               height={200}
               alt="Get Your Tickets"
-              className="mb-8 w-full max-w-[600px] object-contain md:max-w-2xl"
+              className="z-30 mb-8 w-full max-w-[600px] object-contain md:max-w-4xl"
               priority
               draggable={false}
             />

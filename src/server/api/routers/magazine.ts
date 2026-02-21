@@ -1,5 +1,8 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { getAllMagazines, getLatestMagazine } from "~/server/contentful/magazine";
+import {
+  getAllMagazines,
+  getLatestMagazine,
+} from "~/server/contentful/magazine";
 
 export const magazineRouter = createTRPCRouter({
   /**

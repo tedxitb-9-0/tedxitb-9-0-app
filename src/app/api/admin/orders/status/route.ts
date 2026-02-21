@@ -23,7 +23,10 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ message: "Forbidden" }, { status: 403 });
   }
 
-  const body = (await request.json()) as { orderId?: unknown; status?: unknown };
+  const body = (await request.json()) as {
+    orderId?: unknown;
+    status?: unknown;
+  };
 
   if (typeof body.orderId !== "string" || typeof body.status !== "string") {
     return NextResponse.json({ message: "Invalid payload" }, { status: 400 });

@@ -34,7 +34,7 @@ export default function ActivityCarousel() {
     (index: number) => {
       if (emblaApi) emblaApi.scrollTo(index);
     },
-    [emblaApi]
+    [emblaApi],
   );
 
   const onSelect = useCallback(() => {
@@ -76,13 +76,16 @@ export default function ActivityCarousel() {
       </div>
 
       <div className="overflow-hidden py-12" ref={emblaRef}>
-        <div className="flex touch-pan-y" style={{ backfaceVisibility: "hidden" }}>
+        <div
+          className="flex touch-pan-y"
+          style={{ backfaceVisibility: "hidden" }}
+        >
           {images.map((src, index) => {
             const isActive = index === selectedIndex;
             return (
               <div
                 key={index}
-                className="flex-[0_0_auto] min-w-0 px-4 transition-transform duration-500 ease-out"
+                className="min-w-0 flex-[0_0_auto] px-4 transition-transform duration-500 ease-out"
                 style={{
                   transform: isActive ? "scale(1)" : "scale(0.85)",
                   opacity: isActive ? 1 : 0.6,
@@ -119,8 +122,8 @@ export default function ActivityCarousel() {
       </div>
 
       {/* Left/Right Overlays to hide cutoff images */}
-      <div className="pointer-events-none absolute left-0 top-0 z-40 h-full w-24 bg-gradient-to-r from-white to-transparent md:w-40 xl:w-64" />
-      <div className="pointer-events-none absolute right-0 top-0 z-40 h-full w-24 bg-gradient-to-l from-white to-transparent md:w-40 xl:w-64" />
+      <div className="pointer-events-none absolute top-0 left-0 z-40 h-full w-24 bg-gradient-to-r from-white to-transparent md:w-40 xl:w-64" />
+      <div className="pointer-events-none absolute top-0 right-0 z-40 h-full w-24 bg-gradient-to-l from-white to-transparent md:w-40 xl:w-64" />
 
       {/* Pagination Dots */}
       <div className="mt-8 flex justify-center gap-3">
@@ -130,10 +133,11 @@ export default function ActivityCarousel() {
             <button
               key={index}
               onClick={() => scrollTo(index)}
-              className={`h-2.5 rounded-full transition-all duration-300 ${isActive
+              className={`h-2.5 rounded-full transition-all duration-300 ${
+                isActive
                   ? "w-8 bg-red-500"
                   : "w-2.5 bg-neutral-300 hover:bg-neutral-400"
-                }`}
+              }`}
               aria-label={`Go to slide ${index + 1}`}
             />
           );

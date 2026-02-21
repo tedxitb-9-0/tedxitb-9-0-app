@@ -44,16 +44,18 @@ export default async function AdminPage() {
   return (
     <main className="min-h-screen">
       <PlainBackground color="blue">
-        <div className="container relative z-40 mx-auto min-h-screen max-w-7xl px-4 py-16 md:py-24">
+        <div className="relative z-40 container mx-auto min-h-screen max-w-7xl px-4 py-16 md:py-24">
           <div className="mb-6 rounded-xl bg-white p-6 shadow-lg">
-            <h1 className="text-2xl font-bold text-navy md:text-3xl">Admin Panel</h1>
-            <p className="mt-1 text-sm text-navy/70 md:text-base">
+            <h1 className="text-navy text-2xl font-bold md:text-3xl">
+              Admin Panel
+            </h1>
+            <p className="text-navy/70 mt-1 text-sm md:text-base">
               View and monitor all ticket and merchandise orders.
             </p>
           </div>
 
           <div className="rounded-xl bg-white p-6 shadow-lg">
-            <h2 className="mb-4 text-xl font-bold text-navy">All Orders</h2>
+            <h2 className="text-navy mb-4 text-xl font-bold">All Orders</h2>
             <AdminOrdersTable initialOrders={tableOrders} />
           </div>
         </div>

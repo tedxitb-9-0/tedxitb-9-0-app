@@ -67,8 +67,8 @@ export const auth = betterAuth({
         attributes: {
           sameSite: "none",
           secure: true,
-        }
-      }
+        },
+      },
     },
     cookiePrefix: "better-auth",
     useSecureCookies: isProduction, // true in production (HTTPS), false in development (HTTP)

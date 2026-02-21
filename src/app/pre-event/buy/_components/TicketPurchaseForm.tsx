@@ -11,6 +11,7 @@ import * as z from "zod";
 import { env } from "~/env";
 import { X, Upload, FileText } from "lucide-react";
 import { toast } from "sonner";
+import Image from "next/image";
 
 const ticketPurchaseSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
@@ -51,6 +52,9 @@ export default function TicketPurchaseForm({
 
   const uploadedProofUrl = watch("paymentProofUrl");
 
+  const { data: ticketCountData, isPending: countPending } =
+    api.order.getPreEventTicketCount.useQuery();
+
   const createOrder = api.order.createPreEventOrder.useMutation({
     onSuccess: (data) => {
       if (data?.id) {
@@ -67,11 +71,15 @@ export default function TicketPurchaseForm({
     createOrder.mutate(data);
   };
 
+  // Determine current price based on backend limit logic
+  const isEarlyBird = ticketCountData?.isEarlyBird ?? false;
+  const priceValue = isEarlyBird ? 70000 : 80000;
+
   const ticketPrice = new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
     minimumFractionDigits: 0,
-  }).format(50000);
+  }).format(priceValue);
 
   return (
     <motion.div
@@ -80,12 +88,30 @@ export default function TicketPurchaseForm({
       transition={{ duration: 0.5 }}
       className="mx-auto w-full max-w-2xl overflow-hidden rounded-xl bg-white p-4 shadow-2xl sm:p-6 md:p-8"
     >
-      <h2 className="text-navy mb-2 text-center text-2xl font-bold sm:text-3xl">
-        Pre-Event Ticket
-      </h2>
-      <p className="text-purple mb-6 text-center text-lg font-semibold sm:text-xl">
-        {ticketPrice}
-      </p>
+      <div className="mb-6 flex flex-col items-center justify-center">
+        <Image
+          src="/pre-event/ticketsale.png"
+          width={1500}
+          height={150}
+          alt="pre-event ticket sale"
+          className="w-[80%]"
+        />
+
+        {ticketCountData && (
+          <div className="mt-4 flex items-center justify-center gap-2">
+            {isEarlyBird && (
+              <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-bold text-yellow-800 ring-1 ring-yellow-400">
+                Early Bird
+              </span>
+            )}
+            {!isEarlyBird && (
+              <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-bold text-gray-800 ring-1 ring-gray-300">
+                Regular
+              </span>
+            )}
+          </div>
+        )}
+      </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Full Name */}
@@ -99,8 +125,9 @@ export default function TicketPurchaseForm({
           <input
             {...register("fullName")}
             id="fullName"
-            className={`w-full rounded-lg border ${errors.fullName ? "border-red" : "border-navy/20"
-              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            className={`w-full rounded-lg border ${
+              errors.fullName ? "border-red" : "border-navy/20"
+            } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
             placeholder="John Doe"
           />
           {errors.fullName && (
@@ -117,8 +144,9 @@ export default function TicketPurchaseForm({
             {...register("email")}
             type="email"
             id="email"
-            className={`w-full rounded-lg border ${errors.email ? "border-red" : "border-navy/20"
-              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            className={`w-full rounded-lg border ${
+              errors.email ? "border-red" : "border-navy/20"
+            } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
             placeholder="john@example.com"
           />
           {errors.email && (
@@ -138,8 +166,9 @@ export default function TicketPurchaseForm({
             {...register("phoneNumber")}
             type="tel"
             id="phoneNumber"
-            className={`w-full rounded-lg border ${errors.phoneNumber ? "border-red" : "border-navy/20"
-              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            className={`w-full rounded-lg border ${
+              errors.phoneNumber ? "border-red" : "border-navy/20"
+            } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
             placeholder="+62812345678"
           />
           {errors.phoneNumber && (
@@ -155,43 +184,39 @@ export default function TicketPurchaseForm({
             Payment Instructions:
           </h3>
           <ol className="text-navy/80 ml-4 list-decimal space-y-1 text-sm">
-            <li>Scan the QR code below or transfer to the account details</li>
-            <li>Enter the exact amount: {ticketPrice}</li>
-            <li>Complete the payment</li>
+            <li>Transfer the exact amount to the account below</li>
+            <li>Take a screenshot of the successful transfer proof</li>
             <li>Upload your payment proof screenshot below</li>
             <li>Submit this form to complete your order</li>
           </ol>
         </div>
 
-        {/* Payment QR Display */}
-        <div className="border-navy/10 rounded-lg border-2 p-4">
-          <h3 className="text-navy mb-3 text-center font-semibold">
-            Scan to Pay
+        {/* Payment BCA Info Display */}
+        <div className="border-navy/10 rounded-lg border-2 p-5 text-center">
+          <h3 className="text-navy mb-2 text-sm font-semibold tracking-wider uppercase">
+            Transfer Destination
           </h3>
-          <div className="flex justify-center">
-            <div className="border-navy/20 relative h-48 w-48 overflow-hidden rounded-lg border-2 bg-gray-100">
-              <div className="flex h-full items-center justify-center p-4">
-                <div className="flex flex-col items-center text-center">
-                  <svg
-                    className="text-navy/40 mb-2 h-16 w-16"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
-                    ></path>
-                  </svg>
-                  <p className="text-navy/60 text-xs">Payment QR</p>
-                  <p className="text-navy/40 mt-1 text-xs">
-                    Add at /public/payment/qr-payment.png
-                  </p>
-                </div>
-              </div>
+          <div className="flex flex-col items-center gap-1 rounded-md bg-gray-50 p-4">
+            <span className="text-navy/60 text-sm font-medium">
+              BCA (Bank Central Asia)
+            </span>
+            <span className="text-navy text-2xl font-bold tracking-widest text-[#0066AE] md:text-3xl">
+              7773221741
+            </span>
+            <span className="text-navy/80 mt-1 font-medium">
+              a.n. Muhammad Rafi Adinata Kusumah
+            </span>
+          </div>
+          <div className="mt-4 border-t border-dashed border-gray-200 pt-4">
+            <span className="text-navy/60 text-sm">Amount to Transfer:</span>
+            <div className="text-purple mt-1 text-2xl font-bold">
+              {countPending ? "..." : ticketPrice}
             </div>
+            {ticketCountData?.isEarlyBird && (
+              <p className="mt-1 text-xs font-semibold text-yellow-600">
+                Early Bird Pricing Applied!
+              </p>
+            )}
           </div>
         </div>
 
@@ -293,8 +318,6 @@ export default function TicketPurchaseForm({
             </p>
           )}
         </div>
-
-
 
         {/* Submit Button */}
         <button

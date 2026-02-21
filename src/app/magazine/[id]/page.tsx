@@ -15,10 +15,12 @@ export default function MagazineDetailPage() {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <h1 className="mb-4 text-4xl font-bold text-navy">Magazine Not Found</h1>
+          <h1 className="text-navy mb-4 text-4xl font-bold">
+            Magazine Not Found
+          </h1>
           <button
             onClick={() => router.push("/magazine")}
-            className="rounded-md bg-blue px-6 py-3 text-white hover:opacity-90"
+            className="bg-blue rounded-md px-6 py-3 text-white hover:opacity-90"
           >
             Back to Magazines
           </button>
@@ -39,12 +41,14 @@ export default function MagazineDetailPage() {
         <div className="container mx-auto flex items-center justify-between px-6 py-4">
           <button
             onClick={() => router.push("/magazine")}
-            className="flex items-center gap-2 text-navy transition-opacity hover:opacity-70"
+            className="text-navy flex items-center gap-2 transition-opacity hover:opacity-70"
           >
             <span className="text-2xl">←</span>
             <span className="text-lg font-semibold">Back to Magazines</span>
           </button>
-          <h1 className="text-xl font-bold text-navy md:text-2xl">{magazine.title}</h1>
+          <h1 className="text-navy text-xl font-bold md:text-2xl">
+            {magazine.title}
+          </h1>
         </div>
       </motion.div>
 

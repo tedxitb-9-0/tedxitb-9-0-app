@@ -120,7 +120,9 @@ export default function OrderCard({ order, onViewQR }: OrderCardProps) {
           </div>
           <div className="text-right">
             <p className="text-sm text-gray-500">Date</p>
-            <p className="text-sm font-semibold text-gray-800">{formattedDate}</p>
+            <p className="text-sm font-semibold text-gray-800">
+              {formattedDate}
+            </p>
           </div>
         </div>
 

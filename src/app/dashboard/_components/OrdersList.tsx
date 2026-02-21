@@ -110,11 +110,10 @@ export default function OrdersList({ orders }: OrdersListProps) {
             />
           </svg>
         </div>
-        <h3 className="mb-2 text-2xl font-bold text-gray-800">
-          No Orders Yet
-        </h3>
+        <h3 className="mb-2 text-2xl font-bold text-gray-800">No Orders Yet</h3>
         <p className="mb-6 text-gray-600">
-          You haven&apos;t placed any orders. Start by getting your event tickets!
+          You haven&apos;t placed any orders. Start by getting your event
+          tickets!
         </p>
       </motion.div>
     );
@@ -128,29 +127,31 @@ export default function OrdersList({ orders }: OrdersListProps) {
         transition={{ duration: 0.5 }}
         className="rounded-xl bg-white p-6 shadow-lg"
       >
-        <h3 className="mb-6 text-2xl font-bold text-navy">My Orders</h3>
+        <h3 className="text-navy mb-6 text-2xl font-bold">My Orders</h3>
 
         {/* Stats Summary */}
         <div className="mb-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-          <div className="rounded-lg bg-blue/10 p-3 md:p-4">
-            <p className="text-xs text-blue md:text-sm">Total Orders</p>
-            <p className="text-xl font-bold text-navy md:text-2xl">{orders.length}</p>
+          <div className="bg-blue/10 rounded-lg p-3 md:p-4">
+            <p className="text-blue text-xs md:text-sm">Total Orders</p>
+            <p className="text-navy text-xl font-bold md:text-2xl">
+              {orders.length}
+            </p>
           </div>
           <div className="rounded-lg bg-[#10b981]/10 p-3 md:p-4">
             <p className="text-xs text-[#10b981] md:text-sm">Confirmed</p>
-            <p className="text-xl font-bold text-navy md:text-2xl">
+            <p className="text-navy text-xl font-bold md:text-2xl">
               {orders.filter((o) => o.status === "confirmed").length}
             </p>
           </div>
-          <div className="rounded-lg bg-yellow/10 p-3 md:p-4">
-            <p className="text-xs text-yellow md:text-sm">Pending</p>
-            <p className="text-xl font-bold text-navy md:text-2xl">
+          <div className="bg-yellow/10 rounded-lg p-3 md:p-4">
+            <p className="text-yellow text-xs md:text-sm">Pending</p>
+            <p className="text-navy text-xl font-bold md:text-2xl">
               {orders.filter((o) => o.status === "pending").length}
             </p>
           </div>
-          <div className="col-span-2 rounded-lg bg-purple/10 p-3 md:col-span-1 md:p-4">
-            <p className="text-xs text-purple md:text-sm">Total Spent</p>
-            <p className="text-xl font-bold text-navy md:text-2xl">
+          <div className="bg-purple/10 col-span-2 rounded-lg p-3 md:col-span-1 md:p-4">
+            <p className="text-purple text-xs md:text-sm">Total Spent</p>
+            <p className="text-navy text-xl font-bold md:text-2xl">
               {new Intl.NumberFormat("id-ID", {
                 style: "currency",
                 currency: "IDR",
@@ -168,13 +169,13 @@ export default function OrdersList({ orders }: OrdersListProps) {
         {/* Filters */}
         <div className="mb-6 grid grid-cols-2 gap-3 border-b pb-4 md:flex md:flex-wrap md:gap-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-navy">
+            <label className="text-navy mb-1 block text-sm font-medium">
               Type
             </label>
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              className="w-full rounded-lg border border-navy/20 px-3 py-2 text-sm text-navy focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue md:w-auto md:px-4"
+              className="border-navy/20 text-navy focus:border-blue focus:ring-blue w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none md:w-auto md:px-4"
             >
               <option value="all">All Types</option>
               <option value="pre_event_ticket">Pre-Event</option>
@@ -184,13 +185,13 @@ export default function OrdersList({ orders }: OrdersListProps) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-navy">
+            <label className="text-navy mb-1 block text-sm font-medium">
               Status
             </label>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full rounded-lg border border-navy/20 px-3 py-2 text-sm text-navy focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue md:w-auto md:px-4"
+              className="border-navy/20 text-navy focus:border-blue focus:ring-blue w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none md:w-auto md:px-4"
             >
               <option value="all">All Statuses</option>
               <option value="pending">Pending</option>
@@ -204,7 +205,9 @@ export default function OrdersList({ orders }: OrdersListProps) {
         {/* Orders List */}
         {filteredOrders.length === 0 ? (
           <div className="py-12 text-center">
-            <p className="text-gray-600">No orders match the selected filters</p>
+            <p className="text-gray-600">
+              No orders match the selected filters
+            </p>
           </div>
         ) : (
           <>
@@ -216,11 +219,11 @@ export default function OrdersList({ orders }: OrdersListProps) {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.05 }}
-                  className="rounded-xl border border-navy/10 bg-gray-50 p-4"
+                  className="border-navy/10 rounded-xl border bg-gray-50 p-4"
                 >
                   {/* Top row: type badge + status badge */}
                   <div className="mb-3 flex items-center justify-between gap-2">
-                    <span className="rounded-full bg-blue/10 px-3 py-1 text-xs font-semibold text-blue">
+                    <span className="bg-blue/10 text-blue rounded-full px-3 py-1 text-xs font-semibold">
                       {getOrderTypeLabel(order.orderType)}
                     </span>
                     <span
@@ -232,25 +235,31 @@ export default function OrdersList({ orders }: OrdersListProps) {
 
                   {/* Order ID + Customer */}
                   <div className="mb-3">
-                    <p className="font-mono text-xs font-medium text-navy/50">#{order.id.slice(0, 8).toUpperCase()}</p>
+                    <p className="text-navy/50 font-mono text-xs font-medium">
+                      #{order.id.slice(0, 8).toUpperCase()}
+                    </p>
                     {order.ticketJson && (
-                      <p className="mt-0.5 font-semibold text-navy">{order.ticketJson.fullName}</p>
+                      <p className="text-navy mt-0.5 font-semibold">
+                        {order.ticketJson.fullName}
+                      </p>
                     )}
                     {order.ticketJson?.email && (
-                      <p className="text-sm text-navy/60">{order.ticketJson.email}</p>
+                      <p className="text-navy/60 text-sm">
+                        {order.ticketJson.email}
+                      </p>
                     )}
                   </div>
 
                   {/* Amount + Date */}
                   <div className="mb-3 flex items-center justify-between">
-                    <span className="text-lg font-bold text-navy">
+                    <span className="text-navy text-lg font-bold">
                       {new Intl.NumberFormat("id-ID", {
                         style: "currency",
                         currency: "IDR",
                         minimumFractionDigits: 0,
                       }).format(order.totalAmount)}
                     </span>
-                    <span className="text-sm text-navy/60">
+                    <span className="text-navy/60 text-sm">
                       {new Date(order.createdAt).toLocaleDateString("id-ID", {
                         year: "numeric",
                         month: "short",
@@ -264,7 +273,7 @@ export default function OrdersList({ orders }: OrdersListProps) {
                     {order.status === "pending" && !order.paymentProofUrl && (
                       <Link
                         href={`/pre-event/payment/${order.id}`}
-                        className="flex-1 rounded-lg bg-blue px-3 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-purple"
+                        className="bg-blue hover:bg-purple flex-1 rounded-lg px-3 py-2 text-center text-sm font-semibold text-white transition-colors"
                       >
                         Complete Payment
                       </Link>
@@ -278,7 +287,7 @@ export default function OrdersList({ orders }: OrdersListProps) {
                             order.ticketJson?.fullName ?? "Attendee",
                           )
                         }
-                        className="flex-1 rounded-lg bg-linear-to-r from-purple to-pink px-3 py-2 text-sm font-semibold text-white transition-all hover:opacity-90"
+                        className="from-purple to-pink flex-1 rounded-lg bg-linear-to-r px-3 py-2 text-sm font-semibold text-white transition-all hover:opacity-90"
                       >
                         View QR Code
                       </button>
@@ -292,7 +301,7 @@ export default function OrdersList({ orders }: OrdersListProps) {
             <div className="hidden overflow-x-auto md:block">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-navy/10 text-left text-sm font-semibold text-navy">
+                  <tr className="border-navy/10 text-navy border-b text-left text-sm font-semibold">
                     <th className="pb-3">Order ID</th>
                     <th className="pb-3">Type</th>
                     <th className="pb-3">Customer</th>
@@ -309,21 +318,21 @@ export default function OrdersList({ orders }: OrdersListProps) {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
-                      className="border-b border-navy/5 hover:bg-blue/5"
+                      className="border-navy/5 hover:bg-blue/5 border-b"
                     >
                       <td className="py-4">
-                        <span className="font-mono text-sm font-medium text-navy">
+                        <span className="text-navy font-mono text-sm font-medium">
                           {order.id.slice(0, 8).toUpperCase()}
                         </span>
                       </td>
                       <td className="py-4">
-                        <span className="rounded-full bg-blue/10 px-3 py-1 text-xs font-semibold text-blue">
+                        <span className="bg-blue/10 text-blue rounded-full px-3 py-1 text-xs font-semibold">
                           {getOrderTypeLabel(order.orderType)}
                         </span>
                       </td>
                       <td className="py-4">
                         <div className="text-sm">
-                          <div className="font-medium text-navy">
+                          <div className="text-navy font-medium">
                             {order.ticketJson?.fullName ?? "N/A"}
                           </div>
                           <div className="text-navy/60">
@@ -332,7 +341,7 @@ export default function OrdersList({ orders }: OrdersListProps) {
                         </div>
                       </td>
                       <td className="py-4">
-                        <span className="font-semibold text-navy">
+                        <span className="text-navy font-semibold">
                           {new Intl.NumberFormat("id-ID", {
                             style: "currency",
                             currency: "IDR",
@@ -341,12 +350,15 @@ export default function OrdersList({ orders }: OrdersListProps) {
                         </span>
                       </td>
                       <td className="py-4">
-                        <span className="text-sm text-navy/70">
-                          {new Date(order.createdAt).toLocaleDateString("id-ID", {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          })}
+                        <span className="text-navy/70 text-sm">
+                          {new Date(order.createdAt).toLocaleDateString(
+                            "id-ID",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            },
+                          )}
                         </span>
                       </td>
                       <td className="py-4">
@@ -358,14 +370,15 @@ export default function OrdersList({ orders }: OrdersListProps) {
                       </td>
                       <td className="py-4">
                         <div className="flex gap-2">
-                          {order.status === "pending" && !order.paymentProofUrl && (
-                            <Link
-                              href={`/pre-event/payment/${order.id}`}
-                              className="rounded-lg bg-blue px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-purple"
-                            >
-                              Pay
-                            </Link>
-                          )}
+                          {order.status === "pending" &&
+                            !order.paymentProofUrl && (
+                              <Link
+                                href={`/pre-event/payment/${order.id}`}
+                                className="bg-blue hover:bg-purple rounded-lg px-3 py-1.5 text-xs font-semibold text-white transition-colors"
+                              >
+                                Pay
+                              </Link>
+                            )}
                           {canViewQR(order) && (
                             <button
                               onClick={() =>
@@ -375,7 +388,7 @@ export default function OrdersList({ orders }: OrdersListProps) {
                                   order.ticketJson?.fullName ?? "Attendee",
                                 )
                               }
-                              className="rounded-lg bg-linear-to-r from-purple to-pink px-3 py-1.5 text-xs font-semibold text-white transition-all hover:opacity-90"
+                              className="from-purple to-pink rounded-lg bg-linear-to-r px-3 py-1.5 text-xs font-semibold text-white transition-all hover:opacity-90"
                             >
                               View QR
                             </button>

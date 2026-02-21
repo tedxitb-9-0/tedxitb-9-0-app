@@ -11,4 +11,3 @@ export default async function MagazinePage() {
     <MagazineClient latestMagazine={latestMagazine} magazines={magazines} />
   );
 }
-

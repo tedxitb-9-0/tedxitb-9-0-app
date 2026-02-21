@@ -35,7 +35,9 @@ interface AdminOrdersTableProps {
   initialOrders: AdminOrder[];
 }
 
-export default function AdminOrdersTable({ initialOrders }: AdminOrdersTableProps) {
+export default function AdminOrdersTable({
+  initialOrders,
+}: AdminOrdersTableProps) {
   const [orders, setOrders] = useState(initialOrders);
   const [savingOrderId, setSavingOrderId] = useState<string | null>(null);
 
@@ -77,14 +79,16 @@ export default function AdminOrdersTable({ initialOrders }: AdminOrdersTableProp
   };
 
   if (!orders.length) {
-    return <div className="py-10 text-center text-navy/70">No orders found.</div>;
+    return (
+      <div className="text-navy/70 py-10 text-center">No orders found.</div>
+    );
   }
 
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-230">
         <thead>
-          <tr className="border-b border-navy/10 text-left text-sm font-semibold text-navy">
+          <tr className="border-navy/10 text-navy border-b text-left text-sm font-semibold">
             <th className="pb-3">Order ID</th>
             <th className="pb-3">User</th>
             <th className="pb-3">Email</th>
@@ -99,19 +103,23 @@ export default function AdminOrdersTable({ initialOrders }: AdminOrdersTableProp
           {orders.map((order) => (
             <tr
               key={order.id}
-              className="border-b border-navy/5 text-sm text-navy hover:bg-blue/5"
+              className="border-navy/5 text-navy hover:bg-blue/5 border-b text-sm"
             >
-              <td className="py-3 font-mono font-medium">{order.id.slice(0, 8).toUpperCase()}</td>
+              <td className="py-3 font-mono font-medium">
+                {order.id.slice(0, 8).toUpperCase()}
+              </td>
               <td className="py-3">{order.user.name}</td>
-              <td className="py-3 text-navy/70">{order.user.email}</td>
+              <td className="text-navy/70 py-3">{order.user.email}</td>
               <td className="py-3">
-                <span className="rounded-full bg-blue/10 px-3 py-1 text-xs font-semibold text-blue">
+                <span className="bg-blue/10 text-blue rounded-full px-3 py-1 text-xs font-semibold">
                   {order.orderType.replaceAll("_", " ")}
                 </span>
               </td>
-              <td className="py-3 font-semibold">{formatCurrency(order.totalAmount)}</td>
+              <td className="py-3 font-semibold">
+                {formatCurrency(order.totalAmount)}
+              </td>
               <td className="py-3">
-                <span className="rounded-full bg-navy/10 px-3 py-1 text-xs font-semibold capitalize text-navy">
+                <span className="bg-navy/10 text-navy rounded-full px-3 py-1 text-xs font-semibold capitalize">
                   {order.status}
                 </span>
               </td>
@@ -120,7 +128,7 @@ export default function AdminOrdersTable({ initialOrders }: AdminOrdersTableProp
                   <select
                     id={`status-${order.id}`}
                     defaultValue={order.status}
-                    className="rounded-lg border border-navy/20 px-2 py-1 text-xs text-navy focus:border-blue focus:outline-none focus:ring-2 focus:ring-blue"
+                    className="border-navy/20 text-navy focus:border-blue focus:ring-blue rounded-lg border px-2 py-1 text-xs focus:ring-2 focus:outline-none"
                   >
                     <option value="pending">Pending</option>
                     <option value="paid">Paid</option>
@@ -137,13 +145,15 @@ export default function AdminOrdersTable({ initialOrders }: AdminOrdersTableProp
                       if (!element) return;
                       void handleSave(order.id, element.value as OrderStatus);
                     }}
-                    className="rounded-lg bg-blue px-2.5 py-1 text-xs font-semibold text-white transition-colors hover:bg-blue/90 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="bg-blue hover:bg-blue/90 rounded-lg px-2.5 py-1 text-xs font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {savingOrderId === order.id ? "Saving..." : "Save"}
                   </button>
                 </div>
               </td>
-              <td className="py-3 text-navy/70">{formatDate(order.createdAt)}</td>
+              <td className="text-navy/70 py-3">
+                {formatDate(order.createdAt)}
+              </td>
             </tr>
           ))}
         </tbody>

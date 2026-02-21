@@ -5,13 +5,7 @@ import { createTRPCRouter, protectedProcedure, adminProcedure } from "../trpc";
 import { orders } from "~/server/db/schema";
 import { generateAttendanceQRString } from "~/lib/qrcode";
 
-// Type definitions for ticket JSON
-type PreEventTicketJson = {
-  fullName: string;
-  email: string;
-  phoneNumber: string;
-  ticketType: "pre_event";
-};
+
 
 export const orderRouter = createTRPCRouter({
   /**
@@ -45,21 +39,47 @@ export const orderRouter = createTRPCRouter({
         );
       }
 
+      // Calculate how many pre-event tickets have already been ordered
+      // (ignoring cancelled orders to reflect true capacity)
+      const existingTickets = await ctx.db.query.orders.findMany({
+        where: and(
+          eq(orders.orderType, "pre_event_ticket"),
+          // Include pending, paid, and confirmed, exclude cancelled
+          // If you have a specific "valid" state, adjust this accordingly
+        ),
+      });
+
+      // Filter out cancelled orders for capacity planning
+      const validTickets = existingTickets.filter(
+        (order) => order.status !== "cancelled",
+      );
+      const currentTicketCount = validTickets.length;
+
+      // Hard limit of 100 tickets
+      if (currentTicketCount >= 100) {
+        throw new Error(
+          "We're sorry, but all pre-event tickets are currently sold out.",
+        );
+      }
+
+      // Determine Pricing Tier (First 30 are early bird 70k, remaining 70 are regular 80k)
+      const isEarlyBird = currentTicketCount < 30;
+      const totalAmount = isEarlyBird ? 70000 : 80000;
+      const ticketTier = isEarlyBird ? "Early Bird" : "Regular";
+
       const orderId = uuidv4();
 
       // Generate attendance QR code string
       const qrCode = generateAttendanceQRString(orderId);
 
       // Prepare ticket JSON
-      const ticketJson: PreEventTicketJson = {
+      const ticketJson = {
         fullName: input.fullName,
         email: input.email,
         phoneNumber: input.phoneNumber,
         ticketType: "pre_event",
+        tier: ticketTier,
       };
-
-      // Ticket price
-      const totalAmount = 50000; // 50,000 IDR
 
       // Create the order with payment proof - status is "pending" awaiting admin confirmation
       const [newOrder] = await ctx.db
@@ -134,6 +154,26 @@ export const orderRouter = createTRPCRouter({
     });
 
     return { hasTicket: !!existingOrder };
+  }),
+
+  /**
+   * Get the current count of pre-event tickets to determine availability and early bird
+   */
+  getPreEventTicketCount: protectedProcedure.query(async ({ ctx }) => {
+    const existingTickets = await ctx.db.query.orders.findMany({
+      where: eq(orders.orderType, "pre_event_ticket"),
+    });
+
+    // Filter out canceled orders
+    const validCount = existingTickets.filter(
+      (order) => order.status !== "cancelled",
+    ).length;
+
+    return {
+      count: validCount,
+      isEarlyBird: validCount < 30,
+      isSoldOut: validCount >= 100,
+    };
   }),
 
   /**
