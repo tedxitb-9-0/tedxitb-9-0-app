@@ -1,38 +1,12 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "motion/react";
 import ColorfulBackground from "~/_components/ColorfulBackground";
-import ActivityCard from "./_components/ActivityCard";
 import ActivityCarousel from "./_components/ActivityCarousel";
-
-const activities = [
-  {
-    title: "Workshop",
-    description:
-      "This workshop discussed waste management and plastic recycling. Participants learned about the process of transforming plastic waste into usable products through hands-on activities.",
-    imageSrc: "/pre-event/activity-left.svg",
-    imageAlt: "Workshop activity",
-  },
-  {
-    title: "Talkshow",
-    description:
-      "This workshop focused on Batik as a cultural practice and artistic medium. Participants were introduced to basic Batik painting techniques and the importance of preserving Batik as part of Indonesian cultural identity.",
-    imageSrc: "/pre-event/activity-middle.svg",
-    imageAlt: "Talkshow activity",
-  },
-  {
-    title: "Exhibition",
-    description:
-      "This workshop focused on Batik as a cultural practice and artistic medium. Participants were introduced to basic Batik painting techniques and the importance of preserving Batik as part of Indonesian cultural identity.",
-    imageSrc: "/pre-event/activity-right.svg",
-    imageAlt: "Exhibition activity",
-  },
-];
-
-const sectionDescription =
-  "This workshop focused on Batik as a cultural practice and artistic medium. Participants were introduced to basic Batik painting techniques and the importance of preserving Batik as part of Indonesian cultural identity.";
+import ActivitySection from "./_components/ActivitySection";
+import PlainBackground from "~/_components/PlainBackground";
+import Link from "next/link";
 
 const PreEvent = () => {
   return (
@@ -40,158 +14,171 @@ const PreEvent = () => {
       <h1 className="sr-only">TEDxITB 9.0 Pre-Event</h1>
 
       {/* Hero Section */}
-      <ColorfulBackground>
-        <div className="py-16-50 relative z-30 container mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center px-4">
+      <ColorfulBackground showSmiles={false}>
+        <div className="relative container mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-between gap-12 px-4 pt-32 pb-16 lg:flex-row">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="bg-blue/50 text-center"
+            className="absolute top-10 left-[25%] z-0 w-lg md:w-4xl"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" as const }}
           >
-            <h2 className="mb-6 text-5xl font-bold text-white md:text-6xl">
-              Pre-Event Ticket
-            </h2>
-            <p className="mb-8 text-xl text-white/90 md:text-2xl">
-              Get your exclusive access to the TEDxITB 9.0 Pre-Event
-            </p>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="mb-12 rounded-2xl bg-white/10 p-8 backdrop-blur-sm"
-            >
-              <p className="mb-4 text-lg text-white">
-                Join us for an exciting pre-event experience featuring exclusive
-                talks, networking opportunities, and more!
-              </p>
-              <div className="flex items-center justify-center gap-8 text-white">
-                <div>
-                  <p className="text-3xl font-bold">IDR 50,000</p>
-                  <p className="text-sm text-white/80">Per Ticket</p>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              <Link
-                href="/pre-event/buy"
-                className="hover:shadow-3xl inline-block rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-12 py-4 text-xl font-bold text-white shadow-2xl transition-all hover:scale-105 hover:from-blue-700 hover:to-purple-700"
-              >
-                Buy Ticket Now
-              </Link>
-              <p className="mt-4 text-sm text-white/70">
-                Secure your spot today!
-              </p>
-            </motion.div>
+            <Image
+              src="/pre-event/top-asset.png"
+              alt="Decorative geometric pattern"
+              width={400}
+              height={400}
+              className="h-auto w-full"
+              draggable={false}
+            />
           </motion.div>
-        </div>
-      </ColorfulBackground>
-
-      {/* Workshop and Activities Section*/}
-      <section className="relative overflow-hidden bg-white py-16 md:py-24">
-        <div className="container relative z-10 mx-auto max-w-7xl px-4 pt-16 md:pt-24">
-          {/* Section Header */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="mb-12 text-center md:mb-16"
+            className="absolute bottom-0 left-[25%] z-0 w-lg md:w-4xl"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" as const }}
           >
-            {/* "Last Year's"*/}
-            <div className="mx-auto mb-2 flex justify-center">
-              <Image
-                src="/pre-event/last-year.svg"
-                alt="Last Year's"
-                width={305}
-                height={58}
-                className="h-auto w-48 md:w-64"
-                draggable={false}
-              />
-            </div>
-
-            {/* "Workshop and Activities"*/}
-            <div className="mx-auto mb-6 flex justify-center">
-              <Image
-                src="/pre-event/workshop-activities.svg"
-                alt="Workshop and Activities"
-                width={865}
-                height={95}
-                className="h-auto w-[80%] max-w-2xl md:w-[70%]"
-                draggable={false}
-              />
-            </div>
-
-            {/* Section description */}
-            <p className="mx-auto max-w-3xl text-sm leading-relaxed text-navy/80 md:text-base">
-              {sectionDescription}
-            </p>
+            <Image
+              src="/pre-event/bottom-asset.png"
+              alt="Decorative geometric pattern"
+              width={400}
+              height={400}
+              className="h-auto w-full"
+              draggable={false}
+            />
           </motion.div>
-
-          {/* Activity Cards Grid */}
+          {/* Text section*/}
           <motion.div
             initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
+            animate="visible"
             variants={{
               hidden: { opacity: 0 },
               visible: {
                 opacity: 1,
-                transition: {
-                  staggerChildren: 0.2,
-                },
+                transition: { staggerChildren: 0.15 },
               },
             }}
-            className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10"
+            className="z-10 flex w-full flex-col items-center justify-center gap-6 lg:w-1/2 lg:items-start"
           >
-            {activities.map((activity, index) => (
-              <ActivityCard
-                key={activity.title}
-                title={activity.title}
-                description={activity.description}
-                imageSrc={activity.imageSrc}
-                imageAlt={activity.imageAlt}
-                index={index}
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.6, ease: "easeOut" },
+                },
+              }}
+              className="flex w-full justify-center lg:justify-start"
+            >
+              <Image
+                src="/pre-event/tedxpressive.png"
+                width={600}
+                height={150}
+                alt="TEDxpressive"
+                className="w-full max-w-[450px] object-contain md:max-w-xl"
+                priority
               />
-            ))}
+            </motion.div>
+            <motion.div
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.6, ease: "easeOut" },
+                },
+              }}
+              className="flex w-full justify-center lg:justify-start"
+            >
+              <Image
+                src="/pre-event/glimpse.png"
+                width={500}
+                height={120}
+                alt="A Glimpse into Last Year's Pre-Event Experience"
+                className="w-full max-w-[350px] object-contain md:max-w-md"
+                priority
+              />
+            </motion.div>
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.6, ease: "easeOut" },
+                },
+              }}
+              className="text-navy max-w-[450px] text-center text-sm leading-relaxed font-medium md:text-base lg:text-left"
+            >
+              TEDxplore, a hands-on pre-event designed to tackle the theme{" "}
+              <strong>PUZZLE: The Struggles of Tomorrow</strong>. We brought
+              together creators, activists, and leaders for 8 hours of
+              exhibitions, workshops, and honest talk about what it actually
+              takes to build our future.
+            </motion.p>
+          </motion.div>
+
+          {/* image section */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+            className="relative -z-10 flex w-full justify-center lg:w-1/2 lg:justify-end"
+          >
+            <motion.div
+              animate={{ y: [0, -15, 0] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <Image
+                src="/pre-event/hero-asset.png"
+                width={2000}
+                height={2000}
+                alt="Pre-Event Hero Asset"
+                className="w-full max-w-[450px] object-contain md:max-w-[500px] xl:max-w-[650px]"
+                priority
+                draggable={false}
+              />
+            </motion.div>
           </motion.div>
         </div>
-      </section>
-      <section className="relative overflow-hidden bg-white py-16 md:py-24">
-        <div className="container relative z-10 mx-auto max-w-7xl px-4">
-        <h2 className="relative mb-20 text-center text-7xl font-titan leading-none">
-          <span
-            className="absolute inset-0 text-black opacity-20"
-            style={{
-              transform: "translateY(10px)",
-              zIndex: 0,
-            }}
-          >
-            Gallery
-          </span>
-          <span
-            className="absolute inset-0 text-transparent"
-            style={{
-              WebkitTextStroke: "12px white",
-              zIndex: 1,
-            }}
-          >
-            Gallery
-          </span>
-          <span
-            className="relative z-10 bg-gradient-to-r from-yellow-300 via-orange-400 to-pink-500 bg-clip-text text-transparent"
-          >
-            Gallery
-          </span>
-        </h2>
+      </ColorfulBackground>
+      <ActivitySection />
+      <section className="relative overflow-hidden bg-white bg-[url('/pattern-bg.svg')] bg-repeat py-16 md:py-24">
+        <div className="relative z-10 container mx-auto flex max-w-7xl flex-col items-center justify-center px-4">
+          <Image
+            src="/pre-event/gallery.png"
+            width={550}
+            height={220}
+            alt="A Glimpse into Last Year's Pre-Event Experience"
+            className="w-[50%] object-contain md:max-w-sm"
+            priority
+          />
           {/* Activity Carousel */}
           <ActivityCarousel />
         </div>
+      </section>
+
+      {/* Get Your Tickets Section */}
+      <section className="bg-white">
+        <PlainBackground color="red">
+          <div className="container mx-auto flex min-h-screen flex-col items-center justify-center px-4 py-24">
+            <Image
+              src="/pre-event/getyourtickets.png"
+              width={700}
+              height={200}
+              alt="Get Your Tickets"
+              className="mb-8 w-full max-w-[600px] object-contain md:max-w-2xl"
+              priority
+              draggable={false}
+            />
+            <Link
+              href="/pre-event/buy"
+              className="text-red z-30 inline-block rounded-full border-b-4 border-gray-300 bg-white px-10 py-5 text-xl font-bold shadow-lg transition-transform hover:scale-105 hover:bg-neutral-100 active:mt-1 active:scale-95 active:border-b-0"
+            >
+              Buy Tickets Now
+            </Link>
+          </div>
+        </PlainBackground>
       </section>
     </main>
   );
