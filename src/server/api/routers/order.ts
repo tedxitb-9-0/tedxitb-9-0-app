@@ -5,8 +5,6 @@ import { createTRPCRouter, protectedProcedure, adminProcedure } from "../trpc";
 import { orders } from "~/server/db/schema";
 import { generateAttendanceQRString } from "~/lib/qrcode";
 
-
-
 export const orderRouter = createTRPCRouter({
   /**
    * Create a new pre-event ticket order

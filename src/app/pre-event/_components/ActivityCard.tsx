@@ -58,9 +58,9 @@ export default function ActivityCard({
       </div>
 
       {/* Decorative accent bottom-right */}
-      <div className="absolute -right-20 bottom-[10%] z-1 h-48 w-48 md:h-52 md:w-52">
+      <div className="absolute -right-20 bottom-[10%] z-2 h-48 w-48 md:h-52 md:w-52">
         <Image
-          src="/pre-event/curvy-bawah.svg"
+          src="/pre-event/curvy-bawah.png"
           alt="Decorative bottom accent"
           fill
           className="object-contain"
@@ -69,7 +69,7 @@ export default function ActivityCard({
       </div>
 
       {/* Layer 2 (middle) – Cover image */}
-      <div className="absolute top-[3%] left-[3%] z-2 h-[48%] w-[82%] overflow-hidden rounded-lg">
+      <div className="absolute top-[4%] right-[4%] z-2 h-[55%] w-[88%] overflow-hidden rounded-xl">
         <Image
           src={imageSrc}
           alt={imageAlt}
@@ -91,7 +91,7 @@ export default function ActivityCard({
         />
 
         {/* Card content positioned over the front card */}
-        <div className="relative z-4 flex h-full flex-col justify-end px-6 pt-20 pb-6 md:px-8 md:pt-24 md:pb-8">
+        <div className="relative z-4 flex h-full flex-col justify-start px-6 pt-[22%] pb-6 md:px-8 md:pt-[26%] md:pb-8">
           <h3
             className="mb-3 text-xl text-white md:text-2xl"
             style={{

@@ -20,6 +20,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.71.1(react@19.2.3))
+      '@leenguyen/react-flip-clock-countdown':
+        specifier: ^1.7.2
+        version: 1.7.2(react@19.2.3)
       '@neondatabase/serverless':
         specifier: ^1.0.2
         version: 1.0.2
@@ -768,6 +771,12 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
+  '@leenguyen/react-flip-clock-countdown@1.7.2':
+    resolution: {integrity: sha512-rWOAnLSCUgYXvXsQ+sNAmoUrz+GNQbrRROuuFqwstE4UwiaHeC/+/+xMEDh1TpvPHBkOXaW1pECf0al/nTrKmQ==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>= 16.13.0'
+
   '@lingui/core@5.8.0':
     resolution: {integrity: sha512-YHl7ej5jgQqCjvFWVQBWZY46SSROycHDx760KE1iOxp4dpzAAwHeKbXxERz3Tgu+o+aIIY2Pg3G9GLeOGiFaWA==}
     engines: {node: '>=20.0.0'}
@@ -1449,6 +1458,10 @@ packages:
 
   cliui@6.0.0:
     resolution: {integrity: sha512-t6wbgtoCXvAzst7QgXxJYqPt0usEfbgQdftEPbLL/cvv6HPE5VgvqCuAIDR0NgU52ds6rFwqrgakNLrHEjCbrQ==}
+
+  clsx@1.2.1:
+    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
+    engines: {node: '>=6'}
 
   color-convert@2.0.1:
     resolution: {integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==}
@@ -3508,6 +3521,11 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  '@leenguyen/react-flip-clock-countdown@1.7.2(react@19.2.3)':
+    dependencies:
+      clsx: 1.2.1
+      react: 19.2.3
+
   '@lingui/core@5.8.0':
     dependencies:
       '@babel/runtime': 7.28.6
@@ -4091,6 +4109,8 @@ snapshots:
       string-width: 4.2.3
       strip-ansi: 6.0.1
       wrap-ansi: 6.2.0
+
+  clsx@1.2.1: {}
 
   color-convert@2.0.1:
     dependencies:

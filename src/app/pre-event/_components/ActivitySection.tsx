@@ -44,7 +44,7 @@ const ActivitySection = () => {
           draggable={false}
         />
         <motion.div
-          className="absolute top-10 left-0 z-0"
+          className="absolute bottom-10 left-0 z-0"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" as const }}
@@ -69,7 +69,7 @@ const ActivitySection = () => {
             alt="Right decorative asset"
             width={200}
             height={700}
-            className="h-auto w-[200px]"
+            className="h-auto w-[100px]"
             draggable={false}
           />
         </motion.div>
