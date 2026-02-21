@@ -48,7 +48,11 @@ const getUserId = (user: unknown): string | null => {
 export const auth = betterAuth({
   plugins: [nextCookies()],
   baseURL,
-  trustedOrigins: [baseURL],
+  trustedOrigins: [
+    baseURL,
+    "https://www.tedxitb.id",
+    ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
+  ],
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
