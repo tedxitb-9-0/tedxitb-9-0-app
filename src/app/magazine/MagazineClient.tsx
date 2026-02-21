@@ -63,8 +63,12 @@ export default function MagazineClient({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <p className="text-lg font-medium sm:text-xl">No magazines available at the moment.</p>
-              <p className="text-sm opacity-80 sm:text-base">Please check back later.</p>
+              <p className="text-lg font-medium sm:text-xl">
+                No magazines available at the moment.
+              </p>
+              <p className="text-sm opacity-80 sm:text-base">
+                Please check back later.
+              </p>
             </motion.div>
           </div>
         </PlainBackground>

@@ -2,7 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useMotionValueEvent, useScroll, AnimatePresence } from "motion/react"
+import {
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  AnimatePresence,
+} from "motion/react";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { useAuthStore } from "~/stores";
@@ -59,7 +64,7 @@ const Navbar = () => {
   return (
     <>
       <motion.nav
-        className="fixed top-0 left-0 right-0 z-50 w-full h-16 select-none flex justify-between items-center px-6 md:px-12 bg-white backdrop-blur-sm"
+        className="fixed top-0 right-0 left-0 z-50 flex h-16 w-full items-center justify-between bg-white px-6 backdrop-blur-sm select-none md:px-12"
         variants={{
           visible: { y: 0 },
           hidden: { y: "-100%" },
@@ -79,7 +84,7 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <motion.div
-          className="hidden lg:flex gap-8 items-center text-foreground"
+          className="text-foreground hidden items-center gap-8 lg:flex"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -94,6 +99,15 @@ const Navbar = () => {
             </motion.div>
           ))}
 
+          {isAuthenticated && user?.role === "admin" && (
+            <motion.div
+              variants={itemVariants}
+              whileHover={{ y: -3, transition: { duration: 0.15 } }}
+            >
+              <Link href="/admin">Admin</Link>
+            </motion.div>
+          )}
+
           <motion.div
             variants={itemVariants}
             whileHover={{ scale: 1.05, transition: { duration: 0.15 } }}
@@ -102,11 +116,17 @@ const Navbar = () => {
             {isLoading ? (
               <span className="px-4 py-1.5 text-gray-400">Loading...</span>
             ) : isAuthenticated && user ? (
-              <Link href="/dashboard" className="px-4 py-1.5 bg-red text-white rounded-md shadow-xl max-w-[120px] truncate inline-block">
+              <Link
+                href="/dashboard"
+                className="bg-red inline-block max-w-30 truncate rounded-md px-4 py-1.5 text-white shadow-xl"
+              >
                 {truncateWithEllipsis(user.name.split(" ")[0] ?? "")}
               </Link>
             ) : (
-              <Link href="/signin" className="px-4 py-1.5 bg-red text-white rounded-md shadow-xl">
+              <Link
+                href="/signin"
+                className="bg-red rounded-md px-4 py-1.5 text-white shadow-xl"
+              >
                 Sign in
               </Link>
             )}
@@ -114,7 +134,7 @@ const Navbar = () => {
         </motion.div>
 
         <button
-          className="lg:hidden p-2 text-foreground"
+          className="text-foreground p-2 lg:hidden"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle menu"
         >
@@ -127,7 +147,7 @@ const Navbar = () => {
         {mobileMenuOpen && (
           <>
             <motion.div
-              className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+              className="fixed inset-0 z-40 bg-black/50 lg:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -135,15 +155,15 @@ const Navbar = () => {
             />
 
             <motion.div
-              className="fixed top-0 right-0 h-full w-72 bg-white z-50 shadow-xl lg:hidden"
+              className="fixed top-0 right-0 z-50 h-full w-72 bg-white shadow-xl lg:hidden"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
-              <div className="flex flex-col h-full pt-20 px-6">
+              <div className="flex h-full flex-col px-6 pt-20">
                 <button
-                  className="absolute top-4 right-4 p-2 text-foreground"
+                  className="text-foreground absolute top-4 right-4 p-2"
                   onClick={() => setMobileMenuOpen(false)}
                   aria-label="Close menu"
                 >
@@ -157,13 +177,10 @@ const Navbar = () => {
                   animate="visible"
                 >
                   {navLinks.map((link) => (
-                    <motion.div
-                      key={link.href}
-                      variants={itemVariants}
-                    >
+                    <motion.div key={link.href} variants={itemVariants}>
                       <Link
                         href={link.href}
-                        className="block py-2 text-lg text-foreground hover:text-red transition-colors"
+                        className="text-foreground hover:text-red block py-2 text-lg transition-colors"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         {link.label}
@@ -171,15 +188,27 @@ const Navbar = () => {
                     </motion.div>
                   ))}
 
+                  {isAuthenticated && user?.role === "admin" && (
+                    <motion.div variants={itemVariants}>
+                      <Link
+                        href="/admin"
+                        className="text-foreground hover:text-red block py-2 text-lg transition-colors"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Admin
+                      </Link>
+                    </motion.div>
+                  )}
+
                   <motion.div variants={itemVariants}>
                     {isLoading ? (
-                      <span className="block w-full text-center px-4 py-2 text-gray-400">
+                      <span className="block w-full px-4 py-2 text-center text-gray-400">
                         Loading...
                       </span>
                     ) : isAuthenticated && user ? (
                       <Link
                         href="/dashboard"
-                        className="block w-full text-center px-4 py-2 bg-red text-white rounded-md shadow-xl truncate"
+                        className="bg-red block w-full truncate rounded-md px-4 py-2 text-center text-white shadow-xl"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         {truncateWithEllipsis(user.name.split(" ")[0] ?? "")}
@@ -187,7 +216,7 @@ const Navbar = () => {
                     ) : (
                       <Link
                         href="/signin"
-                        className="block w-full text-center px-4 py-2 bg-red text-white rounded-md shadow-xl"
+                        className="bg-red block w-full rounded-md px-4 py-2 text-center text-white shadow-xl"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Sign in
@@ -201,8 +230,7 @@ const Navbar = () => {
         )}
       </AnimatePresence>
     </>
-  )
-}
-
+  );
+};
 
 export default Navbar;

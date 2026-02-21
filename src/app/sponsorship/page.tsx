@@ -1,4 +1,4 @@
-import ComingSoon from "~/_components/ComingSoon"
+import ComingSoon from "~/_components/ComingSoon";
 
 const Sponsorship = () => {
   return (
@@ -6,8 +6,7 @@ const Sponsorship = () => {
       <h1 className="sr-only">About TEDxITB 9.0</h1>
       <ComingSoon />
     </>
-
-  )
-}
+  );
+};
 
 export default Sponsorship;

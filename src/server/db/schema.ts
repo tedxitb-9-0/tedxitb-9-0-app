@@ -13,6 +13,8 @@ import {
 
 export const createTable = pgTableCreator((name) => `pg-drizzle_${name}`);
 
+export const userRoleEnum = pgEnum("user_role", ["user", "admin"]);
+
 export const posts = createTable(
   "post",
   (d) => ({
@@ -38,6 +40,7 @@ export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
+  role: userRoleEnum("role").default("user").notNull(),
   emailVerified: boolean("email_verified")
     .$defaultFn(() => false)
     .notNull(),
@@ -107,7 +110,12 @@ export const sessionRelations = relations(session, ({ one }) => ({
   user: one(user, { fields: [session.userId], references: [user.id] }),
 }));
 
-export const statusEnum = pgEnum("status", ["pending", "paid", "confirmed", "cancelled"]);
+export const statusEnum = pgEnum("status", [
+  "pending",
+  "paid",
+  "confirmed",
+  "cancelled",
+]);
 
 export const orderTypeEnum = pgEnum("order_type", [
   "pre_event_ticket",
@@ -127,6 +135,8 @@ export const orders = createTable("order", {
   // Flexible JSON fields - one will be populated based on orderType
   merchJson: json("merch_json"), // For merchandise orders
   ticketJson: json("ticket_json"), // For ticket orders (pre-event or main-event)
+  paymentProofUrl: text("payment_proof_url"), // Base64 encoded payment proof image
+  qrCode: text("qr_code"), // Attendance QR code string (e.g., TEDX-PE-{orderId})
   createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),
@@ -139,4 +149,3 @@ export const orders = createTable("order", {
 export const ordersRelations = relations(orders, ({ one }) => ({
   user: one(user, { fields: [orders.userId], references: [user.id] }),
 }));
-

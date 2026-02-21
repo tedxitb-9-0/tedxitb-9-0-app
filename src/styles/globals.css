@@ -35,3 +35,46 @@ body {
   width: 0;
   height: 0;
 }
+
+/* Custom Responsive Flip Clock Styles */
+.pre-event-flip-clock {
+  /* Default Desktop / Full Size */
+  --fcc-digit-block-width: 60px;
+  --fcc-digit-block-height: 90px;
+  --fcc-digit-font-size: 45px;
+  --fcc-digit-color: white;
+  --fcc-background: #e12d2d;
+  --fcc-divider-color: #ffffff40;
+  --fcc-divider-height: 1px;
+  --fcc-separator-size: 6px;
+  --fcc-separator-color: #e12d2d;
+  --fcc-label-color: #e12d2d;
+  --fcc-label-font-size: 13px;
+  --fcc-spacing: 8px;
+  font-weight: 700;
+  gap: var(--fcc-spacing);
+}
+
+/* Tablet responsive */
+@media (max-width: 1024px) {
+  .pre-event-flip-clock {
+    --fcc-digit-block-width: 45px;
+    --fcc-digit-block-height: 70px;
+    --fcc-digit-font-size: 35px;
+    --fcc-separator-size: 5px;
+    --fcc-label-font-size: 11px;
+    --fcc-spacing: 6px;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .pre-event-flip-clock {
+    --fcc-digit-block-width: 32px;
+    --fcc-digit-block-height: 50px;
+    --fcc-digit-font-size: 24px;
+    --fcc-separator-size: 3px;
+    --fcc-label-font-size: 9px;
+    --fcc-spacing: 4px;
+  }
+}

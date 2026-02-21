@@ -24,8 +24,7 @@ export default function AboutLayout({
 }) {
   return (
     <main className="flex flex-col items-center justify-center">
-        {children}
+      {children}
     </main>
   );
 }
-

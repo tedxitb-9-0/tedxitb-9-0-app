@@ -68,7 +68,8 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
       <motion.div
         className="absolute top-0 left-0 z-10 w-64 md:w-96"
         initial={{ opacity: 0, x: -50, y: -50 }}
-        animate={{ opacity: 1, x: 0, y: 0 }}
+        whileInView={{ opacity: 1, x: 0, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6, ease: "easeOut" as const }}
       >
         <motion.div
@@ -93,7 +94,8 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
       <motion.div
         className="absolute top-0 right-0 z-10 w-48 md:w-64"
         initial={{ opacity: 0, x: 50, y: -50 }}
-        animate={{ opacity: 1, x: 0, y: 0 }}
+        whileInView={{ opacity: 1, x: 0, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.1 }}
       >
         <motion.div
@@ -119,7 +121,8 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
       <motion.div
         className="absolute top-0 right-0 z-10 w-48 md:w-64"
         initial={{ opacity: 0, x: 50, y: -50 }}
-        animate={{ opacity: 1, x: 0, y: 0 }}
+        whileInView={{ opacity: 1, x: 0, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.1 }}
       >
         <motion.div
@@ -144,7 +147,8 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
       <motion.div
         className="absolute bottom-0 left-0 z-10 w-64 md:w-md"
         initial={{ opacity: 0, x: -50, y: 50 }}
-        animate={{ opacity: 1, x: 0, y: 0 }}
+        whileInView={{ opacity: 1, x: 0, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.2 }}
       >
         <motion.div
@@ -169,7 +173,8 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
       <motion.div
         className="absolute right-0 bottom-0 z-10 w-48 md:w-96"
         initial={{ opacity: 0, x: 50, y: 50 }}
-        animate={{ opacity: 1, x: 0, y: 0 }}
+        whileInView={{ opacity: 1, x: 0, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.3 }}
       >
         <motion.div
@@ -194,7 +199,8 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
       <motion.div
         className="absolute -top-[25%] left-0 z-0 hidden w-xl lg:block lg:w-2xl xl:w-2xl"
         initial={{ opacity: 0, y: -100 }}
-        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6, ease: "easeOut" as const }}
         style={{ y: leftAssetY }}
       >
@@ -211,7 +217,8 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
       <motion.div
         className="absolute right-8 z-0 w-2xl lg:-top-[50%] xl:w-4xl"
         initial={{ opacity: 0, y: -100 }}
-        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.1 }}
         style={{ y: rightAssetY }}
       >
@@ -228,7 +235,8 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
       <motion.div
         className="absolute bottom-8 left-[5%] z-30 w-20 md:w-28"
         initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6, ease: "easeOut" as const }}
         style={{ x: leftSmileX }}
       >
@@ -245,7 +253,8 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
       <motion.div
         className="absolute right-[2%] bottom-8 z-30 w-28 md:w-48"
         initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6, ease: "easeOut" as const }}
         style={{ x: rightSmileX }}
       >
@@ -262,7 +271,8 @@ const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
       <motion.div
         className="pointer-events-none absolute bottom-0 left-0 z-20 w-full"
         initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" as const, delay: 0.2 }}
       >
         <Image
