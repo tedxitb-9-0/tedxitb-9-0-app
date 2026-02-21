@@ -22,7 +22,7 @@ const HeroSection = () => {
         />
       </motion.div>
       <motion.div
-        className="absolute bottom-0 left-[25%] z-0 w-lg md:w-4xl"
+        className="absolute -bottom-10 left-[25%] z-0 w-lg md:w-5xl"
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" as const }}
@@ -30,8 +30,8 @@ const HeroSection = () => {
         <Image
           src="/pre-event/bottom-asset.png"
           alt="Decorative geometric pattern"
-          width={400}
-          height={400}
+          width={1800}
+          height={500}
           className="h-auto w-full"
           draggable={false}
         />
@@ -102,9 +102,9 @@ const HeroSection = () => {
         >
           TEDxplore, a hands-on pre-event designed to tackle the theme{" "}
           <strong>PUZZLE: The Struggles of Tomorrow</strong>. We brought
-          together creators, activists, and leaders for 8 hours of
-          exhibitions, workshops, and honest talk about what it actually
-          takes to build our future.
+          together creators, activists, and leaders for 8 hours of exhibitions,
+          workshops, and honest talk about what it actually takes to build our
+          future.
         </motion.p>
       </motion.div>
 
@@ -124,7 +124,7 @@ const HeroSection = () => {
             width={2000}
             height={2000}
             alt="Pre-Event Hero Asset"
-            className="w-full max-w-[450px] object-contain md:max-w-[500px] xl:max-w-[650px]"
+            className="w-full max-w-[450px] object-contain md:max-w-2xl xl:max-w-5xl"
             priority
             draggable={false}
           />

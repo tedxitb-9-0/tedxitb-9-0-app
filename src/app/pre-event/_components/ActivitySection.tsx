@@ -12,21 +12,21 @@ const activities = [
   {
     title: "Workshop",
     description:
-      "This workshop discussed waste management and plastic recycling. Participants learned about the process of transforming plastic waste into usable products through hands-on activities.",
+      "Across the three workshop spots, participants learned about waste management and plastic recycling through hands-on activities, and explored Batik as a cultural art form by practicing basic painting techniques while understanding its importance in preserving Indonesian cultural identity.",
     imageSrc: "/pre-event/activity-left.svg",
     imageAlt: "Workshop activity",
   },
   {
     title: "Talkshow",
     description:
-      "This workshop focused on Batik as a cultural practice and artistic medium. Participants were introduced to basic Batik painting techniques and the importance of preserving Batik as part of Indonesian cultural identity.",
-    imageSrc: "/pre-event/activity-middle.svg",
+      "The talk show was a 45-minute discussion addressing challenges and opportunities related to Indonesia Emas 2045. The session focused on practical perspectives rather than theoretical concepts.",
+    imageSrc: "/pre-event/activity-middle.png",
     imageAlt: "Talkshow activity",
   },
   {
     title: "Exhibition",
     description:
-      "This workshop focused on Batik as a cultural practice and artistic medium. Participants were introduced to basic Batik painting techniques and the importance of preserving Batik as part of Indonesian cultural identity.",
+      "Live music performances by local rising stars (veterans of the West Java Festival 2024) were held throughout the event to support a relaxed environment. The exhibition area allowed participants to move freely between workshops, discussion sessions, and community booths.",
     imageSrc: "/pre-event/activity-right.svg",
     imageAlt: "Exhibition activity",
   },

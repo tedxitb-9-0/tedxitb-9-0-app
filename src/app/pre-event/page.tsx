@@ -12,7 +12,7 @@ const PreEvent = () => {
       <h1 className="sr-only">TEDxITB 9.0 Pre-Event</h1>
 
       {/* Hero Section */}
-      <ColorfulBackground showSmiles={false}>
+      <ColorfulBackground showSmiles={true}>
         <HeroSection />
       </ColorfulBackground>
       <ActivitySection />

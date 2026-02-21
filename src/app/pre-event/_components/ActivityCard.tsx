@@ -47,7 +47,7 @@ export default function ActivityCard({
       </div>
 
       {/* Decorative accent top-left */}
-      <div className="absolute top-[15%] -left-29 z-20 h-48 w-48 md:h-52 md:w-52">
+      <div className="absolute top-[15%] -left-25 z-3 h-48 w-48 md:h-52 md:w-52">
         <Image
           src="/pre-event/curvy-atas.png"
           alt="Decorative top accent"
@@ -58,7 +58,7 @@ export default function ActivityCard({
       </div>
 
       {/* Decorative accent bottom-right */}
-      <div className="absolute -right-20 bottom-[10%] z-2 h-48 w-48 md:h-52 md:w-52">
+      <div className="absolute -right-20 bottom-[5%] z-3 h-48 w-48 md:h-52 md:w-52">
         <Image
           src="/pre-event/curvy-bawah.png"
           alt="Decorative bottom accent"
@@ -81,7 +81,7 @@ export default function ActivityCard({
       </div>
 
       {/* Layer 3 (front)*/}
-      <div className="absolute bottom-0 left-0 z-3 h-[62%] w-[96%]">
+      <div className="absolute bottom-0 left-0 z-8 h-[62%] w-[96%]">
         <Image
           src="/pre-event/top-layer.svg"
           alt="Front card layer"
