@@ -22,7 +22,7 @@ const HeroSection = () => {
         />
       </motion.div>
       <motion.div
-        className="absolute -bottom-10 left-[25%] z-0 w-lg md:w-5xl"
+        className="absolute -bottom-25 left-[25%] z-0 w-lg md:w-5xl"
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" as const }}
