@@ -32,7 +32,7 @@ export default function ActivityCard({
           },
         },
       }}
-      className="relative mx-auto w-full"
+      className="group relative mx-auto w-full"
       style={{ maxWidth: 400, aspectRatio: "400/540" }}
     >
       {/* Layer 1 (back)*/}
@@ -69,12 +69,12 @@ export default function ActivityCard({
       </div>
 
       {/* Layer 2 (middle) – Cover image */}
-      <div className="absolute top-[4%] right-[4%] z-2 h-[55%] w-[88%] overflow-hidden rounded-xl">
+      <div className="absolute top-[4%] right-[4%] z-2 h-[55%] w-[88%] overflow-hidden rounded-xl transition-all duration-500 ease-out group-hover:-translate-y-6 group-hover:translate-x-4 group-hover:-rotate-2">
         <Image
           src={imageSrc}
           alt={imageAlt}
           fill
-          className="object-cover"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
           sizes="(max-width: 640px) 80vw, (max-width: 1024px) 40vw, 30vw"
           draggable={false}
         />

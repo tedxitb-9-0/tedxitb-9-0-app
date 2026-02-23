@@ -22,7 +22,7 @@ const HeroSection = () => {
         />
       </motion.div>
       <motion.div
-        className="absolute -bottom-25 left-[25%] z-0 w-lg md:w-5xl"
+        className="absolute -bottom-25 -left-20 z-0 w-lg md:left-[25%] md:w-5xl"
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" as const }}
@@ -47,7 +47,7 @@ const HeroSection = () => {
             transition: { staggerChildren: 0.15 },
           },
         }}
-        className="z-10 flex w-full flex-col items-center justify-center gap-6 lg:w-1/2 lg:items-start"
+        className="z-30 flex w-full flex-col items-center justify-center gap-6 lg:w-1/2 lg:items-start"
       >
         <motion.div
           variants={{
@@ -65,7 +65,7 @@ const HeroSection = () => {
             width={600}
             height={150}
             alt="TEDxpressive"
-            className="w-full max-w-[450px] object-contain md:max-w-xl"
+            className="z-99 w-full max-w-[450px] object-contain md:max-w-xl"
             priority
           />
         </motion.div>
@@ -113,7 +113,7 @@ const HeroSection = () => {
         initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
         animate={{ opacity: 1, scale: 1, rotate: 0 }}
         transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-        className="relative -z-10 flex w-full justify-center lg:w-1/2 lg:justify-end"
+        className="relative z-30 flex w-full justify-center lg:w-1/2 lg:justify-end"
       >
         <motion.div
           animate={{ y: [0, -15, 0] }}
