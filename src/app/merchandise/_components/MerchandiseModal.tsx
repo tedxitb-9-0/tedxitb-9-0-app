@@ -71,7 +71,7 @@ export default function MerchandiseModal({
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 rounded-full bg-white/80 p-2 text-black transition-colors hover:bg-white"
+          className="absolute top-4 right-4 z-10 rounded-full p-2 text-black transition-colors hover:scale-105 hover:cursor-pointer hover:bg-white"
         >
           <X className="h-5 w-5" />
         </button>
@@ -97,14 +97,14 @@ export default function MerchandiseModal({
         <div className="flex w-full flex-col overflow-y-auto p-6 md:w-1/2">
           <div className="mb-2">
             <span
-              className={`inline-block rounded-full px-3 py-1 text-xs font-bold tracking-wider text-white uppercase ${isBundle ? "bg-blue-600" : "bg-pink-500"}`}
+              className={`inline-block rounded-full px-3 py-1 text-xs font-bold tracking-wider text-white uppercase ${isBundle ? "bg-blue" : "bg-pink"}`}
             >
-              {type === "bundle" ? "Bundle" : (merchType ?? "Merch")}
+              {type === "bundle" ? "Merchandise Bundle" : "Merchandise Item"}
             </span>
           </div>
 
           <h2
-            className={`font-titan mb-2 text-3xl font-bold ${isBundle ? "text-blue-800" : "text-pink-600"}`}
+            className={`font-titan mb-2 text-3xl font-bold ${isBundle ? "text-blue" : "text-pink"}`}
           >
             {title}
           </h2>
@@ -146,10 +146,11 @@ export default function MerchandiseModal({
                     onClick={() => {
                       setSelectedIndex(idx);
                     }}
-                    className={`rounded-lg border-2 px-4 py-2 text-sm font-semibold transition-colors ${safeIndex === idx
-                      ? "border-pink-500 bg-pink-50 text-pink-600"
-                      : "border-gray-200 bg-white text-gray-600 hover:border-pink-200"
-                      }`}
+                    className={`rounded-lg border-2 px-4 py-2 text-sm font-semibold transition-colors hover:cursor-pointer ${
+                      safeIndex === idx
+                        ? "border-pink-500 bg-pink-50 text-pink-600"
+                        : "border-gray-200 bg-white text-gray-600 hover:border-pink-200"
+                    }`}
                   >
                     {item.name.replace(
                       (item.merchandiseType ?? "") + " ",
@@ -164,10 +165,11 @@ export default function MerchandiseModal({
           <div className="mt-auto pt-4">
             <button
               onClick={handleAddToCart}
-              className={`flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 font-bold text-white transition-transform hover:scale-105 active:scale-95 ${isBundle
-                ? "bg-blue-600 hover:bg-blue-700"
-                : "bg-pink-500 hover:bg-pink-600"
-                }`}
+              className={`flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 font-bold text-white transition-transform hover:cursor-pointer active:scale-95 ${
+                isBundle
+                  ? "bg-blue-600 hover:bg-blue-700"
+                  : "bg-pink-500 hover:bg-pink-600"
+              }`}
             >
               <ShoppingCart className="h-5 w-5" />
               Add to Cart
