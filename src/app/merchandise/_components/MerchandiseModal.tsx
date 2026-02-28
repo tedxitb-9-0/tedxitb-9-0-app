@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { X, ShoppingCart } from "lucide-react";
+import { X, ShoppingCart, Minus, Plus } from "lucide-react";
 import {
   type IMerchandise,
   type IMerchandiseBundle,
 } from "~/server/contentful/types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCartStore } from "~/stores/cartStore";
 import { toast } from "sonner";
 
@@ -26,7 +26,14 @@ export default function MerchandiseModal({
 }: MerchandiseModalProps) {
   // 1. Hooks unconditionally at the top level
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const { addItem, setDrawerOpen } = useCartStore();
+  const [quantity, setQuantity] = useState(1);
+
+  useEffect(() => {
+    if (isOpen) {
+      setQuantity(1);
+    }
+  }, [isOpen, itemGroup]);
+  const { addItem } = useCartStore();
 
   const isBundle =
     type === "bundle" && !!itemGroup && !Array.isArray(itemGroup);
@@ -62,9 +69,9 @@ export default function MerchandiseModal({
       // Wait, the store expects `IMerchandise`. A bundle is `IMerchandiseBundle`. We need to handle this.
       // Wait actually, `IMerchandiseBundle` doesn't fit `IMerchandise` exactly, but the user didn't mention bundle vs regular in the cart store. Let's see if we should just cast it.
       // For now, let's treat bundleData as an IMerchandise for the cart since they share `id`, `name`, `price`, `image`.
-      addItem(bundleData as unknown as IMerchandise);
+      addItem(bundleData as unknown as IMerchandise, quantity);
     } else if (currentRegularItem) {
-      addItem(currentRegularItem);
+      addItem(currentRegularItem, quantity);
     }
 
     toast.success(`Added ${title ?? "item"} to cart!`);
@@ -155,10 +162,11 @@ export default function MerchandiseModal({
                     onClick={() => {
                       setSelectedIndex(idx);
                     }}
-                    className={`rounded-lg border-2 px-4 py-2 text-sm font-semibold transition-colors hover:cursor-pointer ${safeIndex === idx
-                      ? "border-pink-500 bg-pink-50 text-pink-600"
-                      : "border-gray-200 bg-white text-gray-600 hover:border-pink-200"
-                      }`}
+                    className={`rounded-lg border-2 px-4 py-2 text-sm font-semibold transition-colors hover:cursor-pointer ${
+                      safeIndex === idx
+                        ? "border-pink-500 bg-pink-50 text-pink-600"
+                        : "border-gray-200 bg-white text-gray-600 hover:border-pink-200"
+                    }`}
                   >
                     {item.name.replace(
                       (item.merchandiseType ?? "") + " ",
@@ -170,16 +178,44 @@ export default function MerchandiseModal({
             </div>
           )}
 
-          <div className="mt-auto pt-4">
+          <div className="mt-auto flex flex-col gap-4 pt-4">
+            <div className="flex items-center justify-between rounded-xl border border-gray-200 bg-white/80 px-4 py-3">
+              <span className="font-semibold text-gray-700">Quantity</span>
+              <div className="flex items-center rounded-lg border border-gray-200">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="p-1 text-gray-500 transition-colors hover:cursor-pointer hover:bg-gray-100 hover:text-black disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={quantity <= 1}
+                >
+                  <Minus className="h-4 w-4" />
+                </button>
+                <span className="w-8 text-center text-sm font-medium text-gray-800">
+                  {quantity}
+                </span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="p-1 text-gray-500 transition-colors hover:cursor-pointer hover:bg-gray-100 hover:text-black"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
             <button
               onClick={handleAddToCart}
-              className={`flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 font-bold text-white transition-transform hover:cursor-pointer active:scale-95 ${isBundle
-                ? "bg-blue-600 hover:bg-blue-700"
-                : "bg-pink-500 hover:bg-pink-600"
-                }`}
+              className={`flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 font-bold text-white transition-transform hover:cursor-pointer active:scale-95 ${
+                isBundle
+                  ? "bg-blue-600 hover:bg-blue-700"
+                  : "bg-pink-500 hover:bg-pink-600"
+              }`}
             >
               <ShoppingCart className="h-5 w-5" />
-              Add to Cart
+              Add to Cart -{" "}
+              {new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                minimumFractionDigits: 0,
+              }).format((price ?? 0) * quantity)}
             </button>
           </div>
         </div>

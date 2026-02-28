@@ -147,7 +147,7 @@ const Navbar = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setDrawerOpen(true)}
-            className="text-foreground relative p-2"
+            className="text-foreground relative p-2 hover:cursor-pointer"
             aria-label="Open cart"
           >
             <ShoppingBag size={24} />
