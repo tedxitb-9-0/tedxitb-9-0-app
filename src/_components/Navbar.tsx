@@ -12,6 +12,7 @@ import { useState } from "react";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import { useAuthStore } from "~/stores";
 import { useCartStore } from "~/stores/cartStore";
+import { toast } from "sonner";
 import { CartDrawer } from "./CartDrawer";
 
 const truncateWithEllipsis = (text: string, maxLength = 10): string => {
