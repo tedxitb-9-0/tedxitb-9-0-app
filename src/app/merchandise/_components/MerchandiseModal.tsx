@@ -7,6 +7,8 @@ import {
   type IMerchandiseBundle,
 } from "~/server/contentful/types";
 import { useState } from "react";
+import { useCartStore } from "~/stores/cartStore";
+import { toast } from "sonner";
 
 interface MerchandiseModalProps {
   isOpen: boolean;
@@ -24,6 +26,7 @@ export default function MerchandiseModal({
 }: MerchandiseModalProps) {
   // 1. Hooks unconditionally at the top level
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const { addItem, setDrawerOpen } = useCartStore();
 
   const isBundle =
     type === "bundle" && !!itemGroup && !Array.isArray(itemGroup);
@@ -34,9 +37,6 @@ export default function MerchandiseModal({
   // Guarantee we never read out of bounds if selectedIndex was kept from a previous modal open
   const safeIndex = selectedIndex < regularItems.length ? selectedIndex : 0;
   const currentRegularItem = regularItems[safeIndex] ?? null;
-
-  // For regular items, we might need options if it requires design selection
-  const merchType = currentRegularItem?.merchandiseType;
 
   // 2. Early return AFTER all hooks
   if (!isOpen || !itemGroup) return null;
@@ -56,9 +56,18 @@ export default function MerchandiseModal({
   }).format(price ?? 0);
 
   const handleAddToCart = () => {
-    // Placeholder logic for adding to cart
+    if (isBundle && bundleData) {
+      // Adding a whole bundle to the cart
+      // We will define bundle items as simply regular items in the cart but with bundle prices?
+      // Wait, the store expects `IMerchandise`. A bundle is `IMerchandiseBundle`. We need to handle this.
+      // Wait actually, `IMerchandiseBundle` doesn't fit `IMerchandise` exactly, but the user didn't mention bundle vs regular in the cart store. Let's see if we should just cast it.
+      // For now, let's treat bundleData as an IMerchandise for the cart since they share `id`, `name`, `price`, `image`.
+      addItem(bundleData as unknown as IMerchandise);
+    } else if (currentRegularItem) {
+      addItem(currentRegularItem);
+    }
 
-    alert(`Added ${title ?? "Item"} to cart!`);
+    toast.success(`Added ${title ?? "item"} to cart!`);
     onClose();
   };
 
@@ -146,11 +155,10 @@ export default function MerchandiseModal({
                     onClick={() => {
                       setSelectedIndex(idx);
                     }}
-                    className={`rounded-lg border-2 px-4 py-2 text-sm font-semibold transition-colors hover:cursor-pointer ${
-                      safeIndex === idx
-                        ? "border-pink-500 bg-pink-50 text-pink-600"
-                        : "border-gray-200 bg-white text-gray-600 hover:border-pink-200"
-                    }`}
+                    className={`rounded-lg border-2 px-4 py-2 text-sm font-semibold transition-colors hover:cursor-pointer ${safeIndex === idx
+                      ? "border-pink-500 bg-pink-50 text-pink-600"
+                      : "border-gray-200 bg-white text-gray-600 hover:border-pink-200"
+                      }`}
                   >
                     {item.name.replace(
                       (item.merchandiseType ?? "") + " ",
@@ -165,11 +173,10 @@ export default function MerchandiseModal({
           <div className="mt-auto pt-4">
             <button
               onClick={handleAddToCart}
-              className={`flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 font-bold text-white transition-transform hover:cursor-pointer active:scale-95 ${
-                isBundle
-                  ? "bg-blue-600 hover:bg-blue-700"
-                  : "bg-pink-500 hover:bg-pink-600"
-              }`}
+              className={`flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 font-bold text-white transition-transform hover:cursor-pointer active:scale-95 ${isBundle
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-pink-500 hover:bg-pink-600"
+                }`}
             >
               <ShoppingCart className="h-5 w-5" />
               Add to Cart

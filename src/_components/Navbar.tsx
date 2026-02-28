@@ -9,8 +9,10 @@ import {
   AnimatePresence,
 } from "motion/react";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingBag } from "lucide-react";
 import { useAuthStore } from "~/stores";
+import { useCartStore } from "~/stores/cartStore";
+import { CartDrawer } from "./CartDrawer";
 
 const truncateWithEllipsis = (text: string, maxLength = 10): string => {
   if (text.length <= maxLength) return text;
@@ -51,7 +53,9 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
   const { user, isAuthenticated, isLoading } = useAuthStore();
+  const { items, setDrawerOpen } = useCartStore();
 
+  const cartItemsCount = items.reduce((sum, item) => sum + item.quantity, 0);
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() ?? 0;
     if (latest > previous && latest > 100) {
@@ -137,15 +141,46 @@ const Navbar = () => {
               </Link>
             )}
           </motion.div>
+
+          <motion.button
+            variants={itemVariants}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setDrawerOpen(true)}
+            className="text-foreground relative p-2"
+            aria-label="Open cart"
+          >
+            <ShoppingBag size={24} />
+            {cartItemsCount > 0 && (
+              <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-pink-500 text-xs font-bold text-white">
+                {cartItemsCount}
+              </span>
+            )}
+          </motion.button>
         </motion.div>
 
-        <button
-          className="text-foreground p-2 lg:hidden"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="flex items-center gap-4 lg:hidden">
+          <button
+            onClick={() => setDrawerOpen(true)}
+            className="text-foreground relative p-2"
+            aria-label="Open cart"
+          >
+            <ShoppingBag size={24} />
+            {cartItemsCount > 0 && (
+              <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-pink-500 text-xs font-bold text-white">
+                {cartItemsCount}
+              </span>
+            )}
+          </button>
+
+          <button
+            className="text-foreground p-2"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </motion.nav>
 
       {/* Mobile View */}
@@ -235,6 +270,8 @@ const Navbar = () => {
           </>
         )}
       </AnimatePresence>
+
+      <CartDrawer />
     </>
   );
 };
