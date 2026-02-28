@@ -12,40 +12,6 @@ export type IMerchandiseType =
   | "E-money";
 
 /**
- * Design options for items that require selection
- */
-export interface IDesignOption {
-  id: string;
-  name: string;
-}
-
-/**
- * Faculty options for Enamel Pin Fakultas
- */
-export const FAKULTAS_OPTIONS: IDesignOption[] = [
-  { id: "fmipa", name: "FMIPA" },
-  { id: "fti", name: "FTI" },
-  { id: "ftsl", name: "FTSL" },
-  { id: "fttm", name: "FTTM" },
-  { id: "fsrd", name: "FSRD" },
-  { id: "sappk", name: "SAPPK" },
-  { id: "stei", name: "STEI" },
-  { id: "sbm", name: "SBM" },
-  { id: "sith", name: "SITH" },
-  { id: "sf", name: "SF" },
-  { id: "fitb", name: "FITB" },
-  { id: "ftmd", name: "FTMD" },
-];
-
-/**
- * Keychain design options
- */
-export const KEYCHAIN_OPTIONS: IDesignOption[] = [
-  { id: "design-1", name: "Design 1" },
-  { id: "design-2", name: "Design 2" },
-];
-
-/**
  * Merchandise item from Contentful
  */
 export interface IMerchandise {
@@ -90,5 +56,4 @@ export interface IMagazine {
 export interface ICartItem {
   merchandise: IMerchandise;
   quantity: number;
-  selectedVariant?: string; // For items with design selection
 }

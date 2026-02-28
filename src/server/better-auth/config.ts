@@ -8,7 +8,10 @@ import { db } from "~/server/db";
 import { orders } from "~/server/db/schema";
 
 const isProduction = env.NODE_ENV === "production";
-const baseURL = process.env.NEXT_PUBLIC_BASE_URL ?? process.env.BETTER_AUTH_URL ?? (isProduction ? "https://www.tedxitb.id" : "http://localhost:3000");
+const baseURL =
+  process.env.NEXT_PUBLIC_BASE_URL ??
+  process.env.BETTER_AUTH_URL ??
+  (isProduction ? "https://www.tedxitb.id" : "http://localhost:3000");
 
 type SessionCallbackSession = {
   user: Record<string, unknown>;

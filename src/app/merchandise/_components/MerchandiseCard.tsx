@@ -19,7 +19,7 @@ const MerchandiseCard = ({
   return (
     <div className="flex w-72 flex-col rounded-2xl bg-white p-4 shadow-lg">
       {/* Image Container */}
-      <div className="relative aspect-square w-64 overflow-hidden rounded-xl border-4 border-black bg-black">
+      <div className="relative aspect-square w-64 overflow-hidden rounded-xl border-2 border-black bg-black">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -36,7 +36,10 @@ const MerchandiseCard = ({
 
       {/* Text Content */}
       <div className="mt-6 flex flex-col text-left">
-        <h3 className={`font-titan text-xl font-bold ${textColorClass}`}>
+        <h3
+          className={`font-titan truncate text-xl font-bold ${textColorClass}`}
+          title={name}
+        >
           {name}
         </h3>
         <p className="text-md text-gray-600">{price}</p>

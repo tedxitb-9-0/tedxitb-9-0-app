@@ -3,9 +3,6 @@ import {
   type IMerchandise,
   type IMerchandiseBundle,
   type IMerchandiseType,
-  type IDesignOption,
-  FAKULTAS_OPTIONS,
-  KEYCHAIN_OPTIONS,
 } from "./types";
 import { type Entry, type EntrySkeletonType, type Asset } from "contentful";
 
@@ -145,30 +142,4 @@ export const getBundleBySlug = async (
     console.error("Error fetching bundle by slug:", error);
     return { status: "error", bundle: null };
   }
-};
-
-/**
- * Get design/variant options for a merchandise type
- * Returns null if the merchandise type has no design selection
- */
-export const getMerchandiseOptions = (
-  merchType: IMerchandiseType,
-): IDesignOption[] | null => {
-  switch (merchType) {
-    case "Enamel Pin Fakultas":
-      return FAKULTAS_OPTIONS;
-    case "Keychain TEDxITB 9.0":
-      return KEYCHAIN_OPTIONS;
-    default:
-      return null;
-  }
-};
-
-/**
- * Check if a merchandise type requires design selection
- */
-export const requiresDesignSelection = (
-  merchType: IMerchandiseType,
-): boolean => {
-  return getMerchandiseOptions(merchType) !== null;
 };

@@ -5,9 +5,6 @@ import {
   getMerchandiseBySlug,
   getAllBundles,
   getBundleBySlug,
-  getMerchandiseOptions,
-  requiresDesignSelection,
-  type IMerchandiseType,
 } from "~/server/contentful";
 
 export const merchandiseRouter = createTRPCRouter({
@@ -57,23 +54,5 @@ export const merchandiseRouter = createTRPCRouter({
         throw new Error("Failed to fetch bundle");
       }
       return result.bundle;
-    }),
-
-  /**
-   * Get design options for a merchandise type
-   */
-  getOptions: protectedProcedure
-    .input(z.object({ type: z.string() }))
-    .query(({ input }) => {
-      return getMerchandiseOptions(input.type as IMerchandiseType);
-    }),
-
-  /**
-   * Check if a merchandise type requires design selection
-   */
-  requiresSelection: protectedProcedure
-    .input(z.object({ type: z.string() }))
-    .query(({ input }) => {
-      return requiresDesignSelection(input.type as IMerchandiseType);
     }),
 });

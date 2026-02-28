@@ -69,7 +69,7 @@ export default function ActivityCard({
       </div>
 
       {/* Layer 2 (middle) – Cover image */}
-      <div className="absolute top-[4%] right-[4%] z-2 h-[55%] w-[88%] overflow-hidden rounded-xl transition-all duration-500 ease-out group-hover:-translate-y-6 group-hover:translate-x-4 group-hover:-rotate-2">
+      <div className="absolute top-[4%] right-[4%] z-2 h-[55%] w-[88%] overflow-hidden rounded-xl transition-all duration-500 ease-out group-hover:translate-x-4 group-hover:-translate-y-6 group-hover:-rotate-2">
         <Image
           src={imageSrc}
           alt={imageAlt}

@@ -2,24 +2,71 @@
 
 import Image from "next/image";
 import MerchandiseCard from "./MerchandiseCard";
+import MerchandiseModal from "./MerchandiseModal";
 import { motion } from "motion/react";
-
-// Placeholder data - will be replaced with Contentful API later
-const bundlePlaceholders = [
-  { id: "bundle-1", name: "Merch Bundle #1", price: "Rpx.xxx,xx" },
-  { id: "bundle-2", name: "Merch Bundle #1", price: "Rpx.xxx,xx" },
-  { id: "bundle-3", name: "Merch Bundle #1", price: "Rpx.xxx,xx" },
-];
-
-const regularPlaceholders = [
-  { id: "regular-1", name: "Merch Name #1", price: "Rpx.xxx,xx" },
-  { id: "regular-2", name: "Merch Name #1", price: "Rpx.xxx,xx" },
-  { id: "regular-3", name: "Merch Name #1", price: "Rpx.xxx,xx" },
-  { id: "regular-4", name: "Merch Name #1", price: "Rpx.xxx,xx" },
-  { id: "regular-5", name: "Merch Name #1", price: "Rpx.xxx,xx" },
-];
+import { api } from "~/trpc/react";
+import { useState, useMemo } from "react";
+import {
+  type IMerchandiseBundle,
+  type IMerchandise,
+  type IMerchandiseType,
+} from "~/server/contentful/types";
 
 const MerchandiseGrid = () => {
+  const { data: bundles, isLoading: bundlesLoading } =
+    api.merchandise.getAllBundles.useQuery();
+  const { data: items, isLoading: itemsLoading } =
+    api.merchandise.getAll.useQuery();
+
+  // State for the modal
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<
+    IMerchandiseBundle | IMerchandise[] | null
+  >(null);
+  const [modalType, setModalType] = useState<"bundle" | "regular">("regular");
+
+  // Group individual merchandises by their Type
+  const groupedItems = useMemo(() => {
+    if (!items) return [];
+
+    const groupMap = new Map<IMerchandiseType, IMerchandise[]>();
+
+    items.forEach((item) => {
+      if (!groupMap.has(item.merchandiseType)) {
+        groupMap.set(item.merchandiseType, []);
+      }
+      groupMap.get(item.merchandiseType)!.push(item);
+    });
+
+    // Convert map to array for rendering
+    return Array.from(groupMap.entries()).map(([type, merchandises]) => ({
+      type,
+      merchandises,
+      // We use the first item to represent the whole group on the card
+      representative: merchandises[0],
+    }));
+  }, [items]);
+
+  const handleOpenBundle = (bundle: IMerchandiseBundle) => {
+    setSelectedGroup(bundle);
+    setModalType("bundle");
+    setModalOpen(true);
+  };
+
+  const handleOpenRegular = (merchandises: IMerchandise[]) => {
+    setSelectedGroup(merchandises);
+    setModalType("regular");
+    setModalOpen(true);
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(price);
+  };
+
   return (
     <section className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-[url('/pattern-bg.svg')] bg-repeat py-12 md:py-16 lg:py-24">
       {/* Bundles Section */}
@@ -35,29 +82,39 @@ const MerchandiseGrid = () => {
           alt="Merchandise Bundle"
           width={750}
           height={70}
-          className="mb-12 h-12 w-auto md:h-18"
+          className="mb-12 h-auto max-h-12 w-auto max-w-[90%] object-contain md:max-h-16"
           draggable={false}
           priority
         />
 
-        {/* Bundle Cards Grid */}
-        <div className="mx-auto grid w-full max-w-7xl grid-cols-1 justify-items-center gap-8 px-6 sm:grid-cols-2 lg:grid-cols-3">
-          {bundlePlaceholders.map((bundle, index) => (
-            <motion.div
-              key={bundle.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              viewport={{ once: true }}
-            >
-              <MerchandiseCard
-                type="bundle"
-                name={bundle.name}
-                price={bundle.price}
-              />
-            </motion.div>
-          ))}
-        </div>
+        {bundlesLoading ? (
+          <div className="flex w-full justify-center py-10">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+          </div>
+        ) : bundles && bundles.length > 0 ? (
+          <div className="mx-auto grid w-full max-w-6xl grid-cols-1 justify-items-center gap-8 px-6 sm:grid-cols-2 lg:grid-cols-3">
+            {bundles.map((bundle, index) => (
+              <motion.div
+                key={bundle.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                onClick={() => handleOpenBundle(bundle)}
+                className="cursor-pointer transition-transform hover:scale-105"
+              >
+                <MerchandiseCard
+                  type="bundle"
+                  name={bundle.name}
+                  price={formatPrice(bundle.price)}
+                  imageUrl={bundle.image}
+                />
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <p className="font-medium text-gray-500">No bundles available yet.</p>
+        )}
       </motion.div>
 
       {/* Merchandise Collection Section */}
@@ -73,30 +130,53 @@ const MerchandiseGrid = () => {
           alt="Merchandise Collection"
           width={3300}
           height={300}
-          className="mb-12 h-12 w-auto md:h-18"
+          className="mb-12 h-auto max-h-12 w-auto max-w-[90%] object-contain md:max-h-16"
           draggable={false}
           priority
         />
 
-        {/* Regular Cards Grid */}
-        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 justify-items-center gap-8 px-6 sm:grid-cols-2 lg:grid-cols-3">
-          {regularPlaceholders.map((merch, index) => (
-            <motion.div
-              key={merch.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              viewport={{ once: true }}
-            >
-              <MerchandiseCard
-                type="regular"
-                name={merch.name}
-                price={merch.price}
-              />
-            </motion.div>
-          ))}
-        </div>
+        {itemsLoading ? (
+          <div className="flex w-full justify-center py-10">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-pink-500 border-t-transparent"></div>
+          </div>
+        ) : groupedItems.length > 0 ? (
+          <div className="mx-auto grid w-full max-w-6xl grid-cols-1 justify-items-center gap-8 px-6 sm:grid-cols-2 lg:grid-cols-3">
+            {groupedItems.map((group, index) => {
+              if (!group.representative) return null;
+              return (
+                <motion.div
+                  key={group.type}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  onClick={() => handleOpenRegular(group.merchandises)}
+                  className="cursor-pointer transition-transform hover:scale-105"
+                >
+                  <MerchandiseCard
+                    type="regular"
+                    name={group.type} // Display the category name (e.g., "Enamel Pin Fakultas")
+                    price={formatPrice(group.representative.price)}
+                    imageUrl={group.representative.image}
+                  />
+                </motion.div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="font-medium text-gray-500">
+            No merchandises available yet.
+          </p>
+        )}
       </motion.div>
+
+      {/* Modal */}
+      <MerchandiseModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        itemGroup={selectedGroup}
+        type={modalType}
+      />
     </section>
   );
 };
