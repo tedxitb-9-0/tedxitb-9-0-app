@@ -13,8 +13,6 @@ export type {
   ISponsorType,
 } from "./types";
 
-export { FAKULTAS_OPTIONS, KEYCHAIN_OPTIONS } from "./types";
-
 // Merchandise service functions
 export {
   getAllMerchandises,
