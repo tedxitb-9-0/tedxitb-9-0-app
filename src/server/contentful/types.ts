@@ -57,3 +57,25 @@ export interface ICartItem {
   merchandise: IMerchandise;
   quantity: number;
 }
+
+/**
+ * Sponsor size tiers (S = smallest, XXL = largest)
+ */
+export type ISponsorSize = "S" | "M" | "L" | "XL" | "XXL";
+
+/**
+ * Sponsor relationship type
+ */
+export type ISponsorType = "Sponsorship" | "Partnership";
+
+/**
+ * Sponsor from Contentful
+ */
+export interface ISponsor {
+  id: string;
+  companyName: string;
+  companyWebsiteLink?: string;
+  logo: string;
+  size: ISponsorSize;
+  type: ISponsorType;
+}

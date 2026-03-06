@@ -6,9 +6,11 @@ export type {
   IMerchandise,
   IMerchandiseBundle,
   IMerchandiseType,
-  IDesignOption,
   ICartItem,
   IMagazine,
+  ISponsor,
+  ISponsorSize,
+  ISponsorType,
 } from "./types";
 
 export { FAKULTAS_OPTIONS, KEYCHAIN_OPTIONS } from "./types";
@@ -19,9 +21,10 @@ export {
   getMerchandiseBySlug,
   getAllBundles,
   getBundleBySlug,
-  getMerchandiseOptions,
-  requiresDesignSelection,
 } from "./merchandise";
 
 // Magazine service functions
 export { getAllMagazines, getLatestMagazine } from "./magazine";
+
+// Sponsorship service functions
+export { getSponsorships } from "./sponsorship";
