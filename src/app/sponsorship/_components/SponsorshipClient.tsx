@@ -2,14 +2,12 @@
 
 import Image from "next/image";
 import { motion } from "motion/react";
-import { api } from "~/trpc/react";
-import { useMemo } from "react";
-import { type ISponsorSize } from "~/server/contentful/types";
+import { type ISponsor, type ISponsorSize } from "~/server/contentful/types";
 
 const SIZE_ORDER: ISponsorSize[] = ["S", "M", "L", "XL", "XXL"];
 
 // Base height in px for S; each tier scales by 0.5x increments
-const BASE_HEIGHT = 80; // px — chosen to look good on the page
+const BASE_HEIGHT = 80;
 const SIZE_SCALE: Record<ISponsorSize, number> = {
   S: 1,
   M: 1.5,
@@ -18,38 +16,28 @@ const SIZE_SCALE: Record<ISponsorSize, number> = {
   XXL: 3,
 };
 
-const SponsorshipClient = () => {
-  const { data: sponsors, isLoading } = api.sponsorship.getAll.useQuery();
+interface SponsorshipClientProps {
+  sponsors: ISponsor[];
+}
 
-  const grouped = useMemo(() => {
-    if (!sponsors) return [];
+const SponsorshipClient = ({ sponsors }: SponsorshipClientProps) => {
+  const onlySponsors = sponsors.filter((s) => s.type === "Sponsorship");
 
-    const onlySponsors = sponsors.filter((s) => s.type === "Sponsorship");
-
-    return SIZE_ORDER.map((size) => ({
-      size,
-      items: onlySponsors.filter((s) => s.size === size),
-    })).filter((group) => group.items.length > 0);
-  }, [sponsors]);
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-[40vh] w-full items-center justify-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-red-500 border-t-transparent" />
-      </div>
-    );
-  }
+  const grouped = SIZE_ORDER.map((size) => ({
+    size,
+    items: onlySponsors.filter((s) => s.size === size),
+  })).filter((group) => group.items.length > 0);
 
   if (!grouped.length) {
     return (
-      <div className="flex min-h-[40vh] w-full items-center justify-center">
-        <p className="text-gray-500 font-medium">No sponsors to display.</p>
+      <div className="flex min-h-[20vh] w-full items-center justify-center">
+        <p className="font-medium text-gray-500">No sponsors to display.</p>
       </div>
     );
   }
 
   return (
-    <div className="flex w-full flex-col items-center gap-16 px-6 py-16 md:py-24">
+    <div className="flex w-full flex-col items-center gap-16 px-6 pb-16 pt-8 md:pb-24 md:pt-10">
       {grouped.map((group, gi) => {
         const logoHeight = BASE_HEIGHT * SIZE_SCALE[group.size];
 
