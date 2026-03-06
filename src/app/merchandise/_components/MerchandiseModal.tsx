@@ -120,7 +120,7 @@ export default function MerchandiseModal({
           </div>
 
           <h2
-            className={`font-titan mb-2 text-3xl font-bold ${isBundle ? "text-blue" : "text-pink"}`}
+            className={`mb-2 font-sans text-3xl font-bold ${isBundle ? "text-blue" : "text-pink"}`}
           >
             {title}
           </h2>

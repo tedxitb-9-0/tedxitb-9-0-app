@@ -31,7 +31,7 @@ export const getSponsorships = async (): Promise<
 > => {
   try {
     const response = await client.getEntries({
-      content_type: "Sponsor",
+      content_type: "sponsors",
       include: 2, // Include linked entries (size, type)
     });
 

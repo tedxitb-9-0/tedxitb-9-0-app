@@ -37,7 +37,7 @@ const MerchandiseCard = ({
       {/* Text Content */}
       <div className="mt-6 flex flex-col text-left">
         <h3
-          className={`font-titan truncate text-xl font-bold ${textColorClass}`}
+          className={`truncate font-sans text-xl font-extrabold ${textColorClass}`}
           title={name}
         >
           {name}

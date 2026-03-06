@@ -151,7 +151,7 @@ const Navbar = () => {
             className="text-foreground relative p-2 hover:cursor-pointer"
             aria-label="Open cart"
           >
-            <ShoppingBag size={24} />
+            <ShoppingBag size={24} className="hover:cursor-pointer" />
             {cartItemsCount > 0 && (
               <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-pink-500 text-xs font-bold text-white">
                 {cartItemsCount}
