@@ -1,3 +1,18 @@
+import ComingSoon from "~/_components/ComingSoon";
+
+const Merchandise = () => {
+  return (
+    <>
+      <h1 className="sr-only">TEDxITB 9.0 Merchandise</h1>
+      <ComingSoon />
+    </>
+  );
+};
+
+export default Merchandise;
+
+/* Original implementation — hidden, not deleted
+
 "use client";
 
 import { useEffect } from "react";
@@ -6,7 +21,7 @@ import { useSession } from "~/server/better-auth/client";
 import { toast } from "sonner";
 import MerchandiseGrid from "./_components/MerchandiseGrid";
 
-const Merchandise = () => {
+const MerchandisePage = () => {
   const router = useRouter();
   const { data: session, isPending } = useSession();
 
@@ -32,12 +47,11 @@ const Merchandise = () => {
     return null;
   }
   return (
-    <main className="">
+    <main>
       <h1 className="sr-only">TEDxITB 9.0 Merchandise</h1>
-      {/* <MerchandiseHero /> */}
       <MerchandiseGrid />
     </main>
   );
 };
 
-export default Merchandise;
+*/
