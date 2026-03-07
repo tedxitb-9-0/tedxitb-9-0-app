@@ -30,11 +30,11 @@ export default async function AdminPage() {
   });
 
   const tableOrders: AdminOrder[] = allOrders.map((order) => ({
-    id: order.id,
-    orderType: order.orderType,
+    ...order,
     status: order.status,
-    totalAmount: order.totalAmount,
-    createdAt: order.createdAt,
+    orderType: order.orderType,
+    ticketJson: order.ticketJson as AdminOrder["ticketJson"],
+    merchJson: order.merchJson as AdminOrder["merchJson"],
     user: {
       name: order.user.name,
       email: order.user.email,

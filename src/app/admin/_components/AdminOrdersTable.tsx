@@ -3,14 +3,10 @@
 import { useState } from "react";
 import { toast } from "sonner";
 
-type OrderStatus = "pending" | "paid" | "confirmed" | "cancelled";
+import { type Order } from "~/types/order";
+import AdminOrderDetailsModal from "./AdminOrderDetailsModal";
 
-export type AdminOrder = {
-  id: string;
-  orderType: string;
-  status: OrderStatus;
-  totalAmount: number;
-  createdAt: Date;
+export type AdminOrder = Order & {
   user: {
     name: string;
     email: string;
@@ -40,8 +36,9 @@ export default function AdminOrdersTable({
 }: AdminOrdersTableProps) {
   const [orders, setOrders] = useState(initialOrders);
   const [savingOrderId, setSavingOrderId] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<AdminOrder | null>(null);
 
-  const handleSave = async (orderId: string, status: OrderStatus) => {
+  const handleSave = async (orderId: string, status: Order["status"]) => {
     const previousOrders = orders;
 
     setSavingOrderId(orderId);
@@ -91,11 +88,10 @@ export default function AdminOrdersTable({
           <tr className="border-navy/10 text-navy border-b text-left text-sm font-semibold">
             <th className="pb-3">Order ID</th>
             <th className="pb-3">User</th>
-            <th className="pb-3">Email</th>
             <th className="pb-3">Type</th>
             <th className="pb-3">Amount</th>
             <th className="pb-3">Status</th>
-            <th className="pb-3">Update Status</th>
+            <th className="pb-3">Details</th>
             <th className="pb-3">Date</th>
           </tr>
         </thead>
@@ -109,7 +105,6 @@ export default function AdminOrdersTable({
                 {order.id.slice(0, 8).toUpperCase()}
               </td>
               <td className="py-3">{order.user.name}</td>
-              <td className="text-navy/70 py-3">{order.user.email}</td>
               <td className="py-3">
                 <span className="bg-blue/10 text-blue rounded-full px-3 py-1 text-xs font-semibold">
                   {order.orderType.replaceAll("_", " ")}
@@ -124,32 +119,12 @@ export default function AdminOrdersTable({
                 </span>
               </td>
               <td className="py-3">
-                <div className="flex items-center gap-2">
-                  <select
-                    id={`status-${order.id}`}
-                    defaultValue={order.status}
-                    className="border-navy/20 text-navy focus:border-blue focus:ring-blue rounded-lg border px-2 py-1 text-xs focus:ring-2 focus:outline-none"
-                  >
-                    <option value="pending">Pending</option>
-                    <option value="paid">Paid</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="cancelled">Cancelled</option>
-                  </select>
-                  <button
-                    type="button"
-                    disabled={savingOrderId === order.id}
-                    onClick={() => {
-                      const element = document.getElementById(
-                        `status-${order.id}`,
-                      ) as HTMLSelectElement | null;
-                      if (!element) return;
-                      void handleSave(order.id, element.value as OrderStatus);
-                    }}
-                    className="bg-blue hover:bg-blue/90 rounded-lg px-2.5 py-1 text-xs font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {savingOrderId === order.id ? "Saving..." : "Save"}
-                  </button>
-                </div>
+                <button
+                  onClick={() => setSelectedOrder(order)}
+                  className="rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-semibold text-gray-800 transition-colors hover:bg-gray-200"
+                >
+                  View
+                </button>
               </td>
               <td className="text-navy/70 py-3">
                 {formatDate(order.createdAt)}
@@ -158,6 +133,17 @@ export default function AdminOrdersTable({
           ))}
         </tbody>
       </table>
+
+      {/* Admin Order Details Modal */}
+      <AdminOrderDetailsModal
+        isOpen={!!selectedOrder}
+        onClose={() => setSelectedOrder(null)}
+        order={selectedOrder}
+        onSaveStatus={async (orderId, status) => {
+          await handleSave(orderId, status as Order["status"]);
+        }}
+        isSaving={savingOrderId === selectedOrder?.id}
+      />
     </div>
   );
 }
