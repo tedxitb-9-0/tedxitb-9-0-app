@@ -9,7 +9,7 @@ const Sponsorship = async () => {
     <main className="w-full">
       <h1 className="sr-only">TEDxITB 9.0 Sponsors</h1>
 
-      <section className="relative flex min-h-screen w-full flex-col items-center justify-start overflow-hidden bg-[url('/pattern-bg.svg')] bg-repeat px-6 pt-12 pb-24 md:pt-16">
+      <section className="relative flex min-h-screen w-full flex-col items-center justify-start overflow-hidden bg-[url('/pattern-bg.svg')] bg-repeat px-6 pt-12 pb-24 md:pt-32">
         {/* Title image */}
         <Image
           src="/Sponsorships.png"

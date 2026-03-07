@@ -1,18 +1,3 @@
-import ComingSoon from "~/_components/ComingSoon";
-
-const Merchandise = () => {
-  return (
-    <>
-      <h1 className="sr-only">TEDxITB 9.0 Merchandise</h1>
-      <ComingSoon />
-    </>
-  );
-};
-
-export default Merchandise;
-
-/* Original implementation — hidden, not deleted
-
 "use client";
 
 import { useEffect } from "react";
@@ -54,4 +39,5 @@ const MerchandisePage = () => {
   );
 };
 
-*/
+export default MerchandisePage;
+

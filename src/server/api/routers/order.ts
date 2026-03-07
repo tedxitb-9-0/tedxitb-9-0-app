@@ -100,6 +100,53 @@ export const orderRouter = createTRPCRouter({
     }),
 
   /**
+   * Create a new merchandise order
+   */
+  createMerchandiseOrder: protectedProcedure
+    .input(
+      z.object({
+        fullName: z.string().min(1, "Full name is required"),
+        email: z.string().email("Valid email is required"),
+        phoneNumber: z
+          .string()
+          .min(10, "Phone number must be at least 10 digits"),
+        paymentProofUrl: z.string().min(1, "Payment proof is required"),
+        cartItems: z.array(z.any()), // Assuming cartItems can be anything from the frontend for now
+        totalAmount: z.number().min(0, "Total amount cannot be negative"),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const orderId = uuidv4();
+
+      // Prepare merchandise JSON
+      const merchJson = {
+        fullName: input.fullName,
+        email: input.email,
+        phoneNumber: input.phoneNumber,
+        cartItems: input.cartItems,
+      };
+
+      // Create the order with payment proof - status is "pending" awaiting admin confirmation
+      const [newOrder] = await ctx.db
+        .insert(orders)
+        .values({
+          id: orderId,
+          userId,
+          orderType: "merchandise",
+          status: "pending", // Still pending until admin confirms payment
+          totalAmount: input.totalAmount,
+          merchJson,
+          paymentProofUrl: input.paymentProofUrl,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .returning();
+
+      return newOrder;
+    }),
+
+  /**
    * Update order with payment proof (base64 image)
    */
   updatePaymentProof: protectedProcedure

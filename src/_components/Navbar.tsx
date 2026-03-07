@@ -24,7 +24,7 @@ const navLinks = [
   { href: "/about", label: "About" },
   { href: "/pre-event", label: "Pre-Event" },
   { href: "/main-event", label: "Main Event" },
-  // { href: "/merchandise", label: "Merchandise" }, // hidden
+  { href: "/merchandise", label: "Merchandise" },
   { href: "/magazine", label: "Magazine" },
   { href: "/sponsorship", label: "Sponsorship" },
 ];
@@ -143,7 +143,6 @@ const Navbar = () => {
             )}
           </motion.div>
 
-          {/* Cart button hidden
           <motion.button
             variants={itemVariants}
             whileHover={{ scale: 1.05 }}
@@ -159,11 +158,9 @@ const Navbar = () => {
               </span>
             )}
           </motion.button>
-          */}
         </motion.div>
 
         <div className="flex items-center gap-4 lg:hidden">
-          {/* Cart button hidden
           <button
             onClick={() => setDrawerOpen(true)}
             className="text-foreground relative p-2"
@@ -176,7 +173,6 @@ const Navbar = () => {
               </span>
             )}
           </button>
-          */}
 
           <button
             className="text-foreground p-2"
@@ -276,8 +272,7 @@ const Navbar = () => {
         )}
       </AnimatePresence>
 
-      {/* <CartDrawer /> */}{/* hidden */}
-    </>
+      <CartDrawer />    </>
   );
 };
 
