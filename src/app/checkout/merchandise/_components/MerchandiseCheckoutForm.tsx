@@ -9,29 +9,37 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { env } from "~/env";
-import { X, Upload, FileText } from "lucide-react";
+import { X, Upload, FileText, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
+import { useCartStore } from "~/stores/cartStore";
 import Image from "next/image";
 
-const ticketPurchaseSchema = z.object({
+const merchandiseCheckoutSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   email: z.string().email("Please enter a valid email"),
   phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
   paymentProofUrl: z.string().min(1, "Please upload payment proof"),
 });
 
-type TicketPurchaseFormData = z.infer<typeof ticketPurchaseSchema>;
+type MerchandiseCheckoutFormData = z.infer<typeof merchandiseCheckoutSchema>;
 
-interface TicketPurchaseFormProps {
+interface MerchandiseCheckoutFormProps {
   userEmail?: string;
 }
 
-export default function TicketPurchaseForm({
+export default function MerchandiseCheckoutForm({
   userEmail = "",
-}: TicketPurchaseFormProps) {
+}: MerchandiseCheckoutFormProps) {
   const router = useRouter();
   const [uploadError, setUploadError] = useState("");
   const [fileName, setFileName] = useState("");
+
+  const { items, clearCart } = useCartStore();
+
+  const totalAmount = items.reduce(
+    (sum, item) => sum + item.merchandise.price * item.quantity,
+    0,
+  );
 
   const {
     register,
@@ -40,8 +48,8 @@ export default function TicketPurchaseForm({
     watch,
     trigger,
     formState: { errors },
-  } = useForm<TicketPurchaseFormData>({
-    resolver: zodResolver(ticketPurchaseSchema),
+  } = useForm<MerchandiseCheckoutFormData>({
+    resolver: zodResolver(merchandiseCheckoutSchema),
     defaultValues: {
       fullName: "",
       email: userEmail,
@@ -52,13 +60,11 @@ export default function TicketPurchaseForm({
 
   const uploadedProofUrl = watch("paymentProofUrl");
 
-  const { data: ticketCountData, isPending: countPending } =
-    api.order.getPreEventTicketCount.useQuery();
-
-  const createOrder = api.order.createPreEventOrder.useMutation({
+  const createOrder = api.order.createMerchandiseOrder.useMutation({
     onSuccess: (data) => {
       if (data?.id) {
         toast.success("Order created successfully!");
+        clearCart();
         router.push("/dashboard");
       }
     },
@@ -67,19 +73,24 @@ export default function TicketPurchaseForm({
     },
   });
 
-  const onSubmit = (data: TicketPurchaseFormData) => {
-    createOrder.mutate(data);
+  const onSubmit = (data: MerchandiseCheckoutFormData) => {
+    if (items.length === 0) {
+      toast.error("Your cart is empty!");
+      return;
+    }
+
+    createOrder.mutate({
+      ...data,
+      cartItems: items,
+      totalAmount,
+    });
   };
 
-  // Determine current price based on backend limit logic
-  const isEarlyBird = ticketCountData?.isEarlyBird ?? false;
-  const priceValue = isEarlyBird ? 70000 : 80000;
-
-  const ticketPrice = new Intl.NumberFormat("id-ID", {
+  const formattedTotal = new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
     minimumFractionDigits: 0,
-  }).format(priceValue);
+  }).format(totalAmount);
 
   return (
     <motion.div
@@ -89,28 +100,12 @@ export default function TicketPurchaseForm({
       className="mx-auto w-full max-w-2xl overflow-hidden rounded-xl bg-white p-4 shadow-2xl sm:p-6 md:p-8"
     >
       <div className="mb-6 flex flex-col items-center justify-center">
-        <Image
-          src="/pre-event/ticketsale.png"
-          width={1500}
-          height={150}
-          alt="pre-event ticket sale"
-          className="w-[80%]"
-        />
-
-        {ticketCountData && (
-          <div className="mt-4 flex items-center justify-center gap-2">
-            {isEarlyBird && (
-              <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-bold text-yellow-800 ring-1 ring-yellow-400">
-                Early Bird
-              </span>
-            )}
-            {!isEarlyBird && (
-              <span className="rounded-full bg-gray-100 px-3 py-1 text-sm font-bold text-gray-800 ring-1 ring-gray-300">
-                Regular
-              </span>
-            )}
-          </div>
-        )}
+        <div className="mb-4 rounded-full bg-pink-100 p-4">
+          <ShoppingBag className="h-12 w-12 text-pink-600" />
+        </div>
+        <h2 className="font-titan text-2xl font-bold text-pink-600">
+          Checkout
+        </h2>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -125,8 +120,9 @@ export default function TicketPurchaseForm({
           <input
             {...register("fullName")}
             id="fullName"
-            className={`w-full rounded-lg border ${errors.fullName ? "border-red" : "border-navy/20"
-              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            className={`w-full rounded-lg border ${
+              errors.fullName ? "border-red" : "border-navy/20"
+            } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
             placeholder="John Doe"
           />
           {errors.fullName && (
@@ -143,8 +139,9 @@ export default function TicketPurchaseForm({
             {...register("email")}
             type="email"
             id="email"
-            className={`w-full rounded-lg border ${errors.email ? "border-red" : "border-navy/20"
-              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            className={`w-full rounded-lg border ${
+              errors.email ? "border-red" : "border-navy/20"
+            } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
             placeholder="john@example.com"
           />
           {errors.email && (
@@ -164,8 +161,9 @@ export default function TicketPurchaseForm({
             {...register("phoneNumber")}
             type="tel"
             id="phoneNumber"
-            className={`w-full rounded-lg border ${errors.phoneNumber ? "border-red" : "border-navy/20"
-              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            className={`w-full rounded-lg border ${
+              errors.phoneNumber ? "border-red" : "border-navy/20"
+            } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
             placeholder="+62812345678"
           />
           {errors.phoneNumber && (
@@ -173,6 +171,38 @@ export default function TicketPurchaseForm({
               {errors.phoneNumber.message}
             </p>
           )}
+        </div>
+
+        {/* Order Summary */}
+        <div className="rounded-lg border border-gray-200 bg-gray-50 p-5">
+          <h3 className="mb-3 text-sm font-semibold tracking-wider text-gray-800 uppercase">
+            Order Summary
+          </h3>
+          <div className="mb-4 space-y-2">
+            {items.map((item) => (
+              <div
+                key={item.merchandise.id}
+                className="flex justify-between text-sm"
+              >
+                <span className="line-clamp-1 pr-4 text-gray-600">
+                  {item.quantity}x {item.merchandise.name}
+                </span>
+                <span className="font-medium whitespace-nowrap text-gray-900">
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    minimumFractionDigits: 0,
+                  }).format(item.merchandise.price * item.quantity)}
+                </span>
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center justify-between border-t border-gray-200 pt-3">
+            <span className="font-semibold text-gray-800">Total</span>
+            <span className="text-lg font-bold text-pink-600">
+              {formattedTotal}
+            </span>
+          </div>
         </div>
 
         {/* Payment Instructions */}
@@ -188,32 +218,26 @@ export default function TicketPurchaseForm({
           </ol>
         </div>
 
-        {/* Payment BCA Info Display */}
+        {/* Payment QRIS Info Display */}
         <div className="border-navy/10 rounded-lg border-2 p-5 text-center">
-          <h3 className="text-navy mb-2 text-sm font-semibold tracking-wider uppercase">
+          <h3 className="text-navy mb-4 text-sm font-semibold tracking-wider uppercase">
             Transfer Destination
           </h3>
-          <div className="flex flex-col items-center gap-1 rounded-md bg-gray-50 p-4">
-            <span className="text-navy/60 text-sm font-medium">
-              BCA (Bank Central Asia)
-            </span>
-            <span className="text-navy text-2xl font-bold tracking-widest text-[#0066AE] md:text-3xl">
-              7773221741
-            </span>
-            <span className="text-navy/80 mt-1 font-medium">
-              a.n. Muhammad Rafi Adinata Kusumah
-            </span>
+          <div className="mx-auto flex w-full max-w-[280px] justify-center overflow-hidden rounded-xl border border-gray-100 shadow-sm">
+            <Image
+              src="/QRIS.jpg"
+              alt="QRIS Payment"
+              width={1078}
+              height={1519}
+              className="h-auto w-full object-contain"
+              priority
+            />
           </div>
-          <div className="mt-4 border-t border-dashed border-gray-200 pt-4">
+          <div className="mt-5 border-t border-dashed border-gray-200 pt-5">
             <span className="text-navy/60 text-sm">Amount to Transfer:</span>
-            <div className="text-purple mt-1 text-2xl font-bold">
-              {countPending ? "..." : ticketPrice}
+            <div className="mt-1 text-2xl font-bold text-pink-600">
+              {formattedTotal}
             </div>
-            {ticketCountData?.isEarlyBird && (
-              <p className="mt-1 text-xs font-semibold text-yellow-600">
-                Early Bird Pricing Applied!
-              </p>
-            )}
           </div>
         </div>
 
@@ -319,8 +343,8 @@ export default function TicketPurchaseForm({
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={createOrder.isPending}
-          className="from-blue to-purple w-full rounded-lg bg-gradient-to-r px-6 py-4 text-lg font-semibold text-white transition-all hover:opacity-90 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={createOrder.isPending || items.length === 0}
+          className="w-full rounded-lg bg-pink-600 px-6 py-4 text-lg font-semibold text-white transition-all hover:bg-pink-700 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
         >
           {createOrder.isPending ? (
             <span className="flex items-center justify-center gap-2">
