@@ -4,22 +4,8 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import QRCodeModal from "./QRCodeModal";
-
-interface Order {
-  id: string;
-  orderType: "pre_event_ticket" | "main_event_ticket" | "merchandise";
-  status: "pending" | "paid" | "confirmed" | "cancelled";
-  totalAmount: number;
-  createdAt: Date;
-  ticketJson?: {
-    fullName: string;
-    email: string;
-    phoneNumber: string;
-  } | null;
-  merchJson?: null;
-  qrCode?: string | null;
-  paymentProofUrl?: string | null;
-}
+import OrderDetailsModal from "./OrderDetailsModal";
+import { type Order } from "~/types/order";
 
 interface OrdersListProps {
   orders: Order[];
@@ -31,6 +17,7 @@ export default function OrdersList({ orders }: OrdersListProps) {
     orderId: string;
     attendeeName: string;
   } | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterType, setFilterType] = useState<string>("all");
 
@@ -278,6 +265,12 @@ export default function OrdersList({ orders }: OrdersListProps) {
                         Complete Payment
                       </Link>
                     )}
+                    <button
+                      onClick={() => setSelectedOrder(order)}
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-800 flex-1 rounded-lg px-3 py-2 text-sm font-semibold transition-colors"
+                    >
+                      View Details
+                    </button>
                     {canViewQR(order) && (
                       <button
                         onClick={() =>
@@ -370,6 +363,12 @@ export default function OrdersList({ orders }: OrdersListProps) {
                       </td>
                       <td className="py-4">
                         <div className="flex gap-2">
+                          <button
+                            onClick={() => setSelectedOrder(order)}
+                            className="bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors"
+                          >
+                            Details
+                          </button>
                           {order.status === "pending" &&
                             !order.paymentProofUrl && (
                               <Link
@@ -417,6 +416,12 @@ export default function OrdersList({ orders }: OrdersListProps) {
           }}
         />
       )}
+      {/* Order Details Modal */}
+      <OrderDetailsModal
+        isOpen={!!selectedOrder}
+        onClose={() => setSelectedOrder(null)}
+        order={selectedOrder}
+      />
     </>
   );
 }

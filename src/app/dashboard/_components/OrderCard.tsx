@@ -2,22 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-interface Order {
-  id: string;
-  orderType: "pre_event_ticket" | "main_event_ticket" | "merchandise";
-  status: "pending" | "paid" | "confirmed" | "cancelled";
-  totalAmount: number;
-  createdAt: Date;
-  ticketJson?: {
-    fullName: string;
-    email: string;
-    phoneNumber: string;
-  } | null;
-  merchJson?: null;
-  qrCode?: string | null;
-  paymentProofUrl?: string | null;
-}
+import { type Order } from "~/types/order";
 
 interface OrderCardProps {
   order: Order;
