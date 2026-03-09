@@ -70,53 +70,6 @@ const MerchandiseGrid = () => {
   return (
     <section className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-[url('/pattern-bg.svg')] bg-repeat py-12 md:py-16 lg:py-24">
       {/* Bundles Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        viewport={{ once: true }}
-        className="mb-8 flex w-full flex-col items-center"
-      >
-        <Image
-          src="/merchandise/merchandise-bundle.png"
-          alt="Merchandise Bundle"
-          width={750}
-          height={70}
-          className="mb-12 h-auto max-h-12 w-auto max-w-[90%] object-contain md:max-h-16"
-          draggable={false}
-          priority
-        />
-
-        {bundlesLoading ? (
-          <div className="flex w-full justify-center py-10">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
-          </div>
-        ) : bundles && bundles.length > 0 ? (
-          <div className="mx-auto grid w-full max-w-6xl grid-cols-1 justify-items-center gap-8 px-6 sm:grid-cols-2 lg:grid-cols-3">
-            {bundles.map((bundle, index) => (
-              <motion.div
-                key={bundle.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                onClick={() => handleOpenBundle(bundle)}
-                className="cursor-pointer transition-transform hover:scale-105"
-              >
-                <MerchandiseCard
-                  type="bundle"
-                  name={bundle.name}
-                  price={formatPrice(bundle.price)}
-                  imageUrl={bundle.image}
-                />
-              </motion.div>
-            ))}
-          </div>
-        ) : (
-          <p className="font-medium text-gray-500">No bundles available yet.</p>
-        )}
-      </motion.div>
-
       {/* Merchandise Collection Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
