@@ -1,3 +1,10 @@
+import { notFound } from "next/navigation";
+
+export default function BuyTicketPage() {
+  return notFound();
+}
+
+/*
 "use client";
 
 import { useEffect } from "react";
@@ -55,3 +62,4 @@ export default function BuyTicketPage() {
     </ColorfulBackground>
   );
 }
+*/
