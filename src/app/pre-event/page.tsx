@@ -5,7 +5,6 @@ import ActivitySection from "./_components/ActivitySection";
 import PlainBackground from "~/_components/PlainBackground";
 import HeroSection from "./_components/HeroSection";
 import FadeInView from "~/_components/FadeInView";
-import FloatingImage from "./_components/FloatingImage";
 import CountdownTimer from "./_components/CountdownTimer";
 
 const PreEvent = () => {
