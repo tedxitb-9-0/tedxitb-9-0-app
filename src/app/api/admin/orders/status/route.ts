@@ -3,6 +3,7 @@ import { eq } from "drizzle-orm";
 import { getSession } from "~/server/better-auth/server";
 import { db } from "~/server/db";
 import { orders, user } from "~/server/db/schema";
+import { sendPreEventConfirmedEmail } from "~/server/email/sendEmail";
 
 const allowedStatuses = ["pending", "paid", "confirmed", "cancelled"] as const;
 
@@ -36,6 +37,17 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ message: "Invalid status" }, { status: 400 });
   }
 
+  const existingOrder = await db.query.orders.findFirst({
+    where: eq(orders.id, body.orderId),
+    with: {
+      user: true,
+    },
+  });
+
+  if (!existingOrder) {
+    return NextResponse.json({ message: "Order not found" }, { status: 404 });
+  }
+
   const [updatedOrder] = await db
     .update(orders)
     .set({
@@ -47,6 +59,22 @@ export async function PATCH(request: Request) {
 
   if (!updatedOrder) {
     return NextResponse.json({ message: "Order not found" }, { status: 404 });
+  }
+
+  const shouldSendPreEventConfirmationEmail =
+    existingOrder.orderType === "pre_event_ticket" &&
+    existingOrder.status !== "confirmed" &&
+    body.status === "confirmed";
+
+  if (shouldSendPreEventConfirmationEmail) {
+    try {
+      const sendConfirmationEmail =
+        sendPreEventConfirmedEmail as (to: string) => Promise<unknown>;
+
+      await sendConfirmationEmail(existingOrder.user.email);
+    } catch (error) {
+      console.error("Failed to send pre-event confirmation email", error);
+    }
   }
 
   return NextResponse.json({ success: true, order: updatedOrder });

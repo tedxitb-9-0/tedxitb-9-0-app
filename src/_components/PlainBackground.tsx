@@ -6,287 +6,316 @@ import { motion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
 
 const colorMap: Record<string, string> = {
-  red: "bg-[linear-gradient(180deg,#B50000_1%,#E50000_35%,#FF5353_100%)]",
-  pink: "bg-[linear-gradient(0deg,#FF74B0_1%,#FF3A8C_64%,#D21363_96%)]",
-  blue: "bg-[linear-gradient(0deg,#6D65FF_0%,#2014FF_64%,#0A00C2_96%)]",
+    red: "bg-[linear-gradient(180deg,#B50000_1%,#E50000_35%,#FF5353_100%)]",
+    pink: "bg-[linear-gradient(0deg,#FF74B0_1%,#FF3A8C_64%,#D21363_96%)]",
+    blue: "bg-[linear-gradient(0deg,#6D65FF_0%,#2014FF_64%,#0A00C2_96%)]",
 };
 
 const leftAssetMap: Record<string, string> = {
-  red: "/plainbg/leftred.svg",
-  pink: "/plainbg/leftpink.svg",
-  blue: "/plainbg/leftblue.svg",
+    red: "/plainbg/leftred.svg",
+    pink: "/plainbg/leftpink.svg",
+    blue: "/plainbg/leftblue.svg",
 };
 
 const rightAssetMap: Record<string, string> = {
-  red: "/plainbg/rightred.svg",
-  pink: "/plainbg/rightpink.svg",
-  blue: "/plainbg/rightblue.svg",
+    red: "/plainbg/rightred.svg",
+    pink: "/plainbg/rightpink.svg",
+    blue: "/plainbg/rightblue.svg",
 };
 
 const leftSmileMap: Record<string, string> = {
-  red: "/plainbg/leftsmile-red.png",
-  pink: "/plainbg/leftsmile-pink.png",
-  blue: "/plainbg/leftsmile-blue.png",
+    red: "/plainbg/leftsmile-red.png",
+    pink: "/plainbg/leftsmile-pink.png",
+    blue: "/plainbg/leftsmile-blue.png",
 };
 
 const rightSmileMap: Record<string, string> = {
-  red: "/plainbg/rightsmile-red.png",
-  pink: "/plainbg/rightsmile-pink.png",
-  blue: "/plainbg/rightsmile-blue.png",
+    red: "/plainbg/rightsmile-red.png",
+    pink: "/plainbg/rightsmile-pink.png",
+    blue: "/plainbg/rightsmile-blue.png",
 };
 
 interface BackgroundProps {
-  color: keyof typeof colorMap;
-  children?: React.ReactNode;
+    color: keyof typeof colorMap;
+    children?: React.ReactNode;
+    className?: string;
 }
 
-const PlainBackground: React.FC<BackgroundProps> = ({ color, children }) => {
-  const containerRef = useRef<HTMLElement>(null);
-  const bgClass = colorMap[color] ?? "bg-red";
-  const leftAsset = leftAssetMap[color] ?? "";
-  const rightAsset = rightAssetMap[color] ?? "";
-  const leftSmile = leftSmileMap[color] ?? "";
-  const rightSmile = rightSmileMap[color] ?? "";
+const PlainBackground: React.FC<BackgroundProps> = ({
+    color,
+    children,
+    className,
+}) => {
+    const containerRef = useRef<HTMLElement>(null);
+    const bgClass = colorMap[color] ?? "bg-red";
+    const leftAsset = leftAssetMap[color] ?? "";
+    const rightAsset = rightAssetMap[color] ?? "";
+    const leftSmile = leftSmileMap[color] ?? "";
+    const rightSmile = rightSmileMap[color] ?? "";
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end start"],
+    });
 
-  // Parallax transforms - both assets scroll up (out to top)
-  const leftAssetY = useTransform(scrollYProgress, [0, 1], [0, -300]);
-  const rightAssetY = useTransform(scrollYProgress, [0, 1], [0, -300]);
-  const leftSmileX = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const rightSmileX = useTransform(scrollYProgress, [0, 1], [0, -200]);
+    // Parallax transforms - both assets scroll up (out to top)
+    const leftAssetY = useTransform(scrollYProgress, [0, 1], [0, -300]);
+    const rightAssetY = useTransform(scrollYProgress, [0, 1], [0, -300]);
+    const leftSmileX = useTransform(scrollYProgress, [0, 1], [0, 200]);
+    const rightSmileX = useTransform(scrollYProgress, [0, 1], [0, -200]);
 
-  return (
-    <section
-      ref={containerRef}
-      className={`flex h-fit w-full overflow-hidden ${bgClass} relative flex-col items-center justify-center gap-4 bg-cover bg-center bg-no-repeat select-none`}
-    >
-      {/* Top Left - floats diagonally from corner */}
-      <motion.div
-        className="absolute top-0 left-0 z-10 w-64 md:w-96"
-        initial={{ opacity: 0, x: -50, y: -50 }}
-        whileInView={{ opacity: 1, x: 0, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6, ease: "easeOut" as const }}
-      >
-        <motion.div
-          animate={{ x: [0, -10, 0], y: [0, -10, 0] }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: "easeInOut" as const,
-          }}
+    return (
+        <section
+            ref={containerRef}
+            className={`relative flex h-fit w-full flex-col items-center justify-center gap-4 overflow-hidden bg-cover bg-center bg-no-repeat select-none ${bgClass} ${className ?? ""}`}
         >
-          <Image
-            src="/plainbg/topleft.png"
-            alt="Decorative corner element"
-            width={200}
-            height={200}
-            className="h-auto w-full"
-            draggable={false}
-          />
-        </motion.div>
-      </motion.div>
-      {/* Top Right  - floats diagonally from corner */}
-      <motion.div
-        className="absolute top-0 right-0 z-10 w-48 md:w-64"
-        initial={{ opacity: 0, x: 50, y: -50 }}
-        whileInView={{ opacity: 1, x: 0, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.1 }}
-      >
-        <motion.div
-          animate={{ x: [0, 10, 0], y: [0, 10, 0] }}
-          transition={{
-            duration: 4.5,
-            repeat: Infinity,
-            ease: "easeInOut" as const,
-          }}
-        >
-          {" "}
-          <Image
-            src="/plainbg/topright.png"
-            alt="Decorative corner element"
-            width={200}
-            height={200}
-            className="h-auto w-full"
-            draggable={false}
-          />{" "}
-        </motion.div>{" "}
-      </motion.div>{" "}
-      {/* Top Right - floats diagonally from corner */}{" "}
-      <motion.div
-        className="absolute top-0 right-0 z-10 w-48 md:w-64"
-        initial={{ opacity: 0, x: 50, y: -50 }}
-        whileInView={{ opacity: 1, x: 0, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.1 }}
-      >
-        <motion.div
-          animate={{ x: [0, 10, 0], y: [0, 10, 0] }}
-          transition={{
-            duration: 4.5,
-            repeat: Infinity,
-            ease: "easeInOut" as const,
-          }}
-        >
-          <Image
-            src="/plainbg/topright.png"
-            alt="Decorative corner element"
-            width={200}
-            height={200}
-            className="h-auto w-full"
-            draggable={false}
-          />
-        </motion.div>
-      </motion.div>
-      {/* Bottom Left - floats diagonally from corner */}
-      <motion.div
-        className="absolute bottom-0 left-0 z-10 w-64 md:w-md"
-        initial={{ opacity: 0, x: -50, y: 50 }}
-        whileInView={{ opacity: 1, x: 0, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.2 }}
-      >
-        <motion.div
-          animate={{ x: [0, -10, 0], y: [0, 10, 0] }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: "easeInOut" as const,
-          }}
-        >
-          <Image
-            src="/plainbg/bottomleft.png"
-            alt="Decorative corner element"
-            width={200}
-            height={200}
-            className="h-auto w-full"
-            draggable={false}
-          />
-        </motion.div>
-      </motion.div>
-      {/* Bottom Right - floats diagonally from corner */}
-      <motion.div
-        className="absolute right-0 bottom-0 z-10 w-48 md:w-96"
-        initial={{ opacity: 0, x: 50, y: 50 }}
-        whileInView={{ opacity: 1, x: 0, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.3 }}
-      >
-        <motion.div
-          animate={{ x: [0, 10, 0], y: [0, 10, 0] }}
-          transition={{
-            duration: 4.2,
-            repeat: Infinity,
-            ease: "easeInOut" as const,
-          }}
-        >
-          <Image
-            src="/plainbg/bottomright.png"
-            alt="Decorative corner element"
-            width={200}
-            height={200}
-            className="h-auto w-full"
-            draggable={false}
-          />
-        </motion.div>
-      </motion.div>
-      {/* Left Asset - enters from top, parallax scrolls up */}
-      <motion.div
-        className="absolute -top-[25%] left-0 z-0 hidden w-xl lg:block lg:w-2xl xl:w-2xl"
-        initial={{ opacity: 0, y: -100 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6, ease: "easeOut" as const }}
-        style={{ y: leftAssetY }}
-      >
-        <Image
-          src={leftAsset}
-          alt="Decorative geometric pattern"
-          width={500}
-          height={500}
-          className="h-auto w-full"
-          draggable={false}
-        />
-      </motion.div>
-      {/* Right Asset - enters from top, parallax scrolls up */}
-      <motion.div
-        className="absolute right-8 z-0 w-2xl lg:-top-[50%] xl:w-4xl"
-        initial={{ opacity: 0, y: -100 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6, ease: "easeOut" as const, delay: 0.1 }}
-        style={{ y: rightAssetY }}
-      >
-        <Image
-          src={rightAsset}
-          alt="Decorative geometric pattern"
-          width={500}
-          height={500}
-          className="h-full w-full"
-          draggable={false}
-        />
-      </motion.div>
-      {/* Left Smile */}
-      <motion.div
-        className="absolute bottom-8 left-[5%] z-30 w-20 md:w-28"
-        initial={{ opacity: 0, x: -50 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6, ease: "easeOut" as const }}
-        style={{ x: leftSmileX }}
-      >
-        <Image
-          src={leftSmile}
-          alt="Decorative smile pattern"
-          width={400}
-          height={400}
-          className="h-auto w-full"
-          draggable={false}
-        />
-      </motion.div>
-      {/* Right Smile */}
-      <motion.div
-        className="absolute right-[2%] bottom-8 z-30 w-28 md:w-48"
-        initial={{ opacity: 0, x: 50 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6, ease: "easeOut" as const }}
-        style={{ x: rightSmileX }}
-      >
-        <Image
-          src={rightSmile}
-          alt="Decorative smile pattern"
-          width={400}
-          height={400}
-          className="h-auto w-full"
-          draggable={false}
-        />
-      </motion.div>
-      {/* White fade at bottom - animates up on first show */}
-      <motion.div
-        className="pointer-events-none absolute bottom-0 left-0 z-20 w-full"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8, ease: "easeOut" as const, delay: 0.2 }}
-      >
-        <Image
-          src="/plainbg/cloud.png"
-          alt="Decorative cloud border"
-          width={400}
-          height={400}
-          className="h-auto w-full"
-          draggable={false}
-        />
-      </motion.div>
-      {children}
-    </section>
-  );
+            {/* Top Left - floats diagonally from corner */}
+            <motion.div
+                className="absolute top-0 left-0 z-10 w-64 md:w-96"
+                initial={{ opacity: 0, x: -50, y: -50 }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" as const }}
+            >
+                <motion.div
+                    animate={{ x: [0, -10, 0], y: [0, -10, 0] }}
+                    transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "easeInOut" as const,
+                    }}
+                >
+                    <Image
+                        src="/plainbg/topleft.png"
+                        alt="Decorative corner element"
+                        width={200}
+                        height={200}
+                        className="h-auto w-full"
+                        draggable={false}
+                    />
+                </motion.div>
+            </motion.div>
+            {/* Top Right  - floats diagonally from corner */}
+            <motion.div
+                className="absolute top-0 right-0 z-10 w-48 md:w-64"
+                initial={{ opacity: 0, x: 50, y: -50 }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{
+                    duration: 0.6,
+                    ease: "easeOut" as const,
+                    delay: 0.1,
+                }}
+            >
+                <motion.div
+                    animate={{ x: [0, 10, 0], y: [0, 10, 0] }}
+                    transition={{
+                        duration: 4.5,
+                        repeat: Infinity,
+                        ease: "easeInOut" as const,
+                    }}
+                >
+                    {" "}
+                    <Image
+                        src="/plainbg/topright.png"
+                        alt="Decorative corner element"
+                        width={200}
+                        height={200}
+                        className="h-auto w-full"
+                        draggable={false}
+                    />{" "}
+                </motion.div>{" "}
+            </motion.div>{" "}
+            {/* Top Right - floats diagonally from corner */}{" "}
+            <motion.div
+                className="absolute top-0 right-0 z-10 w-48 md:w-64"
+                initial={{ opacity: 0, x: 50, y: -50 }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{
+                    duration: 0.6,
+                    ease: "easeOut" as const,
+                    delay: 0.1,
+                }}
+            >
+                <motion.div
+                    animate={{ x: [0, 10, 0], y: [0, 10, 0] }}
+                    transition={{
+                        duration: 4.5,
+                        repeat: Infinity,
+                        ease: "easeInOut" as const,
+                    }}
+                >
+                    <Image
+                        src="/plainbg/topright.png"
+                        alt="Decorative corner element"
+                        width={200}
+                        height={200}
+                        className="h-auto w-full"
+                        draggable={false}
+                    />
+                </motion.div>
+            </motion.div>
+            {/* Bottom Left - floats diagonally from corner */}
+            <motion.div
+                className="absolute bottom-0 left-0 z-10 w-64 md:w-md"
+                initial={{ opacity: 0, x: -50, y: 50 }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{
+                    duration: 0.6,
+                    ease: "easeOut" as const,
+                    delay: 0.2,
+                }}
+            >
+                <motion.div
+                    animate={{ x: [0, -10, 0], y: [0, 10, 0] }}
+                    transition={{
+                        duration: 5,
+                        repeat: Infinity,
+                        ease: "easeInOut" as const,
+                    }}
+                >
+                    <Image
+                        src="/plainbg/bottomleft.png"
+                        alt="Decorative corner element"
+                        width={200}
+                        height={200}
+                        className="h-auto w-full"
+                        draggable={false}
+                    />
+                </motion.div>
+            </motion.div>
+            {/* Bottom Right - floats diagonally from corner */}
+            <motion.div
+                className="absolute right-0 bottom-0 z-10 w-48 md:w-96"
+                initial={{ opacity: 0, x: 50, y: 50 }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{
+                    duration: 0.6,
+                    ease: "easeOut" as const,
+                    delay: 0.3,
+                }}
+            >
+                <motion.div
+                    animate={{ x: [0, 10, 0], y: [0, 10, 0] }}
+                    transition={{
+                        duration: 4.2,
+                        repeat: Infinity,
+                        ease: "easeInOut" as const,
+                    }}
+                >
+                    <Image
+                        src="/plainbg/bottomright.png"
+                        alt="Decorative corner element"
+                        width={200}
+                        height={200}
+                        className="h-auto w-full"
+                        draggable={false}
+                    />
+                </motion.div>
+            </motion.div>
+            {/* Left Asset - enters from top, parallax scrolls up */}
+            <motion.div
+                className="absolute -top-[25%] left-0 z-0 hidden w-xl lg:block lg:w-2xl xl:w-2xl"
+                initial={{ opacity: 0, y: -100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" as const }}
+                style={{ y: leftAssetY }}
+            >
+                <Image
+                    src={leftAsset}
+                    alt="Decorative geometric pattern"
+                    width={500}
+                    height={500}
+                    className="h-auto w-full"
+                    draggable={false}
+                />
+            </motion.div>
+            {/* Right Asset - enters from top, parallax scrolls up */}
+            <motion.div
+                className="absolute right-8 z-0 w-2xl lg:-top-[50%] xl:w-4xl"
+                initial={{ opacity: 0, y: -100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{
+                    duration: 0.6,
+                    ease: "easeOut" as const,
+                    delay: 0.1,
+                }}
+                style={{ y: rightAssetY }}
+            >
+                <Image
+                    src={rightAsset}
+                    alt="Decorative geometric pattern"
+                    width={500}
+                    height={500}
+                    className="h-full w-full"
+                    draggable={false}
+                />
+            </motion.div>
+            {/* Left Smile */}
+            <motion.div
+                className="absolute bottom-8 left-[5%] z-30 w-20 md:w-28"
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" as const }}
+                style={{ x: leftSmileX }}
+            >
+                <Image
+                    src={leftSmile}
+                    alt="Decorative smile pattern"
+                    width={400}
+                    height={400}
+                    className="h-auto w-full"
+                    draggable={false}
+                />
+            </motion.div>
+            {/* Right Smile */}
+            <motion.div
+                className="absolute right-[2%] bottom-8 z-30 w-28 md:w-48"
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" as const }}
+                style={{ x: rightSmileX }}
+            >
+                <Image
+                    src={rightSmile}
+                    alt="Decorative smile pattern"
+                    width={400}
+                    height={400}
+                    className="h-auto w-full"
+                    draggable={false}
+                />
+            </motion.div>
+            {/* White fade at bottom - animates up on first show */}
+            <motion.div
+                className="pointer-events-none absolute bottom-0 left-0 z-20 w-full"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{
+                    duration: 0.8,
+                    ease: "easeOut" as const,
+                    delay: 0.2,
+                }}
+            >
+                <Image
+                    src="/plainbg/cloud.png"
+                    alt="Decorative cloud border"
+                    width={400}
+                    height={400}
+                    className="h-auto w-full"
+                    draggable={false}
+                />
+            </motion.div>
+            {children}
+        </section>
+    );
 };
 
 export default PlainBackground;
