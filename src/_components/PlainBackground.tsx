@@ -9,42 +9,49 @@ const colorMap: Record<string, string> = {
     red: "bg-[linear-gradient(180deg,#B50000_1%,#E50000_35%,#FF5353_100%)]",
     pink: "bg-[linear-gradient(0deg,#FF74B0_1%,#FF3A8C_64%,#D21363_96%)]",
     blue: "bg-[linear-gradient(0deg,#6D65FF_0%,#2014FF_64%,#0A00C2_96%)]",
+    purple: "bg-[linear-gradient(0deg,#7C0BC8_0%,#9A1AEF_64%,#CD59FF_96%)]",
 };
 
 const leftAssetMap: Record<string, string> = {
     red: "/plainbg/leftred.svg",
     pink: "/plainbg/leftpink.svg",
     blue: "/plainbg/leftblue.svg",
+    purple: "/plainbg/leftpurple.svg",
 };
 
 const rightAssetMap: Record<string, string> = {
     red: "/plainbg/rightred.svg",
     pink: "/plainbg/rightpink.svg",
     blue: "/plainbg/rightblue.svg",
+    purple: "/plainbg/rightpurple.svg",
 };
 
 const leftSmileMap: Record<string, string> = {
     red: "/plainbg/leftsmile-red.png",
     pink: "/plainbg/leftsmile-pink.png",
     blue: "/plainbg/leftsmile-blue.png",
+    purple: "/plainbg/leftsmile-purple.png",
 };
 
 const rightSmileMap: Record<string, string> = {
     red: "/plainbg/rightsmile-red.png",
     pink: "/plainbg/rightsmile-pink.png",
     blue: "/plainbg/rightsmile-blue.png",
+    purple: "/plainbg/rightsmile-purple.png",
 };
 
 interface BackgroundProps {
     color: keyof typeof colorMap;
     children?: React.ReactNode;
     className?: string;
+    showTopCloud?: boolean;
 }
 
 const PlainBackground: React.FC<BackgroundProps> = ({
     color,
     children,
     className,
+    showTopCloud = false,
 }) => {
     const containerRef = useRef<HTMLElement>(null);
     const bgClass = colorMap[color] ?? "bg-red";
@@ -313,6 +320,18 @@ const PlainBackground: React.FC<BackgroundProps> = ({
                     draggable={false}
                 />
             </motion.div>
+            {showTopCloud && (
+                <div className="pointer-events-none absolute top-0 left-0 z-20 w-full rotate-180">
+                    <Image
+                        src="/plainbg/cloud.png"
+                        alt="Decorative cloud border"
+                        width={400}
+                        height={400}
+                        className="h-auto w-full"
+                        draggable={false}
+                    />
+                </div>
+            )}
             {children}
         </section>
     );

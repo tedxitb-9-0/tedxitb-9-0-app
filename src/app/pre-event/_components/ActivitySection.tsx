@@ -83,7 +83,7 @@ const ActivitySection = () => {
     }, []);
 
     return (
-        <section className="relative overflow-hidden bg-white bg-[url('/pattern-bg.svg')] bg-repeat">
+        <section className="relative overflow-hidden bg-white bg-[url('/pattern-bg.svg')] bg-repeat py-12">
             <div className="pointer-events-none absolute top-0 left-0 hidden h-full w-full lg:block">
                 <Image
                     src="/pre-event/last-year-bg.png"
