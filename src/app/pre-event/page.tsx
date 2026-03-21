@@ -6,6 +6,7 @@ import PlainBackground from "~/_components/PlainBackground";
 import HeroSection from "./_components/HeroSection";
 import FadeInView from "~/_components/FadeInView";
 import CountdownTimer from "./_components/CountdownTimer";
+import VenueSection from "./_components/VenueSection";
 
 const PreEvent = () => {
     return (
@@ -17,26 +18,15 @@ const PreEvent = () => {
                 <HeroSection />
             </ColorfulBackground>
             <ActivitySection />
-            <section className="relative overflow-hidden bg-white bg-[url('/pattern-bg.svg')] bg-repeat py-16 md:py-24">
-                <div className="relative z-10 container mx-auto flex max-w-7xl flex-col items-center justify-center px-4">
-                    <FadeInView className="z-20 flex w-[50%] justify-center md:max-w-sm">
-                        <Image
-                            src="/pre-event/gallery.png"
-                            width={550}
-                            height={220}
-                            alt="A Glimpse into Last Year's Pre-Event Experience"
-                            className="w-full object-contain"
-                            priority
-                        />
-                    </FadeInView>
-                    {/* Activity Carousel */}
-                    <ActivityCarousel />
-                </div>
+            <section className="bg-white">
+                <PlainBackground color="purple" showTopCloud>
+                    <VenueSection />
+                </PlainBackground>
             </section>
 
             {/* Get Your Tickets Section */}
             <section className="bg-white">
-                <PlainBackground color="red">
+                <PlainBackground color="red" showTopCloud>
                     <div className="container mx-auto flex min-h-screen flex-col items-center justify-center px-4 py-24">
                         <FadeInView className="z-30 mb-8 flex w-full max-w-[600px] flex-col justify-center md:max-w-4xl">
                             <Image
