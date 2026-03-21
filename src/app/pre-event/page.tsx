@@ -18,20 +18,7 @@ const PreEvent = () => {
             </ColorfulBackground>
             <ActivitySection />
             <section className="relative overflow-hidden bg-white bg-[url('/pattern-bg.svg')] bg-repeat py-16 md:py-24">
-                <div className="relative z-10 container mx-auto flex max-w-7xl flex-col items-center justify-center px-4">
-                    <FadeInView className="z-20 flex w-[50%] justify-center md:max-w-sm">
-                        <Image
-                            src="/pre-event/gallery.png"
-                            width={550}
-                            height={220}
-                            alt="A Glimpse into Last Year's Pre-Event Experience"
-                            className="w-full object-contain"
-                            priority
-                        />
-                    </FadeInView>
-                    {/* Activity Carousel */}
-                    <ActivityCarousel />
-                </div>
+                <div className="relative z-10 container mx-auto flex max-w-7xl flex-col items-center justify-center px-4"></div>
             </section>
 
             {/* Get Your Tickets Section */}

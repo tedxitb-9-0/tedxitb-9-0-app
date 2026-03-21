@@ -8,6 +8,8 @@ interface ActivityCardProps {
   description: string;
   imageSrc: string;
   imageAlt: string;
+  logoSrc: string;
+  logoAlt: string;
   index?: number;
 }
 
@@ -16,6 +18,8 @@ export default function ActivityCard({
   description,
   imageSrc,
   imageAlt,
+  logoSrc,
+  logoAlt,
   index = 0,
 }: ActivityCardProps) {
   return (
@@ -92,16 +96,27 @@ export default function ActivityCard({
 
         {/* Card content positioned over the front card */}
         <div className="relative z-4 flex h-full flex-col justify-start px-6 pt-[22%] pb-6 md:px-8 md:pt-[26%] md:pb-8">
-          <h3
-            className="mb-3 text-xl text-white md:text-2xl"
-            style={{
-              fontFamily: "var(--font-titan-one), cursive",
-              textShadow:
-                "2px 2px 0 rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.2)",
-            }}
-          >
-            {title}
-          </h3>
+          <div className="mb-3 flex items-start justify-between gap-3">
+            <h3
+              className="text-xl text-white md:text-2xl"
+              style={{
+                fontFamily: "var(--font-titan-one), cursive",
+                textShadow:
+                  "2px 2px 0 rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.2)",
+              }}
+            >
+              {title}
+            </h3>
+            <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full bg-white">
+              <Image
+                src={logoSrc}
+                alt={logoAlt}
+                fill
+                className="object-cover"
+                draggable={false}
+              />
+            </div>
+          </div>
           <p className="text-justify text-xs leading-relaxed text-white/90 md:text-sm">
             {description}
           </p>
