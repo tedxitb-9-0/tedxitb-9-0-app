@@ -12,12 +12,25 @@ import { env } from "~/env";
 import { X, Upload, FileText } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
+import { HEARD_FROM_OPTIONS, HEARD_FROM_VALUES } from "~/lib/heardFrom";
 
 const ticketPurchaseSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   email: z.string().email("Please enter a valid email"),
   phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
   paymentProofUrl: z.string().min(1, "Please upload payment proof"),
+  heardFrom: z.enum(HEARD_FROM_VALUES, {
+    message: "Please tell us where you heard about this pre-event",
+  }),
+  heardFromOther: z.string().optional(),
+}).superRefine((data, ctx) => {
+  if (data.heardFrom === "other" && !data.heardFromOther?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Please specify where you heard about this pre-event",
+      path: ["heardFromOther"],
+    });
+  }
 });
 
 type TicketPurchaseFormData = z.infer<typeof ticketPurchaseSchema>;
@@ -39,6 +52,7 @@ export default function TicketPurchaseForm({
     setValue,
     watch,
     trigger,
+    clearErrors,
     formState: { errors },
   } = useForm<TicketPurchaseFormData>({
     resolver: zodResolver(ticketPurchaseSchema),
@@ -47,10 +61,13 @@ export default function TicketPurchaseForm({
       email: userEmail,
       phoneNumber: "",
       paymentProofUrl: "",
+      heardFrom: undefined,
+      heardFromOther: "",
     },
   });
 
   const uploadedProofUrl = watch("paymentProofUrl");
+  const heardFrom = watch("heardFrom");
 
   const { data: ticketCountData, isPending: countPending } =
     api.order.getPreEventTicketCount.useQuery();
@@ -174,6 +191,66 @@ export default function TicketPurchaseForm({
             </p>
           )}
         </div>
+
+        {/* Discovery Source */}
+        <div>
+          <label
+            htmlFor="heardFrom"
+            className="text-navy mb-2 block font-semibold"
+          >
+            Let us know where you heard about this pre-event
+          </label>
+          <select
+            {...register("heardFrom")}
+            id="heardFrom"
+            className={`w-full rounded-lg border ${errors.heardFrom ? "border-red" : "border-navy/20"
+              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            onChange={(event) => {
+              const value = event.target.value as TicketPurchaseFormData["heardFrom"];
+              setValue("heardFrom", value, { shouldValidate: true });
+              if (value !== "other") {
+                setValue("heardFromOther", "");
+                clearErrors("heardFromOther");
+              }
+            }}
+            defaultValue=""
+          >
+            <option value="" disabled>
+              Select one option
+            </option>
+            {HEARD_FROM_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          {errors.heardFrom && (
+            <p className="text-red mt-1 text-sm">{errors.heardFrom.message}</p>
+          )}
+        </div>
+
+        {heardFrom === "other" && (
+          <div>
+            <label
+              htmlFor="heardFromOther"
+              className="text-navy mb-2 block font-semibold"
+            >
+              Other: please specify
+            </label>
+            <input
+              {...register("heardFromOther")}
+              id="heardFromOther"
+              className={`w-full rounded-lg border ${errors.heardFromOther ? "border-red" : "border-navy/20"
+                } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+              placeholder="Write your source"
+            />
+            {errors.heardFromOther && (
+              <p className="text-red mt-1 text-sm">
+                {errors.heardFromOther.message}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Payment Instructions */}
         <div className="bg-blue/10 rounded-lg p-4">

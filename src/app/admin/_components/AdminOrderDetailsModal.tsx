@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { X, ExternalLink } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { type AdminOrder } from "./AdminOrdersTable";
+import { getHeardFromLabel } from "~/lib/heardFrom";
 
 interface AdminOrderDetailsModalProps {
   isOpen: boolean;
@@ -71,6 +72,13 @@ export default function AdminOrderDetailsModal({
 
   const isMerch = order.orderType === "merchandise";
   const pData = isMerch ? order.merchJson : order.ticketJson;
+  const ticketData = !isMerch ? order.ticketJson : null;
+  const heardFromValue =
+    ticketData?.heardFrom
+      ? getHeardFromLabel(ticketData.heardFrom)
+      : null;
+  const heardFromOtherValue =
+    ticketData?.heardFrom === "other" ? ticketData.heardFromOther : null;
 
   const handleSave = async () => {
     await onSaveStatus(order.id, selectedStatus);
@@ -151,6 +159,18 @@ export default function AdminOrderDetailsModal({
                         <span className="text-sm text-gray-500">Phone</span>
                         <span className="text-sm font-medium text-gray-900">{pData.phoneNumber}</span>
                       </div>
+                      {heardFromValue && (
+                        <div className="flex justify-between gap-4">
+                          <span className="text-sm text-gray-500">Heard From</span>
+                          <span className="text-right text-sm font-medium text-gray-900">{heardFromValue}</span>
+                        </div>
+                      )}
+                      {heardFromOtherValue && (
+                        <div className="flex justify-between gap-4">
+                          <span className="text-sm text-gray-500">Other Source</span>
+                          <span className="text-right text-sm font-medium text-gray-900">{heardFromOtherValue}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
