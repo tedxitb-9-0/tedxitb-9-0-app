@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { HEARD_FROM_VALUES } from "~/lib/heardFrom";
 
 export const ticketJsonSchema = z.object({
   fullName: z.string(),
@@ -6,6 +7,8 @@ export const ticketJsonSchema = z.object({
   phoneNumber: z.string(),
   ticketType: z.string().optional(),
   tier: z.string().optional(),
+  heardFrom: z.enum(HEARD_FROM_VALUES).optional(),
+  heardFromOther: z.string().nullable().optional(),
 });
 
 export const cartItemSchema = z.object({

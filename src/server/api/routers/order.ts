@@ -4,6 +4,9 @@ import { v4 as uuidv4 } from "uuid";
 import { createTRPCRouter, protectedProcedure, adminProcedure } from "../trpc";
 import { orders } from "~/server/db/schema";
 import { generateAttendanceQRString } from "~/lib/qrcode";
+import { HEARD_FROM_VALUES } from "~/lib/heardFrom";
+
+const heardFromEnum = z.enum(HEARD_FROM_VALUES);
 
 export const orderRouter = createTRPCRouter({
   /**
@@ -18,6 +21,16 @@ export const orderRouter = createTRPCRouter({
           .string()
           .min(10, "Phone number must be at least 10 digits"),
         paymentProofUrl: z.string().min(1, "Payment proof is required"),
+        heardFrom: heardFromEnum,
+        heardFromOther: z.string().optional(),
+      }).superRefine((data, ctx) => {
+        if (data.heardFrom === "other" && !data.heardFromOther?.trim()) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Please specify where you heard about this pre-event",
+            path: ["heardFromOther"],
+          });
+        }
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -77,6 +90,9 @@ export const orderRouter = createTRPCRouter({
         phoneNumber: input.phoneNumber,
         ticketType: "pre_event",
         tier: ticketTier,
+        heardFrom: input.heardFrom,
+        heardFromOther:
+          input.heardFrom === "other" ? input.heardFromOther?.trim() : null,
       };
 
       // Create the order with payment proof - status is "pending" awaiting admin confirmation
