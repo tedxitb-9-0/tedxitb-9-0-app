@@ -53,6 +53,14 @@ function PreEventConfirmedEmail(): ReactElement {
       null,
       "We are excited to have you join us for a series of engaging workshops, performances, and sessions prepared for you. We hope you are looking forward to the experience.",
     ),
+    createElement(
+      "p",
+      null,
+      "Just a quick update regarding the TEDxITB 9.0 Pre-Event 😊",
+      createElement("br"),
+      createElement("br"),
+      "The ticket system has been adjusted - instead of a fixed price, it will now be deposit-based. This means you'll only need to pay a deposit to secure your spot, and it will be refunded upon your attendance at the event.",
+    ),
     createElement("p", null, "See you there."),
     createElement(
       "p",
