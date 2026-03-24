@@ -5,6 +5,7 @@ export const ticketJsonSchema = z.object({
   fullName: z.string(),
   email: z.string().email("Invalid email address"),
   phoneNumber: z.string(),
+  nomorRekening: z.string().optional(),
   ticketType: z.string().optional(),
   tier: z.string().optional(),
   heardFrom: z.enum(HEARD_FROM_VALUES).optional(),

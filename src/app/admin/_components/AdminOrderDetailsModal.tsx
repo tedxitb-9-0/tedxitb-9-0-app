@@ -159,6 +159,13 @@ export default function AdminOrderDetailsModal({
                         <span className="text-sm text-gray-500">Phone</span>
                         <span className="text-sm font-medium text-gray-900">{pData.phoneNumber}</span>
                       </div>
+                      {typeof ticketData?.nomorRekening === "string" &&
+                        ticketData.nomorRekening && (
+                        <div className="flex justify-between gap-4">
+                          <span className="text-sm text-gray-500">Nomor Rekening</span>
+                          <span className="text-right text-sm font-medium text-gray-900">{ticketData.nomorRekening}</span>
+                        </div>
+                        )}
                       {heardFromValue && (
                         <div className="flex justify-between gap-4">
                           <span className="text-sm text-gray-500">Heard From</span>

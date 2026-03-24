@@ -7,6 +7,7 @@ import { generateAttendanceQRString } from "~/lib/qrcode";
 import { HEARD_FROM_VALUES } from "~/lib/heardFrom";
 
 const heardFromEnum = z.enum(HEARD_FROM_VALUES);
+const nomorRekeningPattern = /^\d+\s+a\/n\s+.+\s+\(.+\)$/;
 
 export const orderRouter = createTRPCRouter({
   /**
@@ -20,6 +21,12 @@ export const orderRouter = createTRPCRouter({
         phoneNumber: z
           .string()
           .min(10, "Phone number must be at least 10 digits"),
+        nomorRekening: z
+          .string()
+          .regex(
+            nomorRekeningPattern,
+            "Nomor rekening must follow: <number> a/n <name> (<bank name>)",
+          ),
         paymentProofUrl: z.string().min(1, "Payment proof is required"),
         heardFrom: heardFromEnum,
         heardFromOther: z.string().optional(),
@@ -88,6 +95,7 @@ export const orderRouter = createTRPCRouter({
         fullName: input.fullName,
         email: input.email,
         phoneNumber: input.phoneNumber,
+        nomorRekening: input.nomorRekening,
         ticketType: "pre_event",
         tier: ticketTier,
         heardFrom: input.heardFrom,
