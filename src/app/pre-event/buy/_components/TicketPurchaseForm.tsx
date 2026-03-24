@@ -14,10 +14,18 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { HEARD_FROM_OPTIONS, HEARD_FROM_VALUES } from "~/lib/heardFrom";
 
+const nomorRekeningPattern = /^\d+\s+a\/n\s+.+\s+\(.+\)$/;
+
 const ticketPurchaseSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   email: z.string().email("Please enter a valid email"),
   phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
+  nomorRekening: z
+    .string()
+    .regex(
+      nomorRekeningPattern,
+      "Format must be: <number> a/n <name> (<bank name>)",
+    ),
   paymentProofUrl: z.string().min(1, "Please upload payment proof"),
   heardFrom: z.enum(HEARD_FROM_VALUES, {
     message: "Please tell us where you heard about this pre-event",
@@ -60,6 +68,7 @@ export default function TicketPurchaseForm({
       fullName: "",
       email: userEmail,
       phoneNumber: "",
+      nomorRekening: "",
       paymentProofUrl: "",
       heardFrom: undefined,
       heardFromOther: "",
@@ -188,6 +197,28 @@ export default function TicketPurchaseForm({
           {errors.phoneNumber && (
             <p className="text-red mt-1 text-sm">
               {errors.phoneNumber.message}
+            </p>
+          )}
+        </div>
+
+        {/* Nomor Rekening */}
+        <div>
+          <label
+            htmlFor="nomorRekening"
+            className="text-navy mb-2 block font-semibold"
+          >
+           Bank Account
+          </label>
+          <input
+            {...register("nomorRekening")}
+            id="nomorRekening"
+            className={`w-full rounded-lg border ${errors.nomorRekening ? "border-red" : "border-navy/20"
+              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            placeholder="1234567890 a/n Nama Lengkap (BCA)"
+          />
+          {errors.nomorRekening && (
+            <p className="text-red mt-1 text-sm">
+              {errors.nomorRekening.message}
             </p>
           )}
         </div>
