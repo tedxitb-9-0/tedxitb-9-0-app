@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 import { type Order } from "~/types/order";
@@ -39,9 +39,26 @@ export default function AdminOrdersTable({
   const [selectedOrder, setSelectedOrder] = useState<AdminOrder | null>(null);
   const [filterType, setFilterType] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 
   const ITEMS_PER_PAGE = 20;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+      // Reset to page 1 only if the search query actually changed the debounced value, 
+      // but doing it here is fine as it fires on every valid debounce
+      setCurrentPage(1);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+  };
 
   const handleFilterTypeChange = (value: string) => {
     setFilterType(value);
@@ -56,6 +73,15 @@ export default function AdminOrdersTable({
   const filteredOrders = orders.filter((order) => {
     if (filterStatus !== "all" && order.status !== filterStatus) return false;
     if (filterType !== "all" && order.orderType !== filterType) return false;
+    
+    if (debouncedSearchQuery.trim() !== "") {
+      const query = debouncedSearchQuery.toLowerCase();
+      const matchesId = order.id.toLowerCase().includes(query);
+      const matchesName = order.user.name.toLowerCase().includes(query);
+      const matchesEmail = order.user.email.toLowerCase().includes(query);
+      if (!matchesId && !matchesName && !matchesEmail) return false;
+    }
+
     return true;
   });
 
@@ -142,35 +168,48 @@ export default function AdminOrdersTable({
 
   return (
     <div>
-      {/* Filters */}
-      <div className="mb-6 grid grid-cols-2 gap-3 border-b border-navy/10 pb-4 md:flex md:flex-wrap md:gap-4">
-        <div>
-          <label className="text-navy mb-1 block text-sm font-medium">Type</label>
-          <select
-            value={filterType}
-            onChange={(e) => handleFilterTypeChange(e.target.value)}
-            className="border-navy/20 text-navy focus:border-blue focus:ring-blue w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none md:w-auto md:px-4"
-          >
-            <option value="all">All Types</option>
-            <option value="pre_event_ticket">Pre-Event Ticket</option>
-            <option value="main_event_ticket">Main Event Ticket</option>
-            <option value="merchandise">Merchandise</option>
-          </select>
+      {/* Filters & Search */}
+      <div className="mb-6 flex flex-col gap-4 border-b border-navy/10 pb-4 md:flex-row md:items-end md:justify-between w-full">
+        <div className="w-full md:max-w-xs">
+          <label className="text-navy mb-1 block text-sm font-medium">Search Orders</label>
+          <input
+            type="text"
+            placeholder="Search by ID, Name, or Email"
+            value={searchQuery}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            className="border-navy/20 text-navy focus:border-blue focus:ring-blue w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+          />
         </div>
 
-        <div>
-          <label className="text-navy mb-1 block text-sm font-medium">Status</label>
-          <select
-            value={filterStatus}
-            onChange={(e) => handleFilterStatusChange(e.target.value)}
-            className="border-navy/20 text-navy focus:border-blue focus:ring-blue w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none md:w-auto md:px-4"
-          >
-            <option value="all">All Statuses</option>
-            <option value="pending">Pending</option>
-            <option value="paid">Paid</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
+        <div className="grid grid-cols-2 gap-3 md:flex md:gap-4">
+          <div>
+            <label className="text-navy mb-1 block text-sm font-medium">Type</label>
+            <select
+              value={filterType}
+              onChange={(e) => handleFilterTypeChange(e.target.value)}
+              className="border-navy/20 text-navy focus:border-blue focus:ring-blue w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none md:w-auto md:px-4"
+            >
+              <option value="all">All Types</option>
+              <option value="pre_event_ticket">Pre-Event Ticket</option>
+              <option value="main_event_ticket">Main Event Ticket</option>
+              <option value="merchandise">Merchandise</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="text-navy mb-1 block text-sm font-medium">Status</label>
+            <select
+              value={filterStatus}
+              onChange={(e) => handleFilterStatusChange(e.target.value)}
+              className="border-navy/20 text-navy focus:border-blue focus:ring-blue w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none md:w-auto md:px-4"
+            >
+              <option value="all">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="paid">Paid</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
         </div>
       </div>
 
