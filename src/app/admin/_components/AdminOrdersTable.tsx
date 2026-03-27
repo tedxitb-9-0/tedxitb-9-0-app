@@ -39,12 +39,31 @@ export default function AdminOrdersTable({
   const [selectedOrder, setSelectedOrder] = useState<AdminOrder | null>(null);
   const [filterType, setFilterType] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const ITEMS_PER_PAGE = 20;
+
+  const handleFilterTypeChange = (value: string) => {
+    setFilterType(value);
+    setCurrentPage(1);
+  };
+
+  const handleFilterStatusChange = (value: string) => {
+    setFilterStatus(value);
+    setCurrentPage(1);
+  };
 
   const filteredOrders = orders.filter((order) => {
     if (filterStatus !== "all" && order.status !== filterStatus) return false;
     if (filterType !== "all" && order.orderType !== filterType) return false;
     return true;
   });
+
+  const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE) || 1;
+  const paginatedOrders = filteredOrders.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   const getOrderTypeLabel = (type: string) => {
     const labels = {
@@ -129,7 +148,7 @@ export default function AdminOrdersTable({
           <label className="text-navy mb-1 block text-sm font-medium">Type</label>
           <select
             value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
+            onChange={(e) => handleFilterTypeChange(e.target.value)}
             className="border-navy/20 text-navy focus:border-blue focus:ring-blue w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none md:w-auto md:px-4"
           >
             <option value="all">All Types</option>
@@ -143,7 +162,7 @@ export default function AdminOrdersTable({
           <label className="text-navy mb-1 block text-sm font-medium">Status</label>
           <select
             value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
+            onChange={(e) => handleFilterStatusChange(e.target.value)}
             className="border-navy/20 text-navy focus:border-blue focus:ring-blue w-full rounded-lg border px-3 py-2 text-sm focus:ring-2 focus:outline-none md:w-auto md:px-4"
           >
             <option value="all">All Statuses</option>
@@ -169,14 +188,14 @@ export default function AdminOrdersTable({
             </tr>
           </thead>
           <tbody>
-            {filteredOrders.length === 0 ? (
+            {paginatedOrders.length === 0 ? (
               <tr>
                 <td colSpan={7} className="py-10 text-center text-navy/70">
                   No orders match the selected filters.
                 </td>
               </tr>
             ) : (
-              filteredOrders.map((order) => (
+              paginatedOrders.map((order) => (
                 <tr
                   key={order.id}
                   className="border-navy/5 text-navy hover:bg-blue/5 border-b text-sm"
@@ -216,6 +235,36 @@ export default function AdminOrdersTable({
             )}
           </tbody>
         </table>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="mt-6 flex items-center justify-between border-t border-navy/10 pt-4">
+            <div className="text-navy/70 text-sm">
+              Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to{" "}
+              {Math.min(currentPage * ITEMS_PER_PAGE, filteredOrders.length)} of{" "}
+              {filteredOrders.length} orders
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="rounded-lg border border-navy/20 px-3 py-1.5 text-sm font-medium text-navy disabled:opacity-50 transition-colors hover:bg-navy/5"
+              >
+                Previous
+              </button>
+              <div className="flex items-center px-4 text-sm text-navy font-medium">
+                Page {currentPage} of {totalPages}
+              </div>
+              <button
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="rounded-lg border border-navy/20 px-3 py-1.5 text-sm font-medium text-navy disabled:opacity-50 transition-colors hover:bg-navy/5"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Admin Order Details Modal */}
         <AdminOrderDetailsModal
