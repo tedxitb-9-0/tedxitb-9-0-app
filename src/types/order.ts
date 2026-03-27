@@ -31,7 +31,7 @@ export const merchJsonSchema = z.object({
 export const orderSchema = z.object({
   id: z.string(),
   orderType: z.enum(["pre_event_ticket", "main_event_ticket", "merchandise"]),
-  status: z.enum(["pending", "paid", "confirmed", "cancelled"]),
+  status: z.enum(["pending", "paid", "confirmed", "cancelled", "attended"]),
   totalAmount: z.number(),
   createdAt: z.date(),
   ticketJson: ticketJsonSchema.nullable().optional(),

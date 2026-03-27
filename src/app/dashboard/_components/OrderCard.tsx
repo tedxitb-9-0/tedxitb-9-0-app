@@ -39,6 +39,7 @@ export default function OrderCard({ order, onViewQR }: OrderCardProps) {
       paid: "bg-blue-100 text-blue-800",
       confirmed: "bg-green-100 text-green-800",
       cancelled: "bg-red-100 text-red-800",
+      attended: "bg-purple-100 text-purple-800",
     };
     return badges[status as keyof typeof badges] ?? badges.pending;
   };
@@ -69,7 +70,7 @@ export default function OrderCard({ order, onViewQR }: OrderCardProps) {
     (order.orderType === "pre_event_ticket" ||
       order.orderType === "main_event_ticket") &&
     order.qrCode &&
-    (order.status === "confirmed" || order.status === "paid");
+    (order.status === "confirmed" || order.status === "paid" || order.status === "attended");
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md transition-shadow hover:shadow-lg">

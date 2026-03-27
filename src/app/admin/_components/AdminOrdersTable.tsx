@@ -2,9 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { QrCode } from "lucide-react";
+import { api } from "~/trpc/react";
 
 import { type Order } from "~/types/order";
 import AdminOrderDetailsModal from "./AdminOrderDetailsModal";
+import AdminQRScannerModal from "./AdminQRScannerModal";
 
 export type AdminOrder = Order & {
   user: {
@@ -42,6 +45,33 @@ export default function AdminOrdersTable({
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+
+  const scanOrderMutation = api.order.scanOrder.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setIsScannerOpen(false);
+      
+      if (data.order) {
+        const newOrder = data.order as AdminOrder;
+        setOrders((prev) => 
+          prev.some((o) => o.id === newOrder.id)
+            ? prev.map((o) => (o.id === newOrder.id ? newOrder : o))
+            : [newOrder, ...prev]
+        );
+        setSelectedOrder(newOrder);
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to scan QR code");
+    },
+  });
+
+  const handleScanSuccess = (qrCode: string) => {
+    if (!scanOrderMutation.isPending) {
+      scanOrderMutation.mutate({ qrCode });
+    }
+  };
 
   const ITEMS_PER_PAGE = 20;
 
@@ -109,6 +139,7 @@ export default function AdminOrdersTable({
       paid: "bg-blue-100 text-blue-800",
       confirmed: "bg-green-100 text-green-800",
       cancelled: "bg-red-100 text-red-800",
+      attended: "bg-purple-100 text-purple-800",
     };
     return badges[status as keyof typeof badges] ?? badges.pending;
   };
@@ -168,6 +199,17 @@ export default function AdminOrdersTable({
 
   return (
     <div>
+      {/* Action Bar */}
+      <div className="mb-6 flex justify-end">
+        <button
+          onClick={() => setIsScannerOpen(true)}
+          className="flex items-center gap-2 rounded-lg bg-blue px-4 py-2 font-semibold text-white transition-colors hover:bg-blue/90"
+        >
+          <QrCode className="h-5 w-5" />
+          Scan QR
+        </button>
+      </div>
+
       {/* Filters & Search */}
       <div className="mb-6 flex flex-col gap-4 border-b border-navy/10 pb-4 md:flex-row md:items-end md:justify-between w-full">
         <div className="w-full md:max-w-xs">
@@ -208,6 +250,7 @@ export default function AdminOrdersTable({
               <option value="paid">Paid</option>
               <option value="confirmed">Confirmed</option>
               <option value="cancelled">Cancelled</option>
+              <option value="attended">Attended</option>
             </select>
           </div>
         </div>
@@ -314,6 +357,14 @@ export default function AdminOrdersTable({
             await handleSave(orderId, status as Order["status"]);
           }}
           isSaving={savingOrderId === selectedOrder?.id}
+        />
+
+        {/* QR Scanner Modal */}
+        <AdminQRScannerModal
+          isOpen={isScannerOpen}
+          onClose={() => setIsScannerOpen(false)}
+          onScanSuccess={handleScanSuccess}
+          isProcessing={scanOrderMutation.isPending}
         />
       </div>
     </div>
