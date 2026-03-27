@@ -115,6 +115,7 @@ export const statusEnum = pgEnum("status", [
   "paid",
   "confirmed",
   "cancelled",
+  "attended",
 ]);
 
 export const orderTypeEnum = pgEnum("order_type", [

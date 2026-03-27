@@ -281,7 +281,7 @@ export const orderRouter = createTRPCRouter({
     .input(
       z.object({
         orderId: z.string().uuid(),
-        status: z.enum(["pending", "paid", "confirmed", "cancelled"]),
+        status: z.enum(["pending", "paid", "confirmed", "cancelled", "attended"]),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -326,5 +326,53 @@ export const orderRouter = createTRPCRouter({
       }
 
       return order;
+    }),
+
+  /**
+   * Scan ticket QR code and mark order as attended
+   */
+  scanOrder: adminProcedure
+    .input(
+      z.object({
+        qrCode: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const existingOrder = await ctx.db.query.orders.findFirst({
+        where: eq(orders.qrCode, input.qrCode),
+        with: {
+          user: true,
+        },
+      });
+
+      if (!existingOrder) {
+        throw new Error("Order not found. Invalid QR code.");
+      }
+
+      if (existingOrder.status === "cancelled") {
+        throw new Error("Order is cancelled and cannot be attended.");
+      }
+
+      if (existingOrder.status === "attended") {
+        return { message: "Already attended", order: existingOrder };
+      }
+
+      const [updatedOrder] = await ctx.db
+        .update(orders)
+        .set({
+          status: "attended",
+          updatedAt: new Date(),
+        })
+        .where(eq(orders.id, existingOrder.id))
+        .returning();
+
+      if (!updatedOrder) {
+        throw new Error("Failed to update order status");
+      }
+
+      return {
+        message: "Order fetched and attended successfully",
+        order: { ...updatedOrder, user: existingOrder.user },
+      };
     }),
 });

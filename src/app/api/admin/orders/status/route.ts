@@ -5,7 +5,7 @@ import { db } from "~/server/db";
 import { orders, user } from "~/server/db/schema";
 import { sendPreEventConfirmedEmail } from "~/server/email/sendEmail";
 
-const allowedStatuses = ["pending", "paid", "confirmed", "cancelled"] as const;
+const allowedStatuses = ["pending", "paid", "confirmed", "cancelled", "attended"] as const;
 
 type AllowedStatus = (typeof allowedStatuses)[number];
 

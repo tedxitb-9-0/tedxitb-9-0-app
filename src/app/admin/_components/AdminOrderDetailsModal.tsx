@@ -50,6 +50,7 @@ export default function AdminOrderDetailsModal({
       paid: "bg-blue-100 text-blue-800",
       confirmed: "bg-green-100 text-green-800",
       cancelled: "bg-red-100 text-red-800",
+      attended: "bg-purple-100 text-purple-800",
     };
     return badges[status as keyof typeof badges] ?? badges.pending;
   };
@@ -248,6 +249,7 @@ export default function AdminOrderDetailsModal({
                     <option value="paid">Paid</option>
                     <option value="confirmed">Confirmed</option>
                     <option value="cancelled">Cancelled</option>
+                    <option value="attended">Attended</option>
                   </select>
                 </div>
 
