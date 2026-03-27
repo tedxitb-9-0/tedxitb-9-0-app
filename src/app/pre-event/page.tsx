@@ -5,7 +5,6 @@ import ActivitySection from "./_components/ActivitySection";
 import PlainBackground from "~/_components/PlainBackground";
 import HeroSection from "./_components/HeroSection";
 import FadeInView from "~/_components/FadeInView";
-import CountdownTimer from "./_components/CountdownTimer";
 import VenueSection from "./_components/VenueSection";
 
 const PreEvent = () => {
@@ -39,8 +38,10 @@ const PreEvent = () => {
                                 draggable={false}
                             />
 
-                            <div className="mx-auto my-8 w-fit max-w-full overflow-x-auto overflow-y-hidden rounded-xl p-8">
-                                <CountdownTimer />
+                            <div className="mx-auto my-8 w-fit max-w-full overflow-x-auto overflow-y-hidden rounded-2xl bg-white/95 backdrop-blur border border-red-100 p-8 shadow-2xl text-center">
+                                <h2 className="text-4xl md:text-5xl font-black text-[#E62B1E] mb-3 tracking-tight">SOLD OUT</h2>
+                                <p className="text-lg md:text-xl font-bold text-gray-800">All pre-event tickets have been fully claimed.</p>
+                                <p className="text-gray-600 mt-2 font-medium">Thank you for your overwhelming enthusiasm!</p>
                             </div>
                         </FadeInView>
                     </div>
