@@ -18,17 +18,34 @@ const merchandiseCheckoutSchema = z.object({
   fullName: z.string().min(1, "Full name is required"),
   email: z.string().email("Please enter a valid email"),
   phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
+  deliveryMethod: z.enum([
+    "pickup_itb_jatinangor",
+    "pickup_itb_ganesa",
+    "delivery_shipping",
+    "pickup_main_event",
+  ]),
+  shippingAddress: z.string().optional(),
   paymentProofUrl: z.string().min(1, "Please upload payment proof"),
+}).superRefine((data, ctx) => {
+  if (data.deliveryMethod === "delivery_shipping" && !data.shippingAddress?.trim()) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Shipping address is required for delivery",
+      path: ["shippingAddress"],
+    });
+  }
 });
 
 type MerchandiseCheckoutFormData = z.infer<typeof merchandiseCheckoutSchema>;
 
 interface MerchandiseCheckoutFormProps {
   userEmail?: string;
+  onPurchaseSuccess?: () => void;
 }
 
 export default function MerchandiseCheckoutForm({
   userEmail = "",
+  onPurchaseSuccess,
 }: MerchandiseCheckoutFormProps) {
   const router = useRouter();
   const [uploadError, setUploadError] = useState("");
@@ -54,15 +71,19 @@ export default function MerchandiseCheckoutForm({
       fullName: "",
       email: userEmail,
       phoneNumber: "",
+      deliveryMethod: "pickup_itb_jatinangor",
+      shippingAddress: "",
       paymentProofUrl: "",
     },
   });
 
   const uploadedProofUrl = watch("paymentProofUrl");
+  const selectedDeliveryMethod = watch("deliveryMethod");
 
   const createOrder = api.order.createMerchandiseOrder.useMutation({
     onSuccess: (data) => {
       if (data?.id) {
+        onPurchaseSuccess?.();
         toast.success("Order created successfully!");
         clearCart();
         router.push("/dashboard");
@@ -172,6 +193,83 @@ export default function MerchandiseCheckoutForm({
             </p>
           )}
         </div>
+
+        {/* Delivery Method */}
+        <div>
+          <p className="text-navy mb-2 block font-semibold">Pickup / Delivery Method</p>
+          <div className="space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-3">
+            <label className="flex cursor-pointer items-start gap-2 rounded-md bg-white p-2">
+              <input
+                {...register("deliveryMethod")}
+                type="radio"
+                value="pickup_itb_jatinangor"
+                className="mt-1"
+              />
+              <span className="text-sm text-gray-800">
+                Pick Up at ITB Jatinangor (Location &amp; Time To Be Announced)
+              </span>
+            </label>
+
+            <label className="flex cursor-pointer items-start gap-2 rounded-md bg-white p-2">
+              <input
+                {...register("deliveryMethod")}
+                type="radio"
+                value="pickup_itb_ganesa"
+                className="mt-1"
+              />
+              <span className="text-sm text-gray-800">
+                Pick Up at ITB Ganesa (Location &amp; Time To Be Announced)
+              </span>
+            </label>
+
+            <label className="flex cursor-pointer items-start gap-2 rounded-md bg-white p-2">
+              <input
+                {...register("deliveryMethod")}
+                type="radio"
+                value="delivery_shipping"
+                className="mt-1"
+              />
+              <span className="text-sm text-gray-800">Delivery (Shipping)</span>
+            </label>
+
+            <label className="flex cursor-pointer items-start gap-2 rounded-md bg-white p-2">
+              <input
+                {...register("deliveryMethod")}
+                type="radio"
+                value="pickup_main_event"
+                className="mt-1"
+              />
+              <span className="text-sm text-gray-800">Pick Up at Main Event</span>
+            </label>
+          </div>
+          {errors.deliveryMethod && (
+            <p className="text-red mt-1 text-sm">{errors.deliveryMethod.message}</p>
+          )}
+        </div>
+
+        {selectedDeliveryMethod === "delivery_shipping" && (
+          <div>
+            <label
+              htmlFor="shippingAddress"
+              className="text-navy mb-2 block font-semibold"
+            >
+              Shipping Address
+            </label>
+            <textarea
+              {...register("shippingAddress")}
+              id="shippingAddress"
+              rows={3}
+              className={`w-full rounded-lg border ${
+                errors.shippingAddress ? "border-red" : "border-navy/20"
+              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+              placeholder="Enter your complete delivery address"
+            />
+            <p className="text-navy/60 mt-1 text-xs">Shipping fee will be shared via chat.</p>
+            {errors.shippingAddress && (
+              <p className="text-red mt-1 text-sm">{errors.shippingAddress.message}</p>
+            )}
+          </div>
+        )}
 
         {/* Order Summary */}
         <div className="rounded-lg border border-gray-200 bg-gray-50 p-5">

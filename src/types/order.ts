@@ -25,6 +25,13 @@ export const merchJsonSchema = z.object({
   fullName: z.string(),
   email: z.string().email("Invalid email address"),
   phoneNumber: z.string(),
+  deliveryMethod: z.enum([
+    "pickup_itb_jatinangor",
+    "pickup_itb_ganesa",
+    "delivery_shipping",
+    "pickup_main_event",
+  ]),
+  shippingAddress: z.string().nullable().optional(),
   cartItems: z.array(cartItemSchema),
 });
 

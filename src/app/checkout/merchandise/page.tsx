@@ -13,6 +13,7 @@ export default function MerchandiseCheckoutPage() {
   const { data: session, isPending: sessionPending } = useSession();
   const { items } = useCartStore();
   const [mounted, setMounted] = useState(false);
+  const [isPurchaseComplete, setIsPurchaseComplete] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -23,11 +24,11 @@ export default function MerchandiseCheckoutPage() {
     if (!sessionPending && !session) {
       toast.error("Please sign in to checkout.");
       router.push("/signin");
-    } else if (mounted && items.length === 0) {
+    } else if (mounted && items.length === 0 && !isPurchaseComplete) {
       toast.error("Your cart is empty!");
       router.push("/merchandise");
     }
-  }, [session, sessionPending, router, items.length, mounted]);
+  }, [session, sessionPending, router, items.length, mounted, isPurchaseComplete]);
 
   // Loading state
   if (sessionPending || !mounted) {
@@ -50,7 +51,10 @@ export default function MerchandiseCheckoutPage() {
     <ColorfulBackground showSmiles={false}>
       <div className="relative z-30 container mx-auto flex min-h-screen items-center justify-center px-4 py-24">
         <h1 className="sr-only">TEDxITB 9.0 Merchandise Checkout</h1>
-        <MerchandiseCheckoutForm userEmail={session.user.email} />
+        <MerchandiseCheckoutForm
+          userEmail={session.user.email}
+          onPurchaseSuccess={() => setIsPurchaseComplete(true)}
+        />
       </div>
     </ColorfulBackground>
   );

@@ -80,6 +80,27 @@ export default function AdminOrderDetailsModal({
       : null;
   const heardFromOtherValue =
     ticketData?.heardFrom === "other" ? ticketData.heardFromOther : null;
+  const merchJson =
+    isMerch && order.merchJson && typeof order.merchJson === "object"
+      ? (order.merchJson as {
+          deliveryMethod?: string;
+          shippingAddress?: string | null;
+        })
+      : null;
+  const merchDeliveryLabel =
+    merchJson?.deliveryMethod === "pickup_itb_jatinangor"
+      ? "Pick Up at ITB Jatinangor (Location & Time To Be Announced)"
+      : merchJson?.deliveryMethod === "pickup_itb_ganesa"
+        ? "Pick Up at ITB Ganesa (Location & Time To Be Announced)"
+        : merchJson?.deliveryMethod === "delivery_shipping"
+          ? "Delivery (Shipping)"
+          : merchJson?.deliveryMethod === "pickup_main_event"
+            ? "Pick Up at Main Event"
+            : null;
+  const merchShippingAddress =
+    merchJson && typeof merchJson.shippingAddress === "string"
+      ? merchJson.shippingAddress
+      : null;
 
   const handleSave = async () => {
     await onSaveStatus(order.id, selectedStatus);
@@ -177,6 +198,18 @@ export default function AdminOrderDetailsModal({
                         <div className="flex justify-between gap-4">
                           <span className="text-sm text-gray-500">Other Source</span>
                           <span className="text-right text-sm font-medium text-gray-900">{heardFromOtherValue}</span>
+                        </div>
+                      )}
+                      {merchDeliveryLabel && (
+                        <div className="flex justify-between gap-4">
+                          <span className="text-sm text-gray-500">Pickup / Delivery</span>
+                          <span className="text-right text-sm font-medium text-gray-900">{merchDeliveryLabel}</span>
+                        </div>
+                      )}
+                      {merchShippingAddress && (
+                        <div className="flex justify-between gap-4">
+                          <span className="text-sm text-gray-500">Shipping Address</span>
+                          <span className="text-right text-sm font-medium text-gray-900">{merchShippingAddress}</span>
                         </div>
                       )}
                     </div>
