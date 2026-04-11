@@ -135,8 +135,23 @@ export const orderRouter = createTRPCRouter({
           .string()
           .min(10, "Phone number must be at least 10 digits"),
         paymentProofUrl: z.string().min(1, "Payment proof is required"),
+        deliveryMethod: z.enum([
+          "pickup_itb_jatinangor",
+          "pickup_itb_ganesa",
+          "delivery_shipping",
+          "pickup_main_event",
+        ]),
+        shippingAddress: z.string().optional(),
         cartItems: z.array(z.any()), // Assuming cartItems can be anything from the frontend for now
         totalAmount: z.number().min(0, "Total amount cannot be negative"),
+      }).superRefine((data, ctx) => {
+        if (data.deliveryMethod === "delivery_shipping" && !data.shippingAddress?.trim()) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Shipping address is required for delivery",
+            path: ["shippingAddress"],
+          });
+        }
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -148,6 +163,11 @@ export const orderRouter = createTRPCRouter({
         fullName: input.fullName,
         email: input.email,
         phoneNumber: input.phoneNumber,
+        deliveryMethod: input.deliveryMethod,
+        shippingAddress:
+          input.deliveryMethod === "delivery_shipping"
+            ? input.shippingAddress?.trim() ?? ""
+            : null,
         cartItems: input.cartItems,
       };
 
