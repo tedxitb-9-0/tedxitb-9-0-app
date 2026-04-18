@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 import { motion } from "motion/react";
@@ -13,46 +13,73 @@ import { X, Upload, FileText } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 import { HEARD_FROM_OPTIONS, HEARD_FROM_VALUES } from "~/lib/heardFrom";
+import { MBTI_OPTIONS, MBTI_VALUES } from "~/lib/mbti";
+import {
+  TICKET_EARLY_BIRD_PRICE_IDR,
+  TICKET_REGULAR_PRICE_IDR,
+} from "~/lib/ticketPricing";
+
+/** Shown under the success toast after checkout, before redirect to dashboard. */
+const TICKET_ORDER_SUCCESS_FOLLOWUP =
+  "Save the date: 10 May 2026. See you at TEDxITB 9.0.";
 
 const nomorRekeningPattern = /^\d+\s+a\/n\s+.+\s+\(.+\)$/;
 
-const ticketPurchaseSchema = z.object({
-  fullName: z.string().min(1, "Full name is required"),
-  email: z.string().email("Please enter a valid email"),
-  phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
-  nomorRekening: z
-    .string()
-    .regex(
-      nomorRekeningPattern,
-      "Format must be: <number> a/n <name> (<bank name>)",
-    ),
-  paymentProofUrl: z.string().min(1, "Please upload payment proof"),
-  heardFrom: z.enum(HEARD_FROM_VALUES, {
-    message: "Please tell us where you heard about this pre-event",
-  }),
-  heardFromOther: z.string().optional(),
-}).superRefine((data, ctx) => {
-  if (data.heardFrom === "other" && !data.heardFromOther?.trim()) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Please specify where you heard about this pre-event",
-      path: ["heardFromOther"],
+function createTicketPurchaseSchema(variant: "pre-event" | "main-event") {
+  const eventPhrase = variant === "pre-event" ? "pre-event" : "main event";
+  return z
+    .object({
+      fullName: z.string().min(1, "Full name is required"),
+      email: z.string().email("Please enter a valid email"),
+      phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
+      mbti: z.enum(MBTI_VALUES, {
+        message: "Please select your MBTI type",
+      }),
+      nomorRekening: z
+        .string()
+        .regex(
+          nomorRekeningPattern,
+          "Format must be: <number> a/n <name> (<bank name>)",
+        ),
+      paymentProofUrl: z.string().min(1, "Please upload payment proof"),
+      heardFrom: z.enum(HEARD_FROM_VALUES, {
+        message: `Please tell us where you heard about this ${eventPhrase}`,
+      }),
+      heardFromOther: z.string().optional(),
+    })
+    .superRefine((data, ctx) => {
+      if (data.heardFrom === "other" && !data.heardFromOther?.trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Please specify where you heard about this ${eventPhrase}`,
+          path: ["heardFromOther"],
+        });
+      }
     });
-  }
-});
+}
 
-type TicketPurchaseFormData = z.infer<typeof ticketPurchaseSchema>;
+type TicketPurchaseFormData = z.infer<
+  ReturnType<typeof createTicketPurchaseSchema>
+>;
 
 interface TicketPurchaseFormProps {
   userEmail?: string;
+  /** Which ticket flow: pre-event or main-event (separate order types and counts). */
+  variant?: "pre-event" | "main-event";
 }
 
 export default function TicketPurchaseForm({
   userEmail = "",
+  variant = "pre-event",
 }: TicketPurchaseFormProps) {
   const router = useRouter();
   const [uploadError, setUploadError] = useState("");
   const [fileName, setFileName] = useState("");
+
+  const ticketPurchaseSchema = useMemo(
+    () => createTicketPurchaseSchema(variant),
+    [variant],
+  );
 
   const {
     register,
@@ -68,6 +95,7 @@ export default function TicketPurchaseForm({
       fullName: "",
       email: userEmail,
       phoneNumber: "",
+      mbti: undefined,
       nomorRekening: "",
       paymentProofUrl: "",
       heardFrom: undefined,
@@ -78,13 +106,38 @@ export default function TicketPurchaseForm({
   const uploadedProofUrl = watch("paymentProofUrl");
   const heardFrom = watch("heardFrom");
 
-  const { data: ticketCountData, isPending: countPending } =
-    api.order.getPreEventTicketCount.useQuery();
+  const preCountQuery = api.order.getPreEventTicketCount.useQuery(undefined, {
+    enabled: variant === "pre-event",
+  });
+  const mainCountQuery = api.order.getMainEventTicketCount.useQuery(undefined, {
+    enabled: variant === "main-event",
+  });
 
-  const createOrder = api.order.createPreEventOrder.useMutation({
+  const ticketCountData =
+    variant === "pre-event" ? preCountQuery.data : mainCountQuery.data;
+  const countPending =
+    variant === "pre-event" ? preCountQuery.isPending : mainCountQuery.isPending;
+
+  const createPreEventOrder = api.order.createPreEventOrder.useMutation({
     onSuccess: (data) => {
       if (data?.id) {
-        toast.success("Order created successfully!");
+        toast.success("Order created successfully!", {
+          description: TICKET_ORDER_SUCCESS_FOLLOWUP,
+        });
+        router.push("/dashboard");
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const createMainEventOrder = api.order.createMainEventOrder.useMutation({
+    onSuccess: (data) => {
+      if (data?.id) {
+        toast.success("Order created successfully!", {
+          description: TICKET_ORDER_SUCCESS_FOLLOWUP,
+        });
         router.push("/dashboard");
       }
     },
@@ -94,12 +147,23 @@ export default function TicketPurchaseForm({
   });
 
   const onSubmit = (data: TicketPurchaseFormData) => {
-    createOrder.mutate(data);
+    if (variant === "pre-event") {
+      createPreEventOrder.mutate(data);
+    } else {
+      createMainEventOrder.mutate(data);
+    }
   };
+
+  const createPending =
+    variant === "pre-event"
+      ? createPreEventOrder.isPending
+      : createMainEventOrder.isPending;
 
   // Determine current price based on backend limit logic
   const isEarlyBird = ticketCountData?.isEarlyBird ?? false;
-  const priceValue = isEarlyBird ? 70000 : 80000;
+  const priceValue = isEarlyBird
+    ? TICKET_EARLY_BIRD_PRICE_IDR
+    : TICKET_REGULAR_PRICE_IDR;
 
   const ticketPrice = new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -116,10 +180,18 @@ export default function TicketPurchaseForm({
     >
       <div className="mb-6 flex flex-col items-center justify-center">
         <Image
-          src="/pre-event/ticketsale.png"
+          src={
+            variant === "main-event"
+              ? "/main-event/ticketsale.png"
+              : "/pre-event/ticketsale.png"
+          }
           width={1500}
           height={150}
-          alt="pre-event ticket sale"
+          alt={
+            variant === "main-event"
+              ? "main event ticket sale"
+              : "pre-event ticket sale"
+          }
           className="w-[80%]"
         />
 
@@ -201,6 +273,36 @@ export default function TicketPurchaseForm({
           )}
         </div>
 
+        {/* MBTI */}
+        <div>
+          <label htmlFor="mbti" className="text-navy mb-2 block font-semibold">
+            MBTI
+          </label>
+          <select
+            {...register("mbti")}
+            id="mbti"
+            className={`w-full rounded-lg border ${errors.mbti ? "border-red" : "border-navy/20"
+              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            onChange={(event) => {
+              const value = event.target.value as TicketPurchaseFormData["mbti"];
+              setValue("mbti", value, { shouldValidate: true });
+            }}
+            defaultValue=""
+          >
+            <option value="" disabled>
+              Select MBTI type
+            </option>
+            {MBTI_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          {errors.mbti && (
+            <p className="text-red mt-1 text-sm">{errors.mbti.message}</p>
+          )}
+        </div>
+
         {/* Nomor Rekening */}
         <div>
           <label
@@ -229,7 +331,8 @@ export default function TicketPurchaseForm({
             htmlFor="heardFrom"
             className="text-navy mb-2 block font-semibold"
           >
-            Let us know where you heard about this pre-event
+            Let us know where you heard about this{" "}
+            {variant === "main-event" ? "main event" : "pre-event"}
           </label>
           <select
             {...register("heardFrom")}
@@ -427,10 +530,10 @@ export default function TicketPurchaseForm({
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={createOrder.isPending}
+          disabled={createPending}
           className="from-blue to-purple w-full rounded-lg bg-gradient-to-r px-6 py-4 text-lg font-semibold text-white transition-all hover:opacity-90 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {createOrder.isPending ? (
+          {createPending ? (
             <span className="flex items-center justify-center gap-2">
               <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
               Creating Order...

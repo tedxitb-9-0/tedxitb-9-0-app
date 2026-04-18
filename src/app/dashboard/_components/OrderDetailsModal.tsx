@@ -158,6 +158,12 @@ export default function OrderDetailsModal({
                         <span className="text-sm text-gray-500">Phone</span>
                         <span className="text-sm font-medium text-gray-900">{pData.phoneNumber}</span>
                       </div>
+                      {ticketData?.mbti && (
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-500">MBTI</span>
+                          <span className="text-sm font-medium text-gray-900">{ticketData.mbti}</span>
+                        </div>
+                      )}
                       {nomorRekeningValue && (
                         <div className="flex justify-between gap-4">
                           <span className="text-sm text-gray-500">Nomor Rekening</span>

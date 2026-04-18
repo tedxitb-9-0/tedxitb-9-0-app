@@ -155,6 +155,14 @@ export default function OrderCard({ order, onViewQR }: OrderCardProps) {
                     {order.ticketJson.phoneNumber}
                   </span>
                 </div>
+                {order.ticketJson.mbti && (
+                  <div>
+                    <span className="text-gray-600">MBTI:</span>{" "}
+                    <span className="font-semibold text-gray-800">
+                      {order.ticketJson.mbti}
+                    </span>
+                  </div>
+                )}
               </div>
             )}
           </div>

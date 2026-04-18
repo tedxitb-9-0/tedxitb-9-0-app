@@ -1,10 +1,12 @@
 import { z } from "zod";
 import { HEARD_FROM_VALUES } from "~/lib/heardFrom";
+import { MBTI_VALUES } from "~/lib/mbti";
 
 export const ticketJsonSchema = z.object({
   fullName: z.string(),
   email: z.string().email("Invalid email address"),
   phoneNumber: z.string(),
+  mbti: z.enum(MBTI_VALUES).optional(),
   nomorRekening: z.string().optional(),
   ticketType: z.string().optional(),
   tier: z.string().optional(),
