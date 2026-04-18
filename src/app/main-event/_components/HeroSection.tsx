@@ -100,7 +100,7 @@ const HeroSection = () => {
           }}
           className="text-navy max-w-[450px] text-center text-sm leading-relaxed font-medium md:text-base lg:text-left"
         >
-          Step into this year's TEDxITB 9.0 Happiness Through Colors, where
+          Step into this year&apos;s TEDxITB 9.0 Happiness Through Colors, where
           ideas, emotions, and interactions unfold through a vibrant spectrum of
           moments designed to inspire curiosity and connection. More than a
           series of speaker talks, each session invites you to see and feel the
