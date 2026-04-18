@@ -5,8 +5,15 @@ import { createTRPCRouter, protectedProcedure, adminProcedure } from "../trpc";
 import { orders } from "~/server/db/schema";
 import { generateAttendanceQRString } from "~/lib/qrcode";
 import { HEARD_FROM_VALUES } from "~/lib/heardFrom";
+import { MBTI_VALUES } from "~/lib/mbti";
+import {
+  isTicketPresaleActive,
+  TICKET_EARLY_BIRD_PRICE_IDR,
+  TICKET_REGULAR_PRICE_IDR,
+} from "~/lib/ticketPricing";
 
 const heardFromEnum = z.enum(HEARD_FROM_VALUES);
+const mbtiEnum = z.enum(MBTI_VALUES);
 const nomorRekeningPattern = /^\d+\s+a\/n\s+.+\s+\(.+\)$/;
 
 export const orderRouter = createTRPCRouter({
@@ -21,6 +28,7 @@ export const orderRouter = createTRPCRouter({
         phoneNumber: z
           .string()
           .min(10, "Phone number must be at least 10 digits"),
+        mbti: mbtiEnum,
         nomorRekening: z
           .string()
           .regex(
@@ -80,9 +88,11 @@ export const orderRouter = createTRPCRouter({
         );
       }
 
-      // Determine Pricing Tier (First 30 are early bird 70k, remaining 70 are regular 80k)
-      const isEarlyBird = currentTicketCount < 30;
-      const totalAmount = isEarlyBird ? 70000 : 80000;
+      // Presale pricing until 27 Apr 2026 midnight WIB, then regular (see ~/lib/ticketPricing)
+      const isEarlyBird = isTicketPresaleActive();
+      const totalAmount = isEarlyBird
+        ? TICKET_EARLY_BIRD_PRICE_IDR
+        : TICKET_REGULAR_PRICE_IDR;
       const ticketTier = isEarlyBird ? "Early Bird" : "Regular";
 
       const orderId = uuidv4();
@@ -95,6 +105,7 @@ export const orderRouter = createTRPCRouter({
         fullName: input.fullName,
         email: input.email,
         phoneNumber: input.phoneNumber,
+        mbti: input.mbti,
         nomorRekening: input.nomorRekening,
         ticketType: "pre_event",
         tier: ticketTier,
@@ -115,6 +126,110 @@ export const orderRouter = createTRPCRouter({
           ticketJson,
           qrCode,
           paymentProofUrl: input.paymentProofUrl, // Include payment proof
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .returning();
+
+      return newOrder;
+    }),
+
+  /**
+   * Create a new main-event ticket order (same flow as pre-event; separate capacity pool)
+   */
+  createMainEventOrder: protectedProcedure
+    .input(
+      z.object({
+        fullName: z.string().min(1, "Full name is required"),
+        email: z.string().email("Valid email is required"),
+        phoneNumber: z
+          .string()
+          .min(10, "Phone number must be at least 10 digits"),
+        mbti: mbtiEnum,
+        nomorRekening: z
+          .string()
+          .regex(
+            nomorRekeningPattern,
+            "Nomor rekening must follow: <number> a/n <name> (<bank name>)",
+          ),
+        paymentProofUrl: z.string().min(1, "Payment proof is required"),
+        heardFrom: heardFromEnum,
+        heardFromOther: z.string().optional(),
+      }).superRefine((data, ctx) => {
+        if (data.heardFrom === "other" && !data.heardFromOther?.trim()) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Please specify where you heard about this main event",
+            path: ["heardFromOther"],
+          });
+        }
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      const existingOrder = await ctx.db.query.orders.findFirst({
+        where: and(
+          eq(orders.userId, userId),
+          eq(orders.orderType, "main_event_ticket"),
+        ),
+      });
+
+      if (existingOrder) {
+        throw new Error(
+          "You already have a main event ticket order. Each user can only order one main event ticket.",
+        );
+      }
+
+      const existingTickets = await ctx.db.query.orders.findMany({
+        where: eq(orders.orderType, "main_event_ticket"),
+      });
+
+      const validTickets = existingTickets.filter(
+        (order) => order.status !== "cancelled",
+      );
+      const currentTicketCount = validTickets.length;
+
+      if (currentTicketCount >= 100) {
+        throw new Error(
+          "We're sorry, but all main event tickets are currently sold out.",
+        );
+      }
+
+      const isEarlyBird = isTicketPresaleActive();
+      const totalAmount = isEarlyBird
+        ? TICKET_EARLY_BIRD_PRICE_IDR
+        : TICKET_REGULAR_PRICE_IDR;
+      const ticketTier = isEarlyBird ? "Early Bird" : "Regular";
+
+      const orderId = uuidv4();
+
+      const qrCode = generateAttendanceQRString(orderId);
+
+      const ticketJson = {
+        fullName: input.fullName,
+        email: input.email,
+        phoneNumber: input.phoneNumber,
+        mbti: input.mbti,
+        nomorRekening: input.nomorRekening,
+        ticketType: "main_event",
+        tier: ticketTier,
+        heardFrom: input.heardFrom,
+        heardFromOther:
+          input.heardFrom === "other" ? input.heardFromOther?.trim() : null,
+      };
+
+      const [newOrder] = await ctx.db
+        .insert(orders)
+        .values({
+          id: orderId,
+          userId,
+          orderType: "main_event_ticket",
+          status: "pending",
+          totalAmount,
+          ticketJson,
+          qrCode,
+          paymentProofUrl: input.paymentProofUrl,
           createdAt: new Date(),
           updatedAt: new Date(),
         })
@@ -260,7 +375,26 @@ export const orderRouter = createTRPCRouter({
 
     return {
       count: validCount,
-      isEarlyBird: validCount < 30,
+      isEarlyBird: isTicketPresaleActive(),
+      isSoldOut: validCount >= 100,
+    };
+  }),
+
+  /**
+   * Get the current count of main-event tickets (separate pool from pre-event)
+   */
+  getMainEventTicketCount: protectedProcedure.query(async ({ ctx }) => {
+    const existingTickets = await ctx.db.query.orders.findMany({
+      where: eq(orders.orderType, "main_event_ticket"),
+    });
+
+    const validCount = existingTickets.filter(
+      (order) => order.status !== "cancelled",
+    ).length;
+
+    return {
+      count: validCount,
+      isEarlyBird: isTicketPresaleActive(),
       isSoldOut: validCount >= 100,
     };
   }),
