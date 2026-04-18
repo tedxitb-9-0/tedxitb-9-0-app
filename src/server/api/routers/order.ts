@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, gte } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import { createTRPCRouter, protectedProcedure, adminProcedure } from "../trpc";
 import { orders } from "~/server/db/schema";
@@ -7,10 +7,11 @@ import { generateAttendanceQRString } from "~/lib/qrcode";
 import { HEARD_FROM_VALUES } from "~/lib/heardFrom";
 import { MBTI_VALUES } from "~/lib/mbti";
 import {
-  isTicketPresaleActive,
-  TICKET_EARLY_BIRD_PRICE_IDR,
-  TICKET_REGULAR_PRICE_IDR,
-} from "~/lib/ticketPricing";
+  logTicketCapacityDebug,
+  partitionTicketsByTier,
+  resolveNextTicketOffer,
+  startOfTodayWib,
+} from "~/lib/ticketCapacity";
 
 const heardFromEnum = z.enum(HEARD_FROM_VALUES);
 const mbtiEnum = z.enum(MBTI_VALUES);
@@ -65,35 +66,35 @@ export const orderRouter = createTRPCRouter({
         );
       }
 
-      // Calculate how many pre-event tickets have already been ordered
-      // (ignoring cancelled orders to reflect true capacity)
+      const startOfToday = startOfTodayWib();
       const existingTickets = await ctx.db.query.orders.findMany({
         where: and(
           eq(orders.orderType, "pre_event_ticket"),
-          // Include pending, paid, and confirmed, exclude cancelled
-          // If you have a specific "valid" state, adjust this accordingly
+          gte(orders.createdAt, startOfToday),
         ),
       });
 
-      // Filter out cancelled orders for capacity planning
       const validTickets = existingTickets.filter(
         (order) => order.status !== "cancelled",
       );
-      const currentTicketCount = validTickets.length;
-
-      // Hard limit of 100 tickets
-      if (currentTicketCount >= 100) {
+      const counts = partitionTicketsByTier(validTickets);
+      const offer = resolveNextTicketOffer(counts);
+      logTicketCapacityDebug("createPreEventOrder", {
+        startOfTodayWib: startOfToday,
+        dbRowCount: existingTickets.length,
+        validOrderCount: validTickets.length,
+        earlyBirdCount: counts.earlyBirdCount,
+        regularCount: counts.regularCount,
+        offer,
+      });
+      if (!offer) {
         throw new Error(
           "We're sorry, but all pre-event tickets are currently sold out.",
         );
       }
 
-      // Presale pricing until 27 Apr 2026 midnight WIB, then regular (see ~/lib/ticketPricing)
-      const isEarlyBird = isTicketPresaleActive();
-      const totalAmount = isEarlyBird
-        ? TICKET_EARLY_BIRD_PRICE_IDR
-        : TICKET_REGULAR_PRICE_IDR;
-      const ticketTier = isEarlyBird ? "Early Bird" : "Regular";
+      const totalAmount = offer.priceIdr;
+      const ticketTier = offer.tier;
 
       const orderId = uuidv4();
 
@@ -181,26 +182,35 @@ export const orderRouter = createTRPCRouter({
         );
       }
 
+      const startOfToday = startOfTodayWib();
       const existingTickets = await ctx.db.query.orders.findMany({
-        where: eq(orders.orderType, "main_event_ticket"),
+        where: and(
+          eq(orders.orderType, "main_event_ticket"),
+          gte(orders.createdAt, startOfToday),
+        ),
       });
 
       const validTickets = existingTickets.filter(
         (order) => order.status !== "cancelled",
       );
-      const currentTicketCount = validTickets.length;
-
-      if (currentTicketCount >= 100) {
+      const counts = partitionTicketsByTier(validTickets);
+      const offer = resolveNextTicketOffer(counts);
+      logTicketCapacityDebug("createMainEventOrder", {
+        startOfTodayWib: startOfToday,
+        dbRowCount: existingTickets.length,
+        validOrderCount: validTickets.length,
+        earlyBirdCount: counts.earlyBirdCount,
+        regularCount: counts.regularCount,
+        offer,
+      });
+      if (!offer) {
         throw new Error(
           "We're sorry, but all main event tickets are currently sold out.",
         );
       }
 
-      const isEarlyBird = isTicketPresaleActive();
-      const totalAmount = isEarlyBird
-        ? TICKET_EARLY_BIRD_PRICE_IDR
-        : TICKET_REGULAR_PRICE_IDR;
-      const ticketTier = isEarlyBird ? "Early Bird" : "Regular";
+      const totalAmount = offer.priceIdr;
+      const ticketTier = offer.tier;
 
       const orderId = uuidv4();
 
@@ -364,19 +374,34 @@ export const orderRouter = createTRPCRouter({
    * Get the current count of pre-event tickets to determine availability and early bird
    */
   getPreEventTicketCount: protectedProcedure.query(async ({ ctx }) => {
+    const startOfToday = startOfTodayWib();
     const existingTickets = await ctx.db.query.orders.findMany({
-      where: eq(orders.orderType, "pre_event_ticket"),
+      where: and(
+        eq(orders.orderType, "pre_event_ticket"),
+        gte(orders.createdAt, startOfToday),
+      ),
     });
 
-    // Filter out canceled orders
-    const validCount = existingTickets.filter(
+    const validTickets = existingTickets.filter(
       (order) => order.status !== "cancelled",
-    ).length;
+    );
+    const counts = partitionTicketsByTier(validTickets);
+    const offer = resolveNextTicketOffer(counts);
+    logTicketCapacityDebug("getPreEventTicketCount", {
+      startOfTodayWib: startOfToday,
+      dbRowCount: existingTickets.length,
+      validOrderCount: validTickets.length,
+      earlyBirdCount: counts.earlyBirdCount,
+      regularCount: counts.regularCount,
+      offer,
+    });
 
     return {
-      count: validCount,
-      isEarlyBird: isTicketPresaleActive(),
-      isSoldOut: validCount >= 100,
+      count: counts.earlyBirdCount + counts.regularCount,
+      earlyBirdCount: counts.earlyBirdCount,
+      regularCount: counts.regularCount,
+      isEarlyBird: offer?.tier === "Early Bird",
+      isSoldOut: offer === null,
     };
   }),
 
@@ -384,18 +409,34 @@ export const orderRouter = createTRPCRouter({
    * Get the current count of main-event tickets (separate pool from pre-event)
    */
   getMainEventTicketCount: protectedProcedure.query(async ({ ctx }) => {
+    const startOfToday = startOfTodayWib();
     const existingTickets = await ctx.db.query.orders.findMany({
-      where: eq(orders.orderType, "main_event_ticket"),
+      where: and(
+        eq(orders.orderType, "main_event_ticket"),
+        gte(orders.createdAt, startOfToday),
+      ),
     });
 
-    const validCount = existingTickets.filter(
+    const validTickets = existingTickets.filter(
       (order) => order.status !== "cancelled",
-    ).length;
+    );
+    const counts = partitionTicketsByTier(validTickets);
+    const offer = resolveNextTicketOffer(counts);
+    logTicketCapacityDebug("getMainEventTicketCount", {
+      startOfTodayWib: startOfToday,
+      dbRowCount: existingTickets.length,
+      validOrderCount: validTickets.length,
+      earlyBirdCount: counts.earlyBirdCount,
+      regularCount: counts.regularCount,
+      offer,
+    });
 
     return {
-      count: validCount,
-      isEarlyBird: isTicketPresaleActive(),
-      isSoldOut: validCount >= 100,
+      count: counts.earlyBirdCount + counts.regularCount,
+      earlyBirdCount: counts.earlyBirdCount,
+      regularCount: counts.regularCount,
+      isEarlyBird: offer?.tier === "Early Bird",
+      isSoldOut: offer === null,
     };
   }),
 
