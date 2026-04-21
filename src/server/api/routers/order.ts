@@ -259,7 +259,7 @@ export const orderRouter = createTRPCRouter({
       });
 
       if (bundleTwoPerson) {
-        if (!offer || offer.tier !== "Regular") {
+        if (offer?.tier !== "Regular") {
           throw new Error(
             "The 2-person bundle is only available at Regular price (not during Early Bird).",
           );
@@ -305,8 +305,8 @@ export const orderRouter = createTRPCRouter({
           },
         };
       } else {
-        totalAmount = offer!.priceIdr;
-        ticketTier = offer!.tier;
+        totalAmount = offer.priceIdr;
+        ticketTier = offer.tier;
         ticketJson = {
           fullName: input.fullName,
           email: input.email,
