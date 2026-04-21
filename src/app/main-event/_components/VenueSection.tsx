@@ -44,7 +44,7 @@ export default function VenueSection() {
         viewport={{ once: true, margin: "-120px" }}
         transition={{ duration: 0.65, ease: "easeOut", delay: 0.1 }}
       >
-        <div className="relative aspect-video w-full min-h-[280px] overflow-hidden rounded-3xl bg-neutral-200">
+        <div className="relative aspect-video min-h-[280px] w-full overflow-hidden rounded-3xl bg-neutral-200">
           <iframe
             title="Peta lokasi Graha Pos Indonesia, Jl. Banda No. 30, Bandung"
             src={MAP_EMBED_SRC}
