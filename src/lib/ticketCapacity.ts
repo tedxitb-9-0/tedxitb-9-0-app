@@ -1,14 +1,15 @@
 import {
   isTicketPresaleActive,
   TICKET_EARLY_BIRD_PRICE_IDR,
+  TICKET_REGULAR_BUNDLE_TOTAL_IDR,
   TICKET_REGULAR_PRICE_IDR,
 } from "~/lib/ticketPricing";
 
 /** Max early-bird orders while presale window is active (separate from regular pool). */
 export const TICKET_PRESALE_CAP = 30;
 
-/** Max regular-price orders (30 presale + 170 regular = 200 total capacity). */
-export const TICKET_REGULAR_CAP = 170;
+/** Max regular-price orders (30 presale + 150 regular = 180 total capacity). */
+export const TICKET_REGULAR_CAP = 150;
 
 export const TICKET_TOTAL_CAP = TICKET_PRESALE_CAP + TICKET_REGULAR_CAP;
 
@@ -34,7 +35,19 @@ export function inferTicketTier(order: {
   }
   if (order.totalAmount === TICKET_EARLY_BIRD_PRICE_IDR) return "Early Bird";
   if (order.totalAmount === TICKET_REGULAR_PRICE_IDR) return "Regular";
+  if (order.totalAmount === TICKET_REGULAR_BUNDLE_TOTAL_IDR) return "Regular";
   return "Regular";
+}
+
+/** Seats consumed toward capacity (main-event 2-person bundle = 2 regular slots). */
+export function getTicketSlotCount(order: {
+  ticketJson: unknown;
+  totalAmount: number;
+}): number {
+  const j = order.ticketJson as { bundle?: string } | null;
+  if (j && typeof j === "object" && j.bundle === "two_person") return 2;
+  if (order.totalAmount === TICKET_REGULAR_BUNDLE_TOTAL_IDR) return 2;
+  return 1;
 }
 
 export function partitionTicketsByTier(
@@ -43,15 +56,17 @@ export function partitionTicketsByTier(
   let earlyBirdCount = 0;
   let regularCount = 0;
   for (const o of orders) {
-    if (inferTicketTier(o) === "Early Bird") earlyBirdCount++;
-    else regularCount++;
+    const tier = inferTicketTier(o);
+    const slots = getTicketSlotCount(o);
+    if (tier === "Early Bird") earlyBirdCount += slots;
+    else regularCount += slots;
   }
   return { earlyBirdCount, regularCount };
 }
 
 /**
  * Next purchase tier/price: presale slots first (up to cap) while the presale window is open,
- * then regular pool (170). Orders before start of today are excluded by the caller.
+ * then regular pool (150). Orders before start of today are excluded by the caller.
  */
 export function resolveNextTicketOffer(counts: {
   earlyBirdCount: number;
