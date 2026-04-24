@@ -1,0 +1,10 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "print-activitysection-lines",
+			"type": "shell",
+			"command": "nl -ba src/app/main-event/_components/ActivitySection.tsx | sed -n '1,280p'"
+		}
+	]
+}

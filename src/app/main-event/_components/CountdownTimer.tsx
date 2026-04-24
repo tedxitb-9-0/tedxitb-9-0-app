@@ -26,7 +26,7 @@ export default function CountdownTimer({
   showBuyButton = false,
 }: CountdownTimerProps) {
   return (
-    <div className="flex w-full flex-col items-center gap-6 text-center">
+    <div className="flex w-full flex-col items-center gap-6 text-center drop-shadow-2xl">
       <FlipClockCountdown
         to={toTimestamp(to)}
         className="pre-event-flip-clock justify-center"
