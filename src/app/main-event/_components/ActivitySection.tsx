@@ -9,15 +9,15 @@ import CountdownTimer from "./CountdownTimer";
 
 const activities = [
     {
-        title: "Zahid Ibrahim",
-        imageSrc: "/main-event/zahid-ibrahim.png",
-        imageAlt: "Zahid Ibrahim",
-        releaseAt: new Date(2026, 3, 24),
-    },
-    {
         title: "Naura Tsabita",
         imageSrc: "/main-event/naura-tsabita.png",
         imageAlt: "Naura Tsabita",
+        releaseAt: new Date(2026, 3, 24),
+    },
+    {
+        title: "Zahid Ibrahim",
+        imageSrc: "/main-event/zahid-ibrahim.png",
+        imageAlt: "Zahid Ibrahim",
         releaseAt: new Date(2026, 3, 26),
     },
     {
@@ -195,7 +195,7 @@ const ActivitySection = () => {
                                         className="flex min-h-130 w-full flex-col items-center justify-center rounded-3xl border-4 border-[#2b4289] bg-white/95 p-6"
                                     >
                                         <h3
-                                            className="mb-6 text-center text-2xl text-red outline-1 outline-white drop-shadow-md"
+                                            className="text-red mb-6 text-center text-2xl outline-1 outline-white drop-shadow-md"
                                             style={{
                                                 fontFamily:
                                                     "var(--font-titan-one), cursive",
