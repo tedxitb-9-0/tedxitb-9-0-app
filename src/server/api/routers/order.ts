@@ -10,8 +10,10 @@ import {
   logTicketCapacityDebug,
   partitionTicketsByTier,
   resolveNextTicketOffer,
+  TICKET_REGULAR_CAP,
   startOfTodayWib,
 } from "~/lib/ticketCapacity";
+import { TICKET_REGULAR_PRICE_IDR } from "~/lib/ticketPricing";
 
 const heardFromEnum = z.enum(HEARD_FROM_VALUES);
 const mbtiEnum = z.enum(MBTI_VALUES);
@@ -194,7 +196,16 @@ export const orderRouter = createTRPCRouter({
         (order) => order.status !== "cancelled",
       );
       const counts = partitionTicketsByTier(validTickets);
-      const offer = resolveNextTicketOffer(counts);
+      if (counts.regularCount >= TICKET_REGULAR_CAP) {
+        throw new Error(
+          "We're sorry, but all main event tickets are currently sold out.",
+        );
+      }
+
+      const offer = {
+        tier: "Regular" as const,
+        priceIdr: TICKET_REGULAR_PRICE_IDR,
+      };
       logTicketCapacityDebug("createMainEventOrder", {
         startOfTodayWib: startOfToday,
         dbRowCount: existingTickets.length,
@@ -203,12 +214,6 @@ export const orderRouter = createTRPCRouter({
         regularCount: counts.regularCount,
         offer,
       });
-      if (!offer) {
-        throw new Error(
-          "We're sorry, but all main event tickets are currently sold out.",
-        );
-      }
-
       const totalAmount = offer.priceIdr;
       const ticketTier = offer.tier;
 
@@ -421,22 +426,21 @@ export const orderRouter = createTRPCRouter({
       (order) => order.status !== "cancelled",
     );
     const counts = partitionTicketsByTier(validTickets);
-    const offer = resolveNextTicketOffer(counts);
     logTicketCapacityDebug("getMainEventTicketCount", {
       startOfTodayWib: startOfToday,
       dbRowCount: existingTickets.length,
       validOrderCount: validTickets.length,
       earlyBirdCount: counts.earlyBirdCount,
       regularCount: counts.regularCount,
-      offer,
+      offer: null,
     });
 
     return {
       count: counts.earlyBirdCount + counts.regularCount,
       earlyBirdCount: counts.earlyBirdCount,
       regularCount: counts.regularCount,
-      isEarlyBird: offer?.tier === "Early Bird",
-      isSoldOut: offer === null,
+      isEarlyBird: false,
+      isSoldOut: counts.regularCount >= TICKET_REGULAR_CAP,
     };
   }),
 

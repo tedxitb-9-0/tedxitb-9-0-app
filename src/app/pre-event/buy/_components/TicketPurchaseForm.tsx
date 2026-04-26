@@ -75,6 +75,7 @@ export default function TicketPurchaseForm({
   const router = useRouter();
   const [uploadError, setUploadError] = useState("");
   const [fileName, setFileName] = useState("");
+  const isMainEvent = variant === "main-event";
 
   const ticketPurchaseSchema = useMemo(
     () => createTicketPurchaseSchema(variant),
@@ -160,8 +161,10 @@ export default function TicketPurchaseForm({
       : createMainEventOrder.isPending;
 
   // Determine current price based on backend limit logic
-  const isEarlyBird = ticketCountData?.isEarlyBird ?? false;
-  const priceValue = isEarlyBird
+  const isEarlyBird = !isMainEvent && (ticketCountData?.isEarlyBird ?? false);
+  const priceValue = isMainEvent
+    ? TICKET_REGULAR_PRICE_IDR
+    : isEarlyBird
     ? TICKET_EARLY_BIRD_PRICE_IDR
     : TICKET_REGULAR_PRICE_IDR;
 
@@ -420,7 +423,7 @@ export default function TicketPurchaseForm({
             <div className="text-purple mt-1 text-2xl font-bold">
               {countPending ? "..." : ticketPrice}
             </div>
-            {ticketCountData?.isEarlyBird && (
+            {isEarlyBird && (
               <p className="mt-1 text-xs font-semibold text-yellow-600">
                 Early Bird Pricing Applied!
               </p>
