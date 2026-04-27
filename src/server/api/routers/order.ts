@@ -7,13 +7,17 @@ import { generateAttendanceQRString } from "~/lib/qrcode";
 import { HEARD_FROM_VALUES } from "~/lib/heardFrom";
 import { MBTI_VALUES } from "~/lib/mbti";
 import {
+  TICKET_REGULAR_CAP,
   logTicketCapacityDebug,
   partitionTicketsByTier,
   resolveNextTicketOffer,
-  TICKET_REGULAR_CAP,
   startOfTodayWib,
 } from "~/lib/ticketCapacity";
-import { TICKET_REGULAR_PRICE_IDR } from "~/lib/ticketPricing";
+import {
+  TICKET_REGULAR_BUNDLE_PRICE_PER_PERSON_IDR,
+  TICKET_REGULAR_BUNDLE_TOTAL_IDR,
+  TICKET_REGULAR_PRICE_IDR,
+} from "~/lib/ticketPricing";
 
 const heardFromEnum = z.enum(HEARD_FROM_VALUES);
 const mbtiEnum = z.enum(MBTI_VALUES);
@@ -142,31 +146,78 @@ export const orderRouter = createTRPCRouter({
    */
   createMainEventOrder: protectedProcedure
     .input(
-      z.object({
-        fullName: z.string().min(1, "Full name is required"),
-        email: z.string().email("Valid email is required"),
-        phoneNumber: z
-          .string()
-          .min(10, "Phone number must be at least 10 digits"),
-        mbti: mbtiEnum,
-        nomorRekening: z
-          .string()
-          .regex(
-            nomorRekeningPattern,
-            "Nomor rekening must follow: <number> a/n <name> (<bank name>)",
-          ),
-        paymentProofUrl: z.string().min(1, "Payment proof is required"),
-        heardFrom: heardFromEnum,
-        heardFromOther: z.string().optional(),
-      }).superRefine((data, ctx) => {
-        if (data.heardFrom === "other" && !data.heardFromOther?.trim()) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Please specify where you heard about this main event",
-            path: ["heardFromOther"],
-          });
-        }
-      }),
+      z
+        .object({
+          fullName: z.string().min(1, "Full name is required"),
+          email: z.string().email("Valid email is required"),
+          phoneNumber: z
+            .string()
+            .min(10, "Phone number must be at least 10 digits"),
+          mbti: mbtiEnum,
+          nomorRekening: z
+            .string()
+            .regex(
+              nomorRekeningPattern,
+              "Nomor rekening must follow: <number> a/n <name> (<bank name>)",
+            ),
+          paymentProofUrl: z.string().min(1, "Payment proof is required"),
+          heardFrom: heardFromEnum,
+          heardFromOther: z.string().optional(),
+          bundleTwoPerson: z.boolean().optional().default(false),
+          companionFullName: z.string().optional(),
+          companionEmail: z.string().optional(),
+          companionPhoneNumber: z.string().optional(),
+          companionMbti: mbtiEnum.optional(),
+        })
+        .superRefine((data, ctx) => {
+          if (data.heardFrom === "other" && !data.heardFromOther?.trim()) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Please specify where you heard about this main event",
+              path: ["heardFromOther"],
+            });
+          }
+          if (data.bundleTwoPerson) {
+            if (!data.companionFullName?.trim()) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Companion full name is required for a 2-person bundle",
+                path: ["companionFullName"],
+              });
+            }
+            if (!data.companionEmail?.trim()) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Companion email is required for a 2-person bundle",
+                path: ["companionEmail"],
+              });
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.companionEmail)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Valid companion email is required",
+                path: ["companionEmail"],
+              });
+            }
+            if (
+              !data.companionPhoneNumber ||
+              data.companionPhoneNumber.length < 10
+            ) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message:
+                  "Companion phone number must be at least 10 digits for a 2-person bundle",
+                path: ["companionPhoneNumber"],
+              });
+            }
+            if (!data.companionMbti) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Companion MBTI is required for a 2-person bundle",
+                path: ["companionMbti"],
+              });
+            }
+          }
+        }),
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
@@ -184,55 +235,91 @@ export const orderRouter = createTRPCRouter({
         );
       }
 
-      const startOfToday = startOfTodayWib();
-      const existingTickets = await ctx.db.query.orders.findMany({
-        where: and(
-          eq(orders.orderType, "main_event_ticket"),
-          gte(orders.createdAt, startOfToday),
-        ),
+      // Count ALL main event tickets (not just today) for proper capacity tracking
+      const allExistingTickets = await ctx.db.query.orders.findMany({
+        where: eq(orders.orderType, "main_event_ticket"),
       });
 
-      const validTickets = existingTickets.filter(
+      const validTickets = allExistingTickets.filter(
         (order) => order.status !== "cancelled",
       );
       const counts = partitionTicketsByTier(validTickets);
-      if (counts.regularCount >= TICKET_REGULAR_CAP) {
-        throw new Error(
-          "We're sorry, but all main event tickets are currently sold out.",
-        );
-      }
-
-      const offer = {
-        tier: "Regular" as const,
-        priceIdr: TICKET_REGULAR_PRICE_IDR,
-      };
+      const offer = resolveNextTicketOffer(counts);
+      const bundleTwoPerson = input.bundleTwoPerson === true;
       logTicketCapacityDebug("createMainEventOrder", {
-        startOfTodayWib: startOfToday,
-        dbRowCount: existingTickets.length,
+        totalDbRowCount: allExistingTickets.length,
         validOrderCount: validTickets.length,
         earlyBirdCount: counts.earlyBirdCount,
         regularCount: counts.regularCount,
         offer,
       });
-      const totalAmount = offer.priceIdr;
-      const ticketTier = offer.tier;
+
+      if (bundleTwoPerson) {
+        if (offer?.tier !== "Regular") {
+          throw new Error(
+            "The 2-person bundle is only available at Regular price (not during Early Bird).",
+          );
+        }
+        if (counts.regularCount + 2 > TICKET_REGULAR_CAP) {
+          throw new Error(
+            "Not enough Regular tickets left for a 2-person bundle. Try a single ticket or check availability later.",
+          );
+        }
+      } else if (!offer) {
+        throw new Error(
+          "We're sorry, but all main event tickets are currently sold out.",
+        );
+      }
+
+      let totalAmount: number;
+      let ticketTier: "Early Bird" | "Regular";
+      let ticketJson: Record<string, unknown>;
+
+      if (bundleTwoPerson) {
+        totalAmount = TICKET_REGULAR_BUNDLE_TOTAL_IDR;
+        ticketTier = "Regular";
+        ticketJson = {
+          fullName: input.fullName,
+          email: input.email,
+          phoneNumber: input.phoneNumber,
+          mbti: input.mbti,
+          nomorRekening: input.nomorRekening,
+          ticketType: "main_event",
+          tier: ticketTier,
+          bundle: "two_person",
+          pricePerPersonIdr: TICKET_REGULAR_BUNDLE_PRICE_PER_PERSON_IDR,
+          bundleTotalIdr: TICKET_REGULAR_BUNDLE_TOTAL_IDR,
+          compareAtSingleRegularPerPersonIdr: TICKET_REGULAR_PRICE_IDR,
+          heardFrom: input.heardFrom,
+          heardFromOther:
+            input.heardFrom === "other" ? input.heardFromOther?.trim() : null,
+          companion: {
+            fullName: input.companionFullName?.trim(),
+            email: input.companionEmail?.trim(),
+            phoneNumber: input.companionPhoneNumber,
+            mbti: input.companionMbti,
+          },
+        };
+      } else {
+        totalAmount = offer.priceIdr;
+        ticketTier = offer.tier;
+        ticketJson = {
+          fullName: input.fullName,
+          email: input.email,
+          phoneNumber: input.phoneNumber,
+          mbti: input.mbti,
+          nomorRekening: input.nomorRekening,
+          ticketType: "main_event",
+          tier: ticketTier,
+          heardFrom: input.heardFrom,
+          heardFromOther:
+            input.heardFrom === "other" ? input.heardFromOther?.trim() : null,
+        };
+      }
 
       const orderId = uuidv4();
 
       const qrCode = generateAttendanceQRString(orderId);
-
-      const ticketJson = {
-        fullName: input.fullName,
-        email: input.email,
-        phoneNumber: input.phoneNumber,
-        mbti: input.mbti,
-        nomorRekening: input.nomorRekening,
-        ticketType: "main_event",
-        tier: ticketTier,
-        heardFrom: input.heardFrom,
-        heardFromOther:
-          input.heardFrom === "other" ? input.heardFromOther?.trim() : null,
-      };
 
       const [newOrder] = await ctx.db
         .insert(orders)
@@ -414,33 +501,34 @@ export const orderRouter = createTRPCRouter({
    * Get the current count of main-event tickets (separate pool from pre-event)
    */
   getMainEventTicketCount: protectedProcedure.query(async ({ ctx }) => {
-    const startOfToday = startOfTodayWib();
-    const existingTickets = await ctx.db.query.orders.findMany({
-      where: and(
-        eq(orders.orderType, "main_event_ticket"),
-        gte(orders.createdAt, startOfToday),
-      ),
+    // Count ALL main event tickets (not just today) for proper capacity tracking
+    const allExistingTickets = await ctx.db.query.orders.findMany({
+      where: eq(orders.orderType, "main_event_ticket"),
     });
 
-    const validTickets = existingTickets.filter(
+    const validTickets = allExistingTickets.filter(
       (order) => order.status !== "cancelled",
     );
     const counts = partitionTicketsByTier(validTickets);
+    const offer = resolveNextTicketOffer(counts);
     logTicketCapacityDebug("getMainEventTicketCount", {
-      startOfTodayWib: startOfToday,
-      dbRowCount: existingTickets.length,
+      totalDbRowCount: allExistingTickets.length,
       validOrderCount: validTickets.length,
       earlyBirdCount: counts.earlyBirdCount,
       regularCount: counts.regularCount,
-      offer: null,
+      offer,
     });
+
+    const regularSlotsRemaining = TICKET_REGULAR_CAP - counts.regularCount;
 
     return {
       count: counts.earlyBirdCount + counts.regularCount,
       earlyBirdCount: counts.earlyBirdCount,
       regularCount: counts.regularCount,
-      isEarlyBird: false,
-      isSoldOut: counts.regularCount >= TICKET_REGULAR_CAP,
+      isEarlyBird: offer?.tier === "Early Bird",
+      isSoldOut: offer === null,
+      bundleTwoPersonAvailable:
+        offer?.tier === "Regular" && regularSlotsRemaining >= 2,
     };
   }),
 

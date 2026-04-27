@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
 import { motion } from "motion/react";
@@ -16,6 +16,8 @@ import { HEARD_FROM_OPTIONS, HEARD_FROM_VALUES } from "~/lib/heardFrom";
 import { MBTI_OPTIONS, MBTI_VALUES } from "~/lib/mbti";
 import {
   TICKET_EARLY_BIRD_PRICE_IDR,
+  TICKET_REGULAR_BUNDLE_PRICE_PER_PERSON_IDR,
+  TICKET_REGULAR_BUNDLE_TOTAL_IDR,
   TICKET_REGULAR_PRICE_IDR,
 } from "~/lib/ticketPricing";
 
@@ -31,7 +33,9 @@ function createTicketPurchaseSchema(variant: "pre-event" | "main-event") {
     .object({
       fullName: z.string().min(1, "Full name is required"),
       email: z.string().email("Please enter a valid email"),
-      phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
+      phoneNumber: z
+        .string()
+        .min(10, "Phone number must be at least 10 digits"),
       mbti: z.enum(MBTI_VALUES, {
         message: "Please select your MBTI type",
       }),
@@ -46,6 +50,11 @@ function createTicketPurchaseSchema(variant: "pre-event" | "main-event") {
         message: `Please tell us where you heard about this ${eventPhrase}`,
       }),
       heardFromOther: z.string().optional(),
+      bundleTwoPerson: z.boolean().optional(),
+      companionFullName: z.string().optional(),
+      companionEmail: z.string().optional(),
+      companionPhoneNumber: z.string().optional(),
+      companionMbti: z.enum(MBTI_VALUES).optional(),
     })
     .superRefine((data, ctx) => {
       if (data.heardFrom === "other" && !data.heardFromOther?.trim()) {
@@ -54,6 +63,52 @@ function createTicketPurchaseSchema(variant: "pre-event" | "main-event") {
           message: `Please specify where you heard about this ${eventPhrase}`,
           path: ["heardFromOther"],
         });
+      }
+      if (variant === "main-event" && data.bundleTwoPerson === true) {
+        if (!data.companionFullName?.trim()) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Companion full name is required for a 2-person bundle",
+            path: ["companionFullName"],
+          });
+        }
+        if (!data.companionEmail?.trim()) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Companion email is required for a 2-person bundle",
+            path: ["companionEmail"],
+          });
+        } else {
+          const emailCheck = z
+            .string()
+            .email("Please enter a valid companion email")
+            .safeParse(data.companionEmail);
+          if (!emailCheck.success) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: emailCheck.error.issues[0]?.message ?? "Invalid email",
+              path: ["companionEmail"],
+            });
+          }
+        }
+        if (
+          !data.companionPhoneNumber ||
+          data.companionPhoneNumber.length < 10
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message:
+              "Companion phone number must be at least 10 digits for a 2-person bundle",
+            path: ["companionPhoneNumber"],
+          });
+        }
+        if (!data.companionMbti) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Please select companion MBTI for a 2-person bundle",
+            path: ["companionMbti"],
+          });
+        }
       }
     });
 }
@@ -101,11 +156,17 @@ export default function TicketPurchaseForm({
       paymentProofUrl: "",
       heardFrom: undefined,
       heardFromOther: "",
+      bundleTwoPerson: false,
+      companionFullName: "",
+      companionEmail: "",
+      companionPhoneNumber: "",
+      companionMbti: undefined,
     },
   });
 
   const uploadedProofUrl = watch("paymentProofUrl");
   const heardFrom = watch("heardFrom");
+  const bundleTwoPerson = watch("bundleTwoPerson");
 
   const preCountQuery = api.order.getPreEventTicketCount.useQuery(undefined, {
     enabled: variant === "pre-event",
@@ -116,8 +177,11 @@ export default function TicketPurchaseForm({
 
   const ticketCountData =
     variant === "pre-event" ? preCountQuery.data : mainCountQuery.data;
+  const mainTicketCount = mainCountQuery.data;
   const countPending =
-    variant === "pre-event" ? preCountQuery.isPending : mainCountQuery.isPending;
+    variant === "pre-event"
+      ? preCountQuery.isPending
+      : mainCountQuery.isPending;
 
   const createPreEventOrder = api.order.createPreEventOrder.useMutation({
     onSuccess: (data) => {
@@ -147,11 +211,62 @@ export default function TicketPurchaseForm({
     },
   });
 
+  useEffect(() => {
+    if (variant !== "main-event") return;
+    if (
+      mainTicketCount?.isEarlyBird ||
+      mainTicketCount?.bundleTwoPersonAvailable === false
+    ) {
+      setValue("bundleTwoPerson", false);
+    }
+  }, [
+    variant,
+    mainTicketCount?.isEarlyBird,
+    mainTicketCount?.bundleTwoPersonAvailable,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    if (!bundleTwoPerson) {
+      setValue("companionFullName", "");
+      setValue("companionEmail", "");
+      setValue("companionPhoneNumber", "");
+      setValue("companionMbti", undefined);
+    }
+  }, [bundleTwoPerson, setValue]);
+
   const onSubmit = (data: TicketPurchaseFormData) => {
     if (variant === "pre-event") {
-      createPreEventOrder.mutate(data);
+      createPreEventOrder.mutate({
+        fullName: data.fullName,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        mbti: data.mbti,
+        nomorRekening: data.nomorRekening,
+        paymentProofUrl: data.paymentProofUrl,
+        heardFrom: data.heardFrom,
+        heardFromOther: data.heardFromOther,
+      });
     } else {
-      createMainEventOrder.mutate(data);
+      createMainEventOrder.mutate({
+        fullName: data.fullName,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        mbti: data.mbti,
+        nomorRekening: data.nomorRekening,
+        paymentProofUrl: data.paymentProofUrl,
+        heardFrom: data.heardFrom,
+        heardFromOther: data.heardFromOther,
+        bundleTwoPerson: data.bundleTwoPerson ?? false,
+        companionFullName: data.bundleTwoPerson
+          ? data.companionFullName
+          : undefined,
+        companionEmail: data.bundleTwoPerson ? data.companionEmail : undefined,
+        companionPhoneNumber: data.bundleTwoPerson
+          ? data.companionPhoneNumber
+          : undefined,
+        companionMbti: data.bundleTwoPerson ? data.companionMbti : undefined,
+      });
     }
   };
 
@@ -161,18 +276,26 @@ export default function TicketPurchaseForm({
       : createMainEventOrder.isPending;
 
   // Determine current price based on backend limit logic
-  const isEarlyBird = !isMainEvent && (ticketCountData?.isEarlyBird ?? false);
-  const priceValue = isMainEvent
-    ? TICKET_REGULAR_PRICE_IDR
-    : isEarlyBird
+  const isEarlyBird = ticketCountData?.isEarlyBird ?? false;
+  const isMainBundle =
+    variant === "main-event" &&
+    !isEarlyBird &&
+    bundleTwoPerson &&
+    mainTicketCount?.bundleTwoPersonAvailable !== false;
+  const priceValue = isEarlyBird
     ? TICKET_EARLY_BIRD_PRICE_IDR
-    : TICKET_REGULAR_PRICE_IDR;
+    : isMainBundle
+      ? TICKET_REGULAR_BUNDLE_TOTAL_IDR
+      : TICKET_REGULAR_PRICE_IDR;
 
-  const ticketPrice = new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-  }).format(priceValue);
+  const fmtIdr = (n: number) =>
+    new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(n);
+
+  const ticketPrice = fmtIdr(priceValue);
 
   return (
     <motion.div
@@ -199,7 +322,7 @@ export default function TicketPurchaseForm({
         />
 
         {ticketCountData && (
-          <div className="mt-4 flex items-center justify-center gap-2">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
             {isEarlyBird && (
               <span className="rounded-full bg-yellow-100 px-3 py-1 text-sm font-bold text-yellow-800 ring-1 ring-yellow-400">
                 Early Bird
@@ -210,11 +333,82 @@ export default function TicketPurchaseForm({
                 Regular
               </span>
             )}
+            {variant === "main-event" &&
+              !isEarlyBird &&
+              bundleTwoPerson &&
+              mainTicketCount?.bundleTwoPersonAvailable && (
+                <span className="rounded-full bg-purple-100 px-3 py-1 text-sm font-bold text-purple-900 ring-1 ring-purple-400">
+                  2-person bundle
+                </span>
+              )}
           </div>
         )}
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {variant === "main-event" && mainTicketCount && (
+          <div>
+            <label
+              htmlFor="bundleTwoPerson"
+              className="text-navy mb-2 block font-semibold"
+            >
+              Bundling option
+            </label>
+            <select
+              id="bundleTwoPerson"
+              value={bundleTwoPerson === true ? "bundle" : "single"}
+              disabled={countPending}
+              onChange={(event) => {
+                setValue("bundleTwoPerson", event.target.value === "bundle", {
+                  shouldValidate: true,
+                });
+              }}
+              className={`w-full rounded-lg border ${
+                errors.bundleTwoPerson ? "border-red" : "border-navy/20"
+              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60`}
+            >
+              <option value="single">
+                1 person - {fmtIdr(TICKET_REGULAR_PRICE_IDR)} (Regular single)
+              </option>
+              <option
+                value="bundle"
+                disabled={
+                  mainTicketCount.isEarlyBird ||
+                  mainTicketCount.bundleTwoPersonAvailable === false
+                }
+              >
+                2-person bundle -{" "}
+                {fmtIdr(TICKET_REGULAR_BUNDLE_PRICE_PER_PERSON_IDR)}
+                /person ({fmtIdr(TICKET_REGULAR_BUNDLE_TOTAL_IDR)} total)
+              </option>
+            </select>
+            {errors.bundleTwoPerson && (
+              <p className="text-red mt-1 text-sm">
+                {errors.bundleTwoPerson.message}
+              </p>
+            )}
+            {mainTicketCount.isEarlyBird && (
+              <p className="text-navy/70 mt-1 text-xs">
+                Bundle pricing applies during Regular period only (not Early
+                Bird).
+              </p>
+            )}
+            {!mainTicketCount.isEarlyBird &&
+              mainTicketCount.bundleTwoPersonAvailable === false && (
+                <p className="text-red mt-1 text-xs">
+                  Not enough tickets left for a 2-person bundle. Choose 1 person
+                  or check back later.
+                </p>
+              )}
+          </div>
+        )}
+
+        {variant === "main-event" && bundleTwoPerson && (
+          <div className="text-navy border-navy/10 border-t pt-6 text-base font-bold">
+            First Attendee
+          </div>
+        )}
+
         {/* Full Name */}
         <div>
           <label
@@ -226,8 +420,9 @@ export default function TicketPurchaseForm({
           <input
             {...register("fullName")}
             id="fullName"
-            className={`w-full rounded-lg border ${errors.fullName ? "border-red" : "border-navy/20"
-              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            className={`w-full rounded-lg border ${
+              errors.fullName ? "border-red" : "border-navy/20"
+            } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
             placeholder="John Doe"
           />
           {errors.fullName && (
@@ -244,8 +439,9 @@ export default function TicketPurchaseForm({
             {...register("email")}
             type="email"
             id="email"
-            className={`w-full rounded-lg border ${errors.email ? "border-red" : "border-navy/20"
-              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            className={`w-full rounded-lg border ${
+              errors.email ? "border-red" : "border-navy/20"
+            } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
             placeholder="john@example.com"
           />
           {errors.email && (
@@ -265,8 +461,9 @@ export default function TicketPurchaseForm({
             {...register("phoneNumber")}
             type="tel"
             id="phoneNumber"
-            className={`w-full rounded-lg border ${errors.phoneNumber ? "border-red" : "border-navy/20"
-              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            className={`w-full rounded-lg border ${
+              errors.phoneNumber ? "border-red" : "border-navy/20"
+            } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
             placeholder="+62812345678"
           />
           {errors.phoneNumber && (
@@ -284,10 +481,12 @@ export default function TicketPurchaseForm({
           <select
             {...register("mbti")}
             id="mbti"
-            className={`w-full rounded-lg border ${errors.mbti ? "border-red" : "border-navy/20"
-              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            className={`w-full rounded-lg border ${
+              errors.mbti ? "border-red" : "border-navy/20"
+            } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
             onChange={(event) => {
-              const value = event.target.value as TicketPurchaseFormData["mbti"];
+              const value = event.target
+                .value as TicketPurchaseFormData["mbti"];
               setValue("mbti", value, { shouldValidate: true });
             }}
             defaultValue=""
@@ -306,19 +505,128 @@ export default function TicketPurchaseForm({
           )}
         </div>
 
+        {variant === "main-event" && bundleTwoPerson && (
+          <>
+            <div className="text-navy border-navy/10 border-t pt-6 text-base font-bold">
+              Second Attendee
+            </div>
+            <div>
+              <label
+                htmlFor="companionFullName"
+                className="text-navy mb-2 block font-semibold"
+              >
+                Full name
+              </label>
+              <input
+                {...register("companionFullName")}
+                id="companionFullName"
+                className={`w-full rounded-lg border ${
+                  errors.companionFullName ? "border-red" : "border-navy/20"
+                } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+                placeholder="Jane Doe"
+              />
+              {errors.companionFullName && (
+                <p className="text-red mt-1 text-sm">
+                  {errors.companionFullName.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="companionEmail"
+                className="text-navy mb-2 block font-semibold"
+              >
+                Email
+              </label>
+              <input
+                {...register("companionEmail")}
+                type="email"
+                id="companionEmail"
+                className={`w-full rounded-lg border ${
+                  errors.companionEmail ? "border-red" : "border-navy/20"
+                } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+                placeholder="jane@example.com"
+              />
+              {errors.companionEmail && (
+                <p className="text-red mt-1 text-sm">
+                  {errors.companionEmail.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="companionPhoneNumber"
+                className="text-navy mb-2 block font-semibold"
+              >
+                Phone number
+              </label>
+              <input
+                {...register("companionPhoneNumber")}
+                type="tel"
+                id="companionPhoneNumber"
+                className={`w-full rounded-lg border ${
+                  errors.companionPhoneNumber ? "border-red" : "border-navy/20"
+                } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+                placeholder="+62812345678"
+              />
+              {errors.companionPhoneNumber && (
+                <p className="text-red mt-1 text-sm">
+                  {errors.companionPhoneNumber.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <label
+                htmlFor="companionMbti"
+                className="text-navy mb-2 block font-semibold"
+              >
+                MBTI
+              </label>
+              <select
+                {...register("companionMbti")}
+                id="companionMbti"
+                className={`w-full rounded-lg border ${
+                  errors.companionMbti ? "border-red" : "border-navy/20"
+                } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+                onChange={(event) => {
+                  const value = event.target
+                    .value as TicketPurchaseFormData["companionMbti"];
+                  setValue("companionMbti", value, { shouldValidate: true });
+                }}
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  Select MBTI type
+                </option>
+                {MBTI_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              {errors.companionMbti && (
+                <p className="text-red mt-1 text-sm">
+                  {errors.companionMbti.message}
+                </p>
+              )}
+            </div>
+          </>
+        )}
+
         {/* Nomor Rekening */}
         <div>
           <label
             htmlFor="nomorRekening"
             className="text-navy mb-2 block font-semibold"
           >
-           Bank Account
+            Bank Account
           </label>
           <input
             {...register("nomorRekening")}
             id="nomorRekening"
-            className={`w-full rounded-lg border ${errors.nomorRekening ? "border-red" : "border-navy/20"
-              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            className={`w-full rounded-lg border ${
+              errors.nomorRekening ? "border-red" : "border-navy/20"
+            } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
             placeholder="1234567890 a/n Nama Lengkap (BCA)"
           />
           {errors.nomorRekening && (
@@ -340,10 +648,12 @@ export default function TicketPurchaseForm({
           <select
             {...register("heardFrom")}
             id="heardFrom"
-            className={`w-full rounded-lg border ${errors.heardFrom ? "border-red" : "border-navy/20"
-              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+            className={`w-full rounded-lg border ${
+              errors.heardFrom ? "border-red" : "border-navy/20"
+            } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
             onChange={(event) => {
-              const value = event.target.value as TicketPurchaseFormData["heardFrom"];
+              const value = event.target
+                .value as TicketPurchaseFormData["heardFrom"];
               setValue("heardFrom", value, { shouldValidate: true });
               if (value !== "other") {
                 setValue("heardFromOther", "");
@@ -377,8 +687,9 @@ export default function TicketPurchaseForm({
             <input
               {...register("heardFromOther")}
               id="heardFromOther"
-              className={`w-full rounded-lg border ${errors.heardFromOther ? "border-red" : "border-navy/20"
-                } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
+              className={`w-full rounded-lg border ${
+                errors.heardFromOther ? "border-red" : "border-navy/20"
+              } text-navy focus:border-blue focus:ring-blue px-4 py-3 focus:ring-2 focus:outline-none`}
               placeholder="Write your source"
             />
             {errors.heardFromOther && (
@@ -426,6 +737,13 @@ export default function TicketPurchaseForm({
             {isEarlyBird && (
               <p className="mt-1 text-xs font-semibold text-yellow-600">
                 Early Bird Pricing Applied!
+              </p>
+            )}
+            {variant === "main-event" && isMainBundle && !countPending && (
+              <p className="text-navy/70 mt-2 text-xs">
+                2-person bundle:{" "}
+                {fmtIdr(TICKET_REGULAR_BUNDLE_PRICE_PER_PERSON_IDR)} x 2 ={" "}
+                {fmtIdr(TICKET_REGULAR_BUNDLE_TOTAL_IDR)}
               </p>
             )}
           </div>

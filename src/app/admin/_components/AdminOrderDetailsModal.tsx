@@ -74,6 +74,8 @@ export default function AdminOrderDetailsModal({
   const isMerch = order.orderType === "merchandise";
   const pData = isMerch ? order.merchJson : order.ticketJson;
   const ticketData = !isMerch ? order.ticketJson : null;
+  const isTwoPersonBundle = ticketData?.bundle === "two_person";
+  const companion = ticketData?.companion ?? null;
   const heardFromValue =
     ticketData?.heardFrom
       ? getHeardFromLabel(ticketData.heardFrom)
@@ -166,8 +168,10 @@ export default function AdminOrderDetailsModal({
 
                 {/* Customer Details */}
                 {pData && (
-                  <div className="mb-6">
-                    <h4 className="text-sm font-bold text-gray-900 mb-3">Customer Information</h4>
+                  <div className="mb-6 space-y-4">
+                    <h4 className="text-sm font-bold text-gray-900">
+                      {isTwoPersonBundle ? "Attendee 1" : "Customer Information"}
+                    </h4>
                     <div className="bg-gray-50 rounded-xl p-4 space-y-3 border border-gray-100">
                       <div className="flex justify-between">
                         <span className="text-sm text-gray-500">Name</span>
@@ -219,6 +223,32 @@ export default function AdminOrderDetailsModal({
                         </div>
                       )}
                     </div>
+
+                    {isTwoPersonBundle && companion && (
+                      <>
+                        <h4 className="text-sm font-bold text-gray-900">Attendee 2</h4>
+                        <div className="bg-gray-50 rounded-xl p-4 space-y-3 border border-gray-100">
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-500">Name</span>
+                            <span className="text-sm font-medium text-gray-900">{companion.fullName ?? "—"}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-500">Email</span>
+                            <span className="text-sm font-medium text-gray-900">{companion.email ?? "—"}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-sm text-gray-500">Phone</span>
+                            <span className="text-sm font-medium text-gray-900">{companion.phoneNumber ?? "—"}</span>
+                          </div>
+                          {companion.mbti && (
+                            <div className="flex justify-between">
+                              <span className="text-sm text-gray-500">MBTI</span>
+                              <span className="text-sm font-medium text-gray-900">{companion.mbti}</span>
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
 
