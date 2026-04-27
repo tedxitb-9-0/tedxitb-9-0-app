@@ -24,7 +24,7 @@ const activities = [
         title: "Keisha Rochelline",
         imageSrc: "/main-event/keisha-rochelline.png",
         imageAlt: "Keisha Rochelline",
-        releaseAt: new Date(2026, 3, 27),
+        releaseAt: new Date(2026, 3, 30),
     },
 ] as const;
 
