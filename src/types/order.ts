@@ -12,6 +12,16 @@ export const ticketJsonSchema = z.object({
   tier: z.string().optional(),
   heardFrom: z.enum(HEARD_FROM_VALUES).optional(),
   heardFromOther: z.string().nullable().optional(),
+  bundle: z.string().optional(),
+  companion: z
+    .object({
+      fullName: z.string().optional(),
+      email: z.string().optional(),
+      phoneNumber: z.string().optional(),
+      mbti: z.string().optional(),
+    })
+    .optional()
+    .nullable(),
 });
 
 export const cartItemSchema = z.object({
