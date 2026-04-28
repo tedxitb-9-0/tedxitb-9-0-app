@@ -16,8 +16,9 @@ const MainEvent = () => {
       <ColorfulBackground showSmiles={true}>
         <HeroSection />
       </ColorfulBackground>
+      {/* Venue Section */}
       <section className="bg-white">
-        <PlainBackground color="red" showTopCloud>
+        <PlainBackground color="blue" showTopCloud>
           <VenueSection />
         </PlainBackground>
       </section>
