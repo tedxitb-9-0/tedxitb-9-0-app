@@ -2,7 +2,6 @@
 
 import { X, Plus, Minus, ShoppingBag } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useCartStore } from "~/stores/cartStore";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -133,13 +132,12 @@ export const CartDrawer = () => {
                     {formatPrice(totalPrice)}
                   </span>
                 </div>
-                <Link
-                  href="/checkout/merchandise"
-                  onClick={() => setDrawerOpen(false)}
-                  className="flex w-full items-center justify-center rounded-xl bg-pink-600 px-6 py-4 font-bold text-white transition-transform hover:bg-pink-700 active:scale-95"
+                <button
+                  disabled
+                  className="flex w-full items-center justify-center rounded-xl bg-gray-300 px-6 py-4 font-bold text-gray-500 cursor-not-allowed"
                 >
-                  Proceed to Checkout
-                </Link>
+                  Merchandise Sales Are Closed
+                </button>
               </div>
             )}
           </motion.div>
