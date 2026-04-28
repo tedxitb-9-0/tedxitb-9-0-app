@@ -24,14 +24,12 @@ const activities = [
         title: "Keisha Rochelline",
         imageSrc: "/main-event/keisha-rochelline.png",
         imageAlt: "Keisha Rochelline",
-        releaseAt: new Date(2026, 3, 30),
+        releaseAt: new Date(2026, 3, 29, 19, 0, 0),
     },
 ] as const;
 
 function getReleaseTimestamp(releaseAt: Date) {
-    const start = new Date(releaseAt);
-    start.setHours(0, 0, 0, 0);
-    return start.getTime();
+    return new Date(releaseAt).getTime();
 }
 
 const ActivitySection = () => {
