@@ -66,12 +66,18 @@ export function partitionTicketsByTier(
 
 /**
  * Next purchase tier/price: presale slots first (up to cap) while the presale window is open,
- * then regular pool (150). Orders before start of today are excluded by the caller.
+ * then regular pool (140). Total hard cap: 170 tickets.
+ * Orders before start of today are excluded by the caller (for pre-event daily cap).
  */
 export function resolveNextTicketOffer(counts: {
   earlyBirdCount: number;
   regularCount: number;
 }): { tier: "Early Bird" | "Regular"; priceIdr: number } | null {
+  const totalCount = counts.earlyBirdCount + counts.regularCount;
+  // Hard total cap: never exceed 170 tickets
+  if (totalCount >= TICKET_TOTAL_CAP) {
+    return null;
+  }
   const presale = isTicketPresaleActive();
   if (presale && counts.earlyBirdCount < TICKET_PRESALE_CAP) {
     return { tier: "Early Bird", priceIdr: TICKET_EARLY_BIRD_PRICE_IDR };
