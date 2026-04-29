@@ -288,7 +288,7 @@ export default function SpeakersSection() {
                                 <Fragment key={COUNTDOWN_UNITS[i]}>
                                     <div className="flex flex-col items-center gap-1">
                                         <span
-                                            className="text-[7vw] sm:text-[6vw] md:text-7xl lg:text-8xl xl:text-9xl [-webkit-text-stroke:1px_white] sm:[-webkit-text-stroke:2px_white] md:[-webkit-text-stroke:4px_white]"
+                                            className="text-[7vw] [-webkit-text-stroke:1px_white] sm:text-[6vw] sm:[-webkit-text-stroke:2px_white] md:text-7xl md:[-webkit-text-stroke:4px_white] lg:text-8xl xl:text-9xl"
                                             style={gradientNumberStyle}
                                         >
                                             {String(val).padStart(2, "0")}
@@ -299,7 +299,7 @@ export default function SpeakersSection() {
                                     </div>
                                     {i < 3 && (
                                         <span
-                                            className="text-[7vw] sm:text-[6vw] md:text-7xl lg:text-8xl xl:text-9xl [-webkit-text-stroke:1px_white] sm:[-webkit-text-stroke:2px_white] md:[-webkit-text-stroke:3px_white]"
+                                            className="text-[7vw] [-webkit-text-stroke:1px_white] sm:text-[6vw] sm:[-webkit-text-stroke:2px_white] md:text-7xl md:[-webkit-text-stroke:3px_white] lg:text-8xl xl:text-9xl"
                                             style={gradientNumberStyle}
                                         >
                                             :
@@ -374,7 +374,7 @@ function SpeakerCard({
                     className="h-auto w-full"
                     draggable={false}
                 />
-                <div className="absolute inset-[6%] overflow-hidden rounded-xl">
+                <div className="absolute inset-[6%] -top-[15%] overflow-hidden rounded-xl">
                     <Image
                         src={imageSrc}
                         alt={
@@ -416,7 +416,7 @@ function SpeakerCard({
                                 fontFamily: "var(--font-titan-one), cursive",
                             }}
                         >
-                            {isRevealed ? speaker.name : "Coming Soon"}
+                            {isRevealed ? speaker.name : "Coming Soon..."}
                         </span>
                     </motion.div>
                 )}
