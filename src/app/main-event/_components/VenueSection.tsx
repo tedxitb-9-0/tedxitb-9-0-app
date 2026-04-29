@@ -13,7 +13,7 @@ const MAP_EMBED_SRC =
 
 export default function VenueSection() {
     return (
-        <div className="relative flex w-full flex-col items-center justify-center overflow-hidden pt-32 pb-16 md:pb-32">
+        <div className="relative flex w-full flex-col items-center justify-center overflow-hidden pt-32 pb-48 sm:pb-56 md:pb-64">
             {/* Purple Cloud at the top */}
             <motion.div
                 className="absolute top-0 right-0 left-0 z-40 w-full rotate-180"
@@ -33,8 +33,9 @@ export default function VenueSection() {
                 />
             </motion.div>
 
+            {/* Map + Buttons */}
             <div className="relative z-30 container mx-auto flex max-w-6xl flex-col items-center px-4">
-                {/* Title */}
+                {/* Title — restored to original position */}
                 <motion.div
                     className="mb-8 w-full max-w-xl md:mb-12 md:max-w-2xl"
                     initial={{ opacity: 0, y: 20 }}
@@ -122,38 +123,60 @@ export default function VenueSection() {
                         10 May 2026
                     </motion.div>
                 </motion.div>
-
-                <motion.div
-                    className="absolute -bottom-48 left-1/2 z-10 flex w-full max-w-2xl -translate-x-1/2 justify-center sm:-bottom-64 md:-bottom-80 md:max-w-3xl lg:-bottom-[28rem] lg:max-w-4xl"
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-120px" }}
-                    transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
-                >
-                    <div className="relative flex w-full justify-center">
-                        <Image
-                            src="/main-event/mascot-arms.webp"
-                            alt="Mascot Arms"
-                            width={1000}
-                            height={500}
-                            className="absolute bottom-0 z-20 h-auto w-[110%] max-w-none md:w-[120%]"
-                            draggable={false}
-                        />
-                        <Image
-                            src="/main-event/mascot-head.webp"
-                            alt="Mascot Head"
-                            width={800}
-                            height={800}
-                            className="absolute bottom-32 z-10 h-auto w-[80%] md:w-[90%]"
-                            draggable={false}
-                        />
-                    </div>
-                </motion.div>
             </div>
+
+            {/* venue-asset — full width, absolutely positioned from the bottom */}
+            <motion.div
+                className="pointer-events-none absolute left-0 right-0 bottom-0 z-15 w-full"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-120px" }}
+                transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
+            >
+                <Image
+                    src="/main-event/venue-asset.webp"
+                    alt="Venue Asset"
+                    width={1920}
+                    height={600}
+                    className="h-auto w-full"
+                    draggable={false}
+                />
+            </motion.div>
+
+            {/* Mascot behind clouds — only eyes peek above the cloud top edge */}
+            <motion.div
+                className="absolute bottom-0 left-1/2 z-10 w-full max-w-2xl -translate-x-1/2 md:max-w-3xl lg:max-w-4xl"
+                initial={{ opacity: 0, y: 60 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-120px" }}
+                transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
+            >
+                {/* Aspect-ratio container anchors both images from the bottom */}
+                <div className="relative w-full" style={{ paddingBottom: "55%" }}>
+                    {/* Arms — full width, sits at the very bottom */}
+                    <Image
+                        src="/main-event/mascot-arms.webp"
+                        alt="Mascot Arms"
+                        width={1000}
+                        height={500}
+                        className="absolute bottom-0 left-1/2 h-auto w-[150%] max-w-none -translate-x-1/2"
+                        draggable={false}
+                    />
+                    {/* Head — centered, raised so only eyes peek above cloud */}
+                    <Image
+                        src="/main-event/mascot-head.webp"
+                        alt="Mascot Head"
+                        width={800}
+                        height={800}
+                        className="absolute -bottom-[15%] left-1/2 h-auto w-[80%] -translate-x-1/2"
+                        draggable={false}
+                    />
+                </div>
+            </motion.div>
 
             {/* Cloud at the bottom */}
             <motion.div
-                className="absolute right-0 bottom-0 left-0 z-20 w-full"
+                className="pointer-events-none absolute right-0 bottom-0 left-0 z-20 w-full"
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-120px" }}
