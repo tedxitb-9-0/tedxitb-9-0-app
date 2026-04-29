@@ -106,7 +106,7 @@ export default function VenueSection() {
                         Graha Pos Indonesia{" "}
                     </motion.a>
                     <motion.div
-                        className="font-titan z-99 inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(90deg,#9A1AEF_0%,#443BF4_63%)] px-6 py-3 text-sm text-white shadow-xl sm:text-base md:px-8 md:text-xl"
+                        className="font-titan z-99 inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(90deg,#9A1AEF_0%,#443BF4_63%)] px-6 py-3 text-sm text-xl text-white shadow-xl md:px-8 md:text-xl"
                         initial={{ opacity: 0, x: 16 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: "-120px" }}
@@ -127,7 +127,7 @@ export default function VenueSection() {
 
             {/* venue-asset — full width, absolutely positioned from the bottom */}
             <motion.div
-                className="pointer-events-none absolute left-0 right-0 bottom-0 z-15 w-full"
+                className="pointer-events-none absolute right-0 bottom-0 left-0 z-15 w-full"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-120px" }}
@@ -152,7 +152,10 @@ export default function VenueSection() {
                 transition={{ duration: 0.7, ease: "easeOut", delay: 0.3 }}
             >
                 {/* Aspect-ratio container anchors both images from the bottom */}
-                <div className="relative w-full" style={{ paddingBottom: "55%" }}>
+                <div
+                    className="relative w-full"
+                    style={{ paddingBottom: "55%" }}
+                >
                     {/* Arms — full width, sits at the very bottom */}
                     <Image
                         src="/main-event/mascot-arms.webp"
