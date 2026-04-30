@@ -17,12 +17,12 @@ const speakers = [
     },
     {
         id: 3,
-        name: "Keisha Rochelline",
+        name: "Amanda Rawles",
         revealAt: new Date(Date.UTC(2026, 3, 29, 12, 0, 0)),
     },
     {
         id: 4,
-        name: "Speaker 4",
+        name: "Keisha Rochelline",
         revealAt: new Date(Date.UTC(2026, 3, 30, 12, 0, 0)),
     },
     {
