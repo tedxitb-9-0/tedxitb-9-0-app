@@ -18,6 +18,9 @@ export const metadata: Metadata = {
     default: "TEDxITB 9.0 - Happiness Through Colors",
     template: "%s | TEDxITB 9.0",
   },
+  alternates: {
+    canonical: baseUrl,
+  },
   description:
     "TEDxITB is an independent, locally licensed TED event held at the Bandung Institute of Technology. Join us for TEDxITB 9.0: Happiness Through Colors - exploring ideas worth spreading.",
   keywords: [
