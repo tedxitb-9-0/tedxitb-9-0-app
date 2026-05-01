@@ -27,7 +27,7 @@ const speakers = [
     },
     {
         id: 5,
-        name: "Speaker 5",
+        name: "Eva Alicia",
         revealAt: new Date(Date.UTC(2026, 4, 1, 12, 0, 0)),
     },
     {
