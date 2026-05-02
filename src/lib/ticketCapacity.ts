@@ -25,10 +25,10 @@ export function startOfTodayWib(now: Date = new Date()): Date {
 }
 
 export function inferTicketTier(order: {
-  ticketJson: unknown;
+  ticketJson?: unknown;
   totalAmount: number;
 }): "Early Bird" | "Regular" {
-  const j = order.ticketJson as { tier?: string } | null;
+  const j = order.ticketJson as { tier?: string } | null | undefined;
   if (j && typeof j === "object") {
     if (j.tier === "Early Bird") return "Early Bird";
     if (j.tier === "Regular") return "Regular";
@@ -41,10 +41,10 @@ export function inferTicketTier(order: {
 
 /** Seats consumed toward capacity (main-event 2-person bundle = 2 regular slots). */
 export function getTicketSlotCount(order: {
-  ticketJson: unknown;
+  ticketJson?: unknown;
   totalAmount: number;
 }): number {
-  const j = order.ticketJson as { bundle?: string } | null;
+  const j = order.ticketJson as { bundle?: string } | null | undefined;
   if (j && typeof j === "object" && j.bundle === "two_person") return 2;
   if (order.totalAmount === TICKET_REGULAR_BUNDLE_TOTAL_IDR) return 2;
   return 1;
