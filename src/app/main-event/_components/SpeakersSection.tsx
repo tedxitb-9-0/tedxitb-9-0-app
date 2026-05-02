@@ -33,12 +33,12 @@ const speakers = [
     {
         id: 6,
         name: "Speaker 6",
-        revealAt: new Date(Date.UTC(2026, 4, 2, 12, 0, 0)),
+        revealAt: new Date(Date.UTC(2026, 4, 7, 12, 0, 0)),
     },
     {
         id: 7,
         name: "Speaker 7",
-        revealAt: new Date(Date.UTC(2026, 4, 3, 12, 0, 0)),
+        revealAt: new Date(Date.UTC(2026, 4, 10, 12, 0, 0)),
     },
 ] as const;
 
