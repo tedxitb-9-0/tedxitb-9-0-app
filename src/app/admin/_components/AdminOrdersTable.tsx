@@ -117,8 +117,17 @@ export default function AdminOrdersTable({
   });
 
   const isTicketFilter = filterType === "pre_event_ticket" || filterType === "main_event_ticket";
+  const isMerchFilter = filterType === "merchandise";
+  
   const totalSalesAmount = filteredOrders.reduce((sum, order) => sum + order.totalAmount, 0);
   const totalTicketsSold = filteredOrders.reduce((sum, order) => sum + (isTicketFilter ? getTicketSlotCount(order) : 0), 0);
+  
+  const totalMerchSold = filteredOrders.reduce((sum, order) => {
+    if (isMerchFilter && order.merchJson && Array.isArray(order.merchJson.cartItems)) {
+      return sum + order.merchJson.cartItems.reduce((itemSum, item) => itemSum + item.quantity, 0);
+    }
+    return sum;
+  }, 0);
 
   const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE) || 1;
   const paginatedOrders = filteredOrders.slice(
@@ -262,11 +271,15 @@ export default function AdminOrdersTable({
       </div>
 
       {/* Summary Metrics */}
-      {isTicketFilter && (
+      {(isTicketFilter || isMerchFilter) && (
         <div className="mb-6 grid grid-cols-2 gap-4 md:flex md:gap-6">
           <div className="rounded-xl border border-navy/10 bg-blue/5 p-4 shadow-sm min-w-40">
-            <p className="text-navy/70 text-xs font-semibold uppercase tracking-wider">Tickets Count</p>
-            <p className="text-navy mt-1 text-2xl font-bold">{totalTicketsSold}</p>
+            <p className="text-navy/70 text-xs font-semibold uppercase tracking-wider">
+              {isTicketFilter ? "Tickets Count" : "Items Count"}
+            </p>
+            <p className="text-navy mt-1 text-2xl font-bold">
+              {isTicketFilter ? totalTicketsSold : totalMerchSold}
+            </p>
           </div>
           <div className="rounded-xl border border-navy/10 bg-blue/5 p-4 shadow-sm min-w-48">
             <p className="text-navy/70 text-xs font-semibold uppercase tracking-wider">Total Amount</p>
