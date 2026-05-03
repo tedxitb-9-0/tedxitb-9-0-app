@@ -6,8 +6,8 @@ export const TICKET_REGULAR_PRICE_IDR = 109_000;
 
 export const TICKET_REGULAR_BUNDLE_PRICE_PER_PERSON_IDR = 99_000;
 export const TICKET_REGULAR_BUNDLE_TOTAL_IDR =
-  TICKET_REGULAR_BUNDLE_PRICE_PER_PERSON_IDR * 2;
+    TICKET_REGULAR_BUNDLE_PRICE_PER_PERSON_IDR * 2;
 
 export function isTicketPresaleActive(now: Date = new Date()): boolean {
-  return now.getTime() < TICKET_PRESALE_END_WIB.getTime();
+    return now.getTime() < TICKET_PRESALE_END_WIB.getTime();
 }
