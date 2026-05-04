@@ -18,6 +18,7 @@ import {
     TICKET_REGULAR_BUNDLE_PRICE_PER_PERSON_IDR,
     TICKET_REGULAR_BUNDLE_TOTAL_IDR,
     TICKET_REGULAR_PRICE_IDR,
+    isMerchandiseSalesActive,
 } from "~/lib/ticketPricing";
 
 const heardFromEnum = z.enum(HEARD_FROM_VALUES);
@@ -420,6 +421,10 @@ export const orderRouter = createTRPCRouter({
                 }),
         )
         .mutation(async ({ ctx, input }) => {
+            if (!isMerchandiseSalesActive()) {
+                throw new Error("Merchandise sales are now closed.");
+            }
+
             const userId = ctx.session.user.id;
             const orderId = uuidv4();
 

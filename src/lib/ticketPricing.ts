@@ -11,3 +11,10 @@ export const TICKET_REGULAR_BUNDLE_TOTAL_IDR =
 export function isTicketPresaleActive(now: Date = new Date()): boolean {
     return now.getTime() < TICKET_PRESALE_END_WIB.getTime();
 }
+
+/** Merchandise sales close at the start of 6 May 2026 WIB (after 5 May midnight). */
+export const MERCHANDISE_SALES_CLOSE_WIB = new Date("2026-05-06T00:00:00+07:00");
+
+export function isMerchandiseSalesActive(now: Date = new Date()): boolean {
+    return now.getTime() < MERCHANDISE_SALES_CLOSE_WIB.getTime();
+}

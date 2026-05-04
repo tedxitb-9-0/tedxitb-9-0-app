@@ -8,6 +8,7 @@ import {
 } from "~/server/contentful/types";
 import { useState, useEffect } from "react";
 import { useCartStore } from "~/stores/cartStore";
+import { isMerchandiseSalesActive } from "~/lib/ticketPricing";
 import { toast } from "sonner";
 
 interface MerchandiseModalProps {
@@ -62,7 +63,15 @@ export default function MerchandiseModal({
     minimumFractionDigits: 0,
   }).format(price ?? 0);
 
+  const merchActive = isMerchandiseSalesActive();
+
   const handleAddToCart = () => {
+    if (!merchActive) {
+      toast.error("Merchandise sales are now closed.");
+      onClose();
+      return;
+    }
+
     if (isBundle && bundleData) {
       // Adding a whole bundle to the cart
       // We will define bundle items as simply regular items in the cart but with bundle prices?
@@ -203,19 +212,30 @@ export default function MerchandiseModal({
 
             <button
               onClick={handleAddToCart}
-              className={`flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 font-bold text-white transition-transform hover:cursor-pointer active:scale-95 ${
+              disabled={!merchActive}
+              className={`flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 font-bold text-white transition-transform hover:cursor-pointer active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 ${
                 isBundle
-                  ? "bg-blue-600 hover:bg-blue-700"
-                  : "bg-pink-500 hover:bg-pink-600"
+                  ? merchActive
+                    ? "bg-blue-600 hover:bg-blue-700"
+                    : "bg-blue-600"
+                  : merchActive
+                    ? "bg-pink-500 hover:bg-pink-600"
+                    : "bg-pink-500"
               }`}
             >
               <ShoppingCart className="h-5 w-5" />
-              Add to Cart -{" "}
-              {new Intl.NumberFormat("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                minimumFractionDigits: 0,
-              }).format((price ?? 0) * quantity)}
+              {merchActive ? (
+                <>
+                  Add to Cart -{" "}
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    minimumFractionDigits: 0,
+                  }).format((price ?? 0) * quantity)}
+                </>
+              ) : (
+                "Merchandise Sales Are Closed"
+              )}
             </button>
           </div>
         </div>

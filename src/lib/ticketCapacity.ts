@@ -8,8 +8,8 @@ import {
 /** Max early-bird orders while presale window is active (separate from regular pool). */
 export const TICKET_PRESALE_CAP = 30;
 
-/** Max regular-price orders (30 presale + 140 regular = 170 total capacity). */
-export const TICKET_REGULAR_CAP = 152;
+/** Max regular-price orders (30 presale + 162 regular = 192 total capacity). */
+export const TICKET_REGULAR_CAP = 162;
 
 export const TICKET_TOTAL_CAP = TICKET_PRESALE_CAP + TICKET_REGULAR_CAP;
 
@@ -66,7 +66,7 @@ export function partitionTicketsByTier(
 
 /**
  * Next purchase tier/price: presale slots first (up to cap) while the presale window is open,
- * then regular pool (140). Total hard cap: 170 tickets.
+ * then regular pool (162). Total hard cap: 192 tickets.
  * Orders before start of today are excluded by the caller (for pre-event daily cap).
  */
 export function resolveNextTicketOffer(counts: {
@@ -74,7 +74,7 @@ export function resolveNextTicketOffer(counts: {
     regularCount: number;
 }): { tier: "Early Bird" | "Regular"; priceIdr: number } | null {
     const totalCount = counts.earlyBirdCount + counts.regularCount;
-    // Hard total cap: never exceed 170 tickets
+    // Hard total cap: never exceed 192 tickets
     if (totalCount >= TICKET_TOTAL_CAP) {
         return null;
     }

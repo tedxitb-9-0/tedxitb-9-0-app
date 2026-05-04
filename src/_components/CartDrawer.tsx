@@ -2,11 +2,15 @@
 
 import { X, Plus, Minus, ShoppingBag } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCartStore } from "~/stores/cartStore";
+import { isMerchandiseSalesActive } from "~/lib/ticketPricing";
 import { motion, AnimatePresence } from "motion/react";
 
 export const CartDrawer = () => {
+  const router = useRouter();
   const { isDrawerOpen, setDrawerOpen, items, updateQuantity } = useCartStore();
+  const merchActive = isMerchandiseSalesActive();
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce(
@@ -132,12 +136,24 @@ export const CartDrawer = () => {
                     {formatPrice(totalPrice)}
                   </span>
                 </div>
-                <button
-                  disabled
-                  className="flex w-full items-center justify-center rounded-xl bg-gray-300 px-6 py-4 font-bold text-gray-500 cursor-not-allowed"
-                >
-                  Merchandise Sales Are Closed
-                </button>
+                {merchActive ? (
+                  <button
+                    onClick={() => {
+                      setDrawerOpen(false);
+                      router.push("/checkout/merchandise");
+                    }}
+                    className="flex w-full items-center justify-center rounded-xl bg-pink-600 px-6 py-4 font-bold text-white transition-colors hover:bg-pink-700"
+                  >
+                    Checkout
+                  </button>
+                ) : (
+                  <button
+                    disabled
+                    className="flex w-full items-center justify-center rounded-xl bg-gray-300 px-6 py-4 font-bold text-gray-500 cursor-not-allowed"
+                  >
+                    Merchandise Sales Are Closed
+                  </button>
+                )}
               </div>
             )}
           </motion.div>
