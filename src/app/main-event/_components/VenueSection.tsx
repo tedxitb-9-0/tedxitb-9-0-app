@@ -135,7 +135,7 @@ export default function VenueSection() {
             >
                 <Image
                     src="/main-event/venue-asset.webp"
-                    alt="Venue Asset"
+                    alt="Venue Background Asset"
                     width={1920}
                     height={600}
                     className="h-auto w-full"
