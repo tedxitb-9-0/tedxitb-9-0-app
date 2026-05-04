@@ -1,12 +1,15 @@
-import Link from "next/link";
-
 export default function MainEventBuyTicketsLink() {
   return (
-    <Link
-      href="/main-event/buy"
-      className="text-red inline-block rounded-full border-b-4 border-gray-300 bg-white px-10 py-5 text-xl font-bold shadow-lg transition-transform hover:scale-105 hover:bg-neutral-100 active:mt-1 active:scale-95 active:border-b-0"
-    >
-      Buy Tickets Now
-    </Link>
+    <div className="mx-auto my-8 w-fit max-w-full overflow-x-auto overflow-y-hidden rounded-2xl border border-red-100 bg-white/95 p-8 text-center shadow-2xl backdrop-blur">
+      <h2 className="mb-3 text-4xl font-black tracking-tight text-[#E62B1E] md:text-5xl">
+        SOLD OUT
+      </h2>
+      <p className="text-lg font-bold text-gray-800 md:text-xl">
+        All main event tickets have been fully claimed.
+      </p>
+      <p className="mt-2 font-medium text-gray-600">
+        Thank you for your overwhelming enthusiasm!
+      </p>
+    </div>
   );
 }

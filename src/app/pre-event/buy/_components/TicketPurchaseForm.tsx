@@ -357,6 +357,19 @@ export default function TicketPurchaseForm({
                 )}
             </div>
 
+            {ticketCountData?.isSoldOut ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <h2 className="mb-3 text-4xl font-black tracking-tight text-[#E62B1E] md:text-5xl">
+                        SOLD OUT
+                    </h2>
+                    <p className="text-lg font-bold text-gray-800 md:text-xl">
+                        All {variant === "main-event" ? "main event" : "pre-event"} tickets have been fully claimed.
+                    </p>
+                    <p className="mt-2 font-medium text-gray-600">
+                        Thank you for your overwhelming enthusiasm!
+                    </p>
+                </div>
+            ) : (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {variant === "main-event" && mainTicketCount && (
                     <div>
@@ -950,6 +963,7 @@ export default function TicketPurchaseForm({
                     By purchasing, you agree to our terms and conditions
                 </p>
             </form>
+            )}
         </motion.div>
     );
 }
