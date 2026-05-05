@@ -66,7 +66,7 @@ export type ISponsorSize = "S" | "M" | "L" | "XL" | "XXL";
 /**
  * Sponsor relationship type
  */
-export type ISponsorType = "Sponsorship" | "Partnership";
+export type ISponsorType = "Sponsorship" | "Partnership" | "Media Partner";
 
 /**
  * Sponsor from Contentful

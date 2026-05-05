@@ -7,6 +7,7 @@ const Sponsorship = async () => {
 
   const sponsorships = sponsors.filter((s) => s.type === "Sponsorship");
   const partnerships = sponsors.filter((s) => s.type === "Partnership");
+  const mediaPartners = sponsors.filter((s) => s.type === "Media Partner");
 
   return (
     <main className="w-full">
@@ -37,6 +38,18 @@ const Sponsorship = async () => {
         />
 
         <SponsorshipClient sponsors={partnerships} emptyMessage="No partners to display." />
+
+        {/* Media Partners section */}
+        <Image
+          src="/mediapartners.webp"
+          alt="Our Media Partners"
+          width={800}
+          height={120}
+          className="mb-2 mt-12 h-auto max-h-16 w-auto max-w-[80%] object-contain md:mt-16 md:max-h-20"
+          draggable={false}
+        />
+
+        <SponsorshipClient sponsors={mediaPartners} emptyMessage="No media partners to display." />
       </section>
     </main>
   );
