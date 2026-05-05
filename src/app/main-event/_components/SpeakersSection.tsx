@@ -32,17 +32,17 @@ const speakers = [
     },
     {
         id: 6,
-        name: "Speaker 6",
-        revealAt: new Date(Date.UTC(2026, 4, 7, 12, 0, 0)),
+        name: "Sadam Permana",
+        revealAt: new Date(Date.UTC(2026, 4, 4, 12, 0, 0)),
     },
     {
         id: 7,
-        name: "Speaker 7",
-        revealAt: new Date(Date.UTC(2026, 4, 10, 12, 0, 0)),
+        name: "Luna Maya",
+        revealAt: new Date(Date.UTC(2026, 4, 6, 12, 0, 0)),
     },
 ] as const;
 
-const SPEAKERS_WITH_IMAGE = new Set([1, 2, 3, 4, 5]);
+const SPEAKERS_WITH_IMAGE = new Set([1, 2, 3, 4, 5, 6, 7]);
 
 // 10 May 2026 00:00 WIB = 9 May 2026 17:00 UTC
 const COUNTDOWN_TARGET = new Date(Date.UTC(2026, 4, 9, 17, 0, 0));
@@ -411,7 +411,7 @@ function SpeakerCard({
                         transition={{ duration: 0.18, ease: "easeOut" }}
                     >
                         <span
-                            className="text-sm leading-tight text-white sm:text-base"
+                            className="text-white sm:text-xl"
                             style={{
                                 fontFamily: "var(--font-titan-one), cursive",
                             }}
