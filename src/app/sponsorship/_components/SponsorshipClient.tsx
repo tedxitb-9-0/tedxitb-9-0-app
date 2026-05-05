@@ -18,20 +18,19 @@ const SIZE_SCALE: Record<ISponsorSize, number> = {
 
 interface SponsorshipClientProps {
   sponsors: ISponsor[];
+  emptyMessage?: string;
 }
 
-const SponsorshipClient = ({ sponsors }: SponsorshipClientProps) => {
-  const onlySponsors = sponsors.filter((s) => s.type === "Sponsorship");
-
+const SponsorshipClient = ({ sponsors, emptyMessage = "No sponsors to display." }: SponsorshipClientProps) => {
   const grouped = SIZE_ORDER.map((size) => ({
     size,
-    items: onlySponsors.filter((s) => s.size === size),
+    items: sponsors.filter((s) => s.size === size),
   })).filter((group) => group.items.length > 0);
 
   if (!grouped.length) {
     return (
       <div className="flex min-h-[20vh] w-full items-center justify-center">
-        <p className="font-medium text-gray-500">No sponsors to display.</p>
+        <p className="font-medium text-gray-500">{emptyMessage}</p>
       </div>
     );
   }
