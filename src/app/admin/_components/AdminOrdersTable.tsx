@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { QrCode } from "lucide-react";
+import { QrCode, Download } from "lucide-react";
 import { api } from "~/trpc/react";
+import * as XLSX from "xlsx";
 
 import { type Order } from "~/types/order";
 import AdminOrderDetailsModal from "./AdminOrderDetailsModal";
 import AdminQRScannerModal from "./AdminQRScannerModal";
 import { getTicketSlotCount } from "~/lib/ticketCapacity";
+import { getHeardFromLabel } from "~/lib/heardFrom";
 
 export type AdminOrder = Order & {
   user: {
@@ -168,6 +170,105 @@ export default function AdminOrdersTable({
     return status.charAt(0).toUpperCase() + status.slice(1);
   };
 
+  // Human-readable labels for the active filters, used in filename + sheet name
+  const exportTypeLabel =
+    filterType === "all"
+      ? "All Types"
+      : getOrderTypeLabel(filterType);
+  const exportStatusLabel =
+    filterStatus === "all" ? "All Statuses" : getStatusText(filterStatus, false);
+  const exportLabel = `${exportTypeLabel} – ${exportStatusLabel}`;
+
+  const handleExport = () => {
+    if (filteredOrders.length === 0) {
+      toast.error("No orders match the current filters to export.");
+      return;
+    }
+
+    const rows = filteredOrders.map((order) => {
+      const isMerch = order.orderType === "merchandise";
+      const t = !isMerch ? order.ticketJson : null;
+      const m = isMerch ? order.merchJson : null;
+      const companion = t?.bundle === "two_person" ? t?.companion : null;
+
+      const heardFrom = t?.heardFrom ? getHeardFromLabel(t.heardFrom) : "";
+      const heardFromOther =
+        t?.heardFrom === "other" ? (t.heardFromOther ?? "") : "";
+
+      const deliveryLabel =
+        m?.deliveryMethod === "pickup_itb_jatinangor"
+          ? "Pick Up – ITB Jatinangor"
+          : m?.deliveryMethod === "pickup_itb_ganesa"
+            ? "Pick Up – ITB Ganesa"
+            : m?.deliveryMethod === "delivery_shipping"
+              ? "Delivery (Shipping)"
+              : m?.deliveryMethod === "pickup_main_event"
+                ? "Pick Up at Main Event"
+                : "";
+
+      const merchItems =
+        m?.cartItems
+          ?.map((item) => `${item.quantity}x ${item.merchandise?.name ?? "?"}`)
+          .join(", ") ?? "";
+
+      return {
+        "Order ID": order.id,
+        "Order Type": getOrderTypeLabel(order.orderType),
+        "Account Name": order.user.name,
+        "Account Email": order.user.email,
+        "Status": order.status.charAt(0).toUpperCase() + order.status.slice(1),
+        "Total Amount (IDR)": order.totalAmount,
+        // Ticket fields
+        "Ticket Type": t?.ticketType ?? "",
+        "Tier": t?.tier ?? "",
+        "Bundle": t?.bundle ?? "",
+        "Attendee Name": t?.fullName ?? m?.fullName ?? "",
+        "Attendee Email": t?.email ?? m?.email ?? "",
+        "Attendee Phone": t?.phoneNumber ?? m?.phoneNumber ?? "",
+        "Attendee MBTI": t?.mbti ?? "",
+        "Nomor Rekening": t?.nomorRekening ?? "",
+        "Heard From": heardFrom,
+        "Heard From (Other)": heardFromOther,
+        // Companion (two-person bundle only)
+        "Companion Name": companion?.fullName ?? "",
+        "Companion Email": companion?.email ?? "",
+        "Companion Phone": companion?.phoneNumber ?? "",
+        "Companion MBTI": companion?.mbti ?? "",
+        // Merch fields
+        "Merch Items": merchItems,
+        "Delivery Method": deliveryLabel,
+        "Shipping Address": m?.shippingAddress ?? "",
+        // Order meta
+        "QR Code": order.qrCode ?? "",
+        "Payment Proof URL": order.paymentProofUrl ?? "",
+        "Created At": new Date(order.createdAt).toLocaleString("id-ID"),
+      };
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    // Auto-fit column widths based on max content length
+    const colWidths = Object.keys(rows[0] ?? {}).map((key) => ({
+      wch: Math.max(
+        key.length,
+        ...rows.map((r) => String(r[key as keyof typeof r] ?? "").length),
+      ),
+    }));
+    worksheet["!cols"] = colWidths;
+
+    const workbook = XLSX.utils.book_new();
+    // Sheet names must be ≤31 chars
+    const sheetName = exportLabel.slice(0, 31);
+    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+
+    const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    const fileSlug = exportLabel
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+    XLSX.writeFile(workbook, `orders-${fileSlug}-${timestamp}.xlsx`);
+    toast.success(`Exported ${filteredOrders.length} orders`);
+  };
+
   const handleSave = async (orderId: string, status: Order["status"]) => {
     const previousOrders = orders;
 
@@ -214,7 +315,16 @@ export default function AdminOrdersTable({
   return (
     <div>
       {/* Action Bar */}
-      <div className="mb-6 flex justify-end">
+      <div className="mb-6 flex justify-end gap-3">
+        <button
+          onClick={handleExport}
+          disabled={filteredOrders.length === 0}
+          title={`Export ${filteredOrders.length} orders matching current filters`}
+          className="flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <Download className="h-5 w-5" />
+          Export ({filteredOrders.length})
+        </button>
         <button
           onClick={() => setIsScannerOpen(true)}
           className="flex items-center gap-2 rounded-lg bg-blue px-4 py-2 font-semibold text-white transition-colors hover:bg-blue/90"
