@@ -134,7 +134,7 @@ export default function VenueSection() {
                 transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
             >
                 <Image
-                    src="/main-event/venue-asset.webp"
+                    src="/main-event/asset.webp"
                     alt="Venue Background Asset"
                     width={1920}
                     height={600}
