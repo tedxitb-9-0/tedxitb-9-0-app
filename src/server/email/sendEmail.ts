@@ -55,3 +55,5 @@ export async function sendPreEventConfirmedEmail(to: string) {
         react: template.react,
     });
 }
+
+

@@ -16,6 +16,7 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "preview": "next build && next start",
+    "script:blast-main-event": "npx tsx --env-file=.env --tsconfig tsconfig.json src/scripts/send-main-event-blast.ts",
     "start": "next start",
     "typecheck": "tsc --noEmit"
   },
