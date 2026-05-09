@@ -59,9 +59,9 @@ export interface ICartItem {
 }
 
 /**
- * Sponsor size tiers (S = smallest, XXL = largest)
+ * Sponsor size tiers (XS = smallest, XXL = largest)
  */
-export type ISponsorSize = "S" | "M" | "L" | "XL" | "XXL";
+export type ISponsorSize = "XS" | "S" | "M" | "L" | "XL" | "XXL";
 
 /**
  * Sponsor relationship type

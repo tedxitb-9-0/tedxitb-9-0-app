@@ -4,11 +4,12 @@ import Image from "next/image";
 import { motion } from "motion/react";
 import { type ISponsor, type ISponsorSize } from "~/server/contentful/types";
 
-const SIZE_ORDER: ISponsorSize[] = ["S", "M", "L", "XL", "XXL"];
+const SIZE_ORDER: ISponsorSize[] = ["XXL", "XL", "L", "M", "S", "XS"];
 
 // Base height in px for S; each tier scales by 0.5x increments
 const BASE_HEIGHT = 80;
 const SIZE_SCALE: Record<ISponsorSize, number> = {
+  XS: 0.5,
   S: 1,
   M: 1.5,
   L: 2,
@@ -63,7 +64,7 @@ const SponsorshipClient = ({ sponsors, emptyMessage = "No sponsors to display." 
                       alt={sponsor.companyName}
                       width={logoHeight * 3}
                       height={logoHeight}
-                      className="h-full w-auto max-w-[180px] object-contain transition-transform duration-300 hover:scale-105"
+                      className="h-full w-auto object-contain transition-transform duration-300 hover:scale-105"
                       style={{ maxHeight: `${logoHeight}px` }}
                       draggable={false}
                     />
