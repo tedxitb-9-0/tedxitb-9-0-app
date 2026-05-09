@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -242,6 +243,27 @@ export default function SpeakersSection() {
                             </motion.div>
                         );
                     })}
+                </motion.div>
+
+                {/* Learn More Button */}
+                <motion.div
+                    className="flex w-full justify-center pb-8 sm:pb-12"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                >
+                    <Link href="/main-event/guide/">
+                        <button
+                            className="flex items-center justify-center rounded-full px-8 py-3 text-2xl text-white shadow-xl transition-transform hover:-translate-y-1 hover:brightness-110 sm:px-12 sm:text-3xl"
+                            style={{
+                                background: "linear-gradient(90deg, #FFB820 0%, #FF3A8C 100%)",
+                                fontFamily: "var(--font-titan-one), cursive",
+                            }}
+                        >
+                            Learn More...
+                        </button>
+                    </Link>
                 </motion.div>
             </div>
 
