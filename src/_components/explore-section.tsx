@@ -4,15 +4,15 @@ import Link from "next/link";
 
 const ExploreSection = () => {
     return (
-        <section className="flex h-fit w-full flex-col items-center justify-center bg-repeat px-4 py-12 md:py-24">
+        <section className="relative flex h-fit w-full flex-col items-center justify-center bg-repeat px-4 py-12 md:py-24">
             <Image
                 src="/exploreTEDxITBeffectsIZIN.png"
                 alt="TEDxITB 9.0 - Happiness Through Colors"
                 width={806}
                 height={175}
-                className="pointer-events-none absolute h-auto w-full"
+                className="pointer-events-none absolute top-0 left-0 h-auto w-full"
                 draggable={false}
-                priority
+                sizes="100vw"
             />
             <motion.div
                 className="m:w-[90%] z-20 mb-5 max-w-[8xl] md:max-w-[6xl]"
@@ -36,7 +36,7 @@ const ExploreSection = () => {
                         height={175}
                         className="h-auto w-full"
                         draggable={false}
-                        priority
+                        sizes="(max-width: 768px) 90vw, 60vw"
                     />
                 </motion.div>
             </motion.div>

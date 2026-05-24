@@ -16,7 +16,7 @@ export default function Home() {
 
             {/* Hero Section */}
             <section className="relative flex h-screen w-full flex-col items-center justify-center">
-                <ColorfulBackground>
+                <ColorfulBackground priority>
                     <h1 className="sr-only">
                         TEDxITB 9.0: Happiness Through Colors
                     </h1>

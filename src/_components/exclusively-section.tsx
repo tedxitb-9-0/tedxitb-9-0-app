@@ -37,7 +37,7 @@ const ExclusivelySection = () => {
               height={120}
               className="h-auto w-full"
               draggable={false}
-              priority
+              sizes="(max-width: 768px) 90vw, 70vw"
             />
           </motion.div>
         </motion.div>
